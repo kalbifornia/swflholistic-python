@@ -1,0 +1,73 @@
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.center {
+  text-align: center;
+}
+
+div.divMap {
+  position: relative;
+  width: 100vw;
+  height: 60vh;
+}
+
+.marker {
+  background-size: cover;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  width: 25px;
+  height: 60px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+}
+
+.marker span {
+  align-self: center;
+}
+
+.marker-farm {
+  background-image: url('/static/markers/mapbox-marker-icon-green.svg');
+}
+
+.marker-default {
+  background-image: url('/static/markers/mapbox-marker-icon-gray.svg');
+}
+
+.divDirectory {
+  padding: 15px;
+}
+
+.divDirectoryItem {
+  padding-bottom: 5px;
+  padding-left: 15px;
+  border-bottom-style: solid;
+  border-bottom-width: 3px;
+  border-bottom-color: gray;
+}
+
+.divPrimaryTag {
+  border-top-width: 3px;
+  border-top-color: red;
+  border-top-style: solid;
+}
+
+.divPrimaryTag h3 {
+  text-transform: uppercase;
+}
+
+.divDirectoryItemName {
+  font-weight: bold;
+}
+
+.divDirectoryItemInfo {
+  padding-left: 15px;
+}
+
+.divViewDetailsContainer {
+  padding: 15px;
+}

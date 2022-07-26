@@ -1,0 +1,45 @@
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <title>Weston A Price Foundation - Naples Chapter Resource Details</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <script src="{{url_for('static',filename='script/jquery.min.js')}}"></script>
+    <script src="{{url_for('static',filename='script/wapf.js')}}"></script>
+    <link rel="icon" type="image/png" href="{{url_for('static',filename='wapf-favicon.png')}}">
+    <link href="{{url_for('static',filename='css/wapf-naples.css')}}" rel='stylesheet' />
+  </head>
+  <body>
+    <div class="divViewDetailsContainer" id="divFeatureDetails">
+      {% if feature == None %}
+        There is no feature in the data set with this identifier.
+      {% else %}
+        <h2>{{feature.name}}</h2>
+        <p><strong>Description</strong>
+        <p>{{feature.description}}</p>
+        <p><strong>Why is this on the WAPF Naples Resource List?</strong></p>
+        <p>{{feature.why_on_wapf_list}}</p>
+        <p><strong>Website</strong></p>
+        <p><a href="{{feature.url}}">{{feature.url}}</a></p>
+        <p><strong>Address</strong></p>
+        <p>{{feature.address}}</p>
+        <p><strong>Phone Number</strong></p>
+        {% if feature.phone == None or feature.phone == "XXXXX" %}
+          <p>N/A</p>
+          {% else %}
+          <p>{{feature.phone}}</p>
+        {% endif %}
+        <p><strong>Tags</strong></p>
+        <p>
+          {% for tag in feature.tags %}
+            {% if loop.index == feature.tags|length %}
+              <a href="/tag/{{tag.tag_name}}">{{tag.description}}</a>
+            {% else %}
+              <a href="/tag/{{tag.tag_name}}">{{tag.description}}</a>,
+            {% endif %}
+          {% endfor %}
+        </p>
+      {% endif %}
+    </div>
+    <div class="divReturnHome center"><a href="/">Return to Home Page (with Map)</a></div>
+  </body>
+</html>

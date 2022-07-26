@@ -1,0 +1,83 @@
+{
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "dagostino",
+        "enabled": true,
+        "name": "D'Agostino Chiropractic",
+        "description": "Family chiropractic center which aims to help their patients thrive by correcting their underlying structural and chemical health imbalances by scientifically utilizing natural healing methods",
+        "why_on_wapf_list": "Dr. D'Agostino is a WAPF member who utilizes diet and other natural healing methods",
+        "tags": [
+          "chiro",
+          "healing_arts",
+          "wapf_member_operated"
+        ],
+        "primary_tag": "chiro",
+        "address": "1338 Del Prado Blvd S, Cape Coral, FL 33990",
+        "phone": "239-573-8918",
+        "url": "https://www.drtonycapecoral.com"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.9409,
+          26.627
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "doctorbrie",
+        "enabled": true,
+        "name": "Pediatric and Perinatal Chiropractic Center",
+        "description": "Pediatric and Perinatal Chiropractic Center is a holistic chiropractic center in Fort Myers. The doctors at this office can serve as primary care provider for both children and their parents. They also have their own whole foods supplements.",
+        "why_on_wapf_list": "Dr. Brie and her teammates employ holistic and natural practices to encourage health in their patients, and they are generally in line with WAPF principles. They encourage parental freedoms and choice when it comes to vaccines.",
+        "tags": [
+          "chiro",
+          "healing_arts",
+          "pediatrics"
+        ],
+        "primary_tag": "chiro",
+        "address": "12731 World Plaza Ln. Bldg 83 Suite 1, Fort Myers Fort Myers, FL 33907",
+        "phone": "239-887-3283",
+        "url": "https://www.doctorbrie.com"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.8783,
+          26.5586
+        ],
+        "type": "Point"
+      }
+    }
+  ],
+  "type": "FeatureCollection",
+  "tagDescriptions": [
+    {
+      "tag": "chiro",
+      "description": "Chiropractic",
+      "parent_category": "healing_arts",
+      "plural_description": "Chiropractors"
+    },
+    {
+      "tag": "healing_arts",
+      "description": "Healing Arts",
+      "parent_category": "healing_arts",
+      "plural_description": "Healing Arts"
+    },
+    {
+      "tag": "pediatrics",
+      "description": "Pediatrics",
+      "parent_category": "healing_arts",
+      "plural_description": "Pediatricians"
+    },
+    {
+      "tag": "wapf_member_operated",
+      "description": "Operated by WAPF Member",
+      "parent_category": "other",
+      "plural_description": "Operated by WAPF Members"
+    }
+  ]
+}

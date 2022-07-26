@@ -1,0 +1,4 @@
+{
+  "SQLALCHEMY_DATABASE_URI":"mysql://joe:password@localhost:3306/swflholistic",
+  "SQLALCHEMY_TRACK_MODIFICATIONS":false
+}

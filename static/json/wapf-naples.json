@@ -1,0 +1,1057 @@
+{
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "dagostino",
+        "enabled": true,
+        "name": "D'Agostino Chiropractic",
+        "description": "Family chiropractic center which aims to help their patients thrive by correcting their underlying structural and chemical health imbalances by scientifically utilizing natural healing methods",
+        "why_on_wapf_list": "Dr. D'Agostino is a WAPF member who utilizes diet and other natural healing methods",
+        "tags": [
+          "wapf_member_operated",
+          "chiro",
+          "healing_arts"
+        ],
+        "primary_tag": "chiro",
+        "address": "1338 Del Prado Blvd S, Cape Coral, FL 33990",
+        "phone": "239-573-8918",
+        "url": "https://www.drtonycapecoral.com"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.940857,
+          26.627038
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "mamascape",
+        "enabled": true,
+        "name": "Mama's Chiropractic Cape Coral",
+        "description": "Mama’s Chiropractic Clinic is a pregnancy and pediatric chiropractic office with locations in Cape Coral, Fort Myers, and North Port, Florida.",
+        "why_on_wapf_list": "Dr. Edwards and his team employ holistic and natural practices to encourage health in their patients. They are promoters of conscious parenting, and they are promoters of patient medical choice on vaccines.",
+        "tags": [
+          "healing_arts",
+          "chiro",
+          "pediatrics"
+        ],
+        "primary_tag": "chiro",
+        "address": "3108 Del Prado Blvd S, Cape Coral, FL 33990",
+        "phone": "239-549-6262",
+        "url": "https://www.mamaschiropractic.com"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.94207,
+          26.59399
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "mamasfortmyers",
+        "enabled": true,
+        "name": "Mama's Chiropractic Fort Myers",
+        "description": "Mama’s Chiropractic Clinic is a pregnancy and pediatric chiropractic office with locations in Cape Coral, Fort Myers, and North Port, Florida.",
+        "why_on_wapf_list": "Dr. Edwards and his team employ holistic and natural practices to encourage health in their patients. They are promoters of conscious parenting, and they are promoters of patient medical choice on vaccines.",
+        "tags": [
+          "healing_arts",
+          "chiro",
+          "pediatrics"
+        ],
+        "primary_tag": "chiro",
+        "address": "9720 Commerce Center Ct, Fort Myers, FL 33908",
+        "phone": "239-549-6262",
+        "url": "https://www.mamaschiropractic.com"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.91266,
+          26.50001
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "pineshine",
+        "enabled": true,
+        "name": "Pineshine Farms",
+        "description": "Pineshine Farms has been delivering exceptional antibiotic and hormone free, 100% grass fed beef since 2017. Their goal is and always has been to provide both a tremendous value for their community of neighbors and a superior customer experience. At Pineshine Farms, they take great pride in their mission to create and maintain a healthy environment that produces hearty and healthy animals. As a result, their animals grow at a natural pace and live low stress lives in order to provide customers with the most nutritious and flavorful meats possible. Pineshine Farms sells whole cows, half cows, and raw dairy.",
+        "why_on_wapf_list": "Owned and operated by WAPF member Tom Scannell, this farm follows WAPF principles in food and farming.",
+        "tags": [
+          "wapf_member_operated",
+          "farm",
+          "raw_dairy"
+        ],
+        "primary_tag": "farm",
+        "address": "7401 Stringfellow Rd, Saint James City, FL 33956",
+        "phone": "239-677-4074",
+        "url": "https://www.facebook.com/pineshinefarms"
+      },
+      "geometry": {
+        "coordinates": [
+          -82.102287,
+          26.567955
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "puredental",
+        "enabled": true,
+        "name": "Pure Dental Naples",
+        "description": "A Biological Dentistry office providing a green, natural and healthy approach to dentistry tailored to the individual. They use the least toxic approach in the world of dentistry and supplement it with all-natural and pure alternatives while maintaining the highest of standards.",
+        "why_on_wapf_list": "Operated by WAPF member Dr. Josephine Perez, this dental office promotes the importance of diet and utilizes other natural and healthy dental practices.",
+        "tags": [
+          "dental",
+          "wapf_member_operated",
+          "healing_arts"
+        ],
+        "primary_tag": "dental",
+        "address": "4444 Tamiami Trail N Suite #6 Naples, FL 34103",
+        "phone": "239-692-9623",
+        "url": "https://puredentalnaples.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.799692,
+          26.200875
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "surfsidedental",
+        "enabled": true,
+        "name": "Surfside Dental Cape Coral (Dr. Julija Cartelli DMD)",
+        "description": "Dr. Julija Cartelli is extremely interested in alternative medicine as well as the holistic aspect of dentistry. She learned from her mother how important it is to treat all people, especially her patients, with fairness, respect and understanding. She strives to offer the best quality of dentistry according to each patient's needs and desires.",
+        "why_on_wapf_list": "Dr. Cartelli is interested in holistic dentistry. She has been recommended by the office of holistic pediatrician Dr. Robert Murdoch.",
+        "tags": [
+          "dental",
+          "healing_arts"
+        ],
+        "primary_tag": "dental",
+        "address": "2378 Surfside Blvd Ste 131, Cape Coral, FL 33991",
+        "phone": "239-282-1940",
+        "url": "https://www.surfsidedentalcapecoral.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -82.02598,
+          26.60774
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "cryonaples",
+        "enabled": true,
+        "name": "Cryo Naples",
+        "description": "This office, led by Drs. Jarod Ward and Josh Bell, practices holistic chiropractic care and also has a cryotherapy chamber.",
+        "why_on_wapf_list": "Operated by WAPF members Dr. Jarod Ward and Dr. Josh Bell, this office provides holistic chiropractic care and has a cryotherapy chamber for utilizing benefits of cold exposure.",
+        "tags": [
+          "wapf_member_operated",
+          "chiro",
+          "cryo",
+          "healing_arts"
+        ],
+        "primary_tag": "chiro",
+        "address": "1575 Pine Ridge Ste 6, Naples, Florida 34109",
+        "url": "https://www.cryonaples.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.786776,
+          26.212725
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "pgfm",
+        "enabled": true,
+        "name": "Punta Gorda Farmer's Market",
+        "description": "This farmer's market has over 80 vendors offering fresh produce, organic produce, fresh seafood, jams and jellies, jewelry, bakeries, fresh made cookies, pies, cat and dog treats, artisan cheeses, fresh cut flowers, plants, guacamole, kettle corn, handmade decor, knife sharpening, teas and coffees, homemade soaps and soups, and live entertainment plus working artists.",
+        "why_on_wapf_list": "This market provides community and the opportunity to buy local and organic foods and other goods.",
+        "tags": [
+          "farmers_market"
+        ],
+        "primary_tag": "farmers_market",
+        "address": "277 Taylor St, Punta Gorda, FL 33950",
+        "phone": "941-391-4856",
+        "url": "https://www.facebook.com/PuntaGordaFarmersMarket/"
+      },
+      "geometry": {
+        "coordinates": [
+          -82.049344,
+          26.933387
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "ccsatfm",
+        "enabled": true,
+        "name": "Cape Coral Saturday Farmer's Market",
+        "description": "This Cape Coral farmer's market offers local foods and other goods.",
+        "why_on_wapf_list": "This market provides community and the opportunity to buy local foods and other goods.",
+        "tags": [
+          "farmers_market"
+        ],
+        "primary_tag": "farmers_market",
+        "address": "SE 47th Terrace and SE 10th Place, Cape Coral, FL 33904",
+        "url": "https://capecoralfarmersmarket.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.9525175,
+          26.5637306
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "cctuesfm",
+        "enabled": true,
+        "name": "Cape Coral Tuesday Farmer's Market",
+        "description": "This Cape Coral farmer's market offers local foods and other goods.",
+        "why_on_wapf_list": "This market provides community and the opportunity to buy local foods and other goods.",
+        "tags": [
+          "farmers_market"
+        ],
+        "primary_tag": "farmers_market",
+        "address": "Veterans Parkway and Surfside Blvd, Cape Coral, FL 33914",
+        "url": "https://capecoralfarmersmarket.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -82.0233269,
+          26.6071928
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "groveladder",
+        "enabled": true,
+        "name": "Grove Ladder Farm",
+        "description": "Grove Ladder Farm is a 12 acre, pasture-based livestock farm in Arcadia, FL. It utilizes rotational grazing. It utilizes non-GMO grain for its chickens and its sheep and cattle eat native Florida grasses. On top of the farm producing its own beef and eggs, it also partners with local farms to provide the opportunity to buy raw dairy and organic veggies.",
+        "why_on_wapf_list": "This farm produces quality grass-fed beef, grass-fed lamb and mutton, pastured eggs, and pastured poultry, using good land and animal management philosophy. They also partner with local farms to allow customers to purchase raw dairy and organic local vegetables.",
+        "tags": [
+          "farm",
+          "raw_dairy",
+          "organic_veg"
+        ],
+        "primary_tag": "farm",
+        "address": "5690 SE Stallings Terr, Arcadia, FL 34266",
+        "phone": "941-928-5891",
+        "url": "https://groveladderfarmllc.grazecart.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.8133,
+          27.1413
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "naturalfamily",
+        "enabled": true,
+        "name": "Natural Family Physicians",
+        "description": "Dr. Robery Murdoch of Natural Family Physicians is a holistic pediatrician, acupuncturist, and functional medicine consultant with over 35 years of clinical experience.",
+        "why_on_wapf_list": "Dr. Murdoch is a functional medicine practicioner who takes a holistic approach in his care of pediatric and adult patients. He also is experienced with detoxification and with recovery from vaccine damage.",
+        "tags": [
+          "healing_arts",
+          "pediatrics",
+          "acupuncture"
+        ],
+        "primary_tag": "pediatrics",
+        "address": "15641 New Hampshire Ct, Fort Myers, FL 33908",
+        "phone": "239-540-1220",
+        "url": "https://naturalfamilyphysicians.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.896257,
+          26.51493
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "neubek",
+        "enabled": true,
+        "name": "Neubek Photographers LLC",
+        "description": "A wedding and event photography company",
+        "why_on_wapf_list": "This photography company is operated by WAPF member Melissa Neubek",
+        "tags": [
+          "wapf_member_operated"
+        ],
+        "primary_tag": "wapf_member_operated",
+        "address": "6240 Shirley St, Naples, FL 34109",
+        "url": "https://neubekphotographersllc.pixieset.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.781286,
+          26.2222
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "magnutrition",
+        "enabled": true,
+        "name": "Mag-Nutrition Healthcare PLLC",
+        "description": "This office is run by acupuncturist Dr. David Hogsed and has a hyperbaric oxygen therapy (HBOT) chamber, along with pulsed electromagnetic field (PEMF) therapy",
+        "why_on_wapf_list": "This clinic sells nutritional supplements and has hyperbaric oxygen and pulsed EMF treatments available for health benefits.",
+        "tags": [
+          "healing_arts",
+          "hbot",
+          "pemf",
+          "acupuncture"
+        ],
+        "primary_tag": "hbot",
+        "address": "6831 Palisades Park Ct, #2, Fort Myers, FL 33912",
+        "url": ""
+      },
+      "geometry": {
+        "coordinates": [
+          -81.85286,
+          26.53881
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "familyfarmersfm",
+        "enabled": true,
+        "name": "The Family Farmers Farm Market",
+        "description": "A roadside market and U-pick farm which provides fresh, seasonal, local foods. They raise and sell their own organic foods including fruits, root vegetables, and honey. They also sell other fruits and veggies from local farms, and they sell local farms' raw dairy and free range eggs.",
+        "why_on_wapf_list": "This farm market provides fresh, local, seasonal foods, and they also sell local raw honey, free range eggs, and raw dairy products.",
+        "tags": [
+          "farm",
+          "market",
+          "organic_veg",
+          "raw_dairy"
+        ],
+        "primary_tag": "market",
+        "address": "14600 Tamiami Trail, Punta Gorda, FL 33955",
+        "phone": "941-301-9967",
+        "url": "https://www.thefamilyfarmersfarmmarket.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.95844,
+          26.81785
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "circlec",
+        "enabled": true,
+        "name": "Circle C Farm",
+        "description": "Farm which raises and sells: pastured eggs and chicken, grass-fed/finished beef, rabbit, goat, alligator, honey. This farm is 100% pasture raised, truly free ranging, grass fed and grass finished meats.",
+        "why_on_wapf_list": "Circle C farm raises and sells pastured eggs, chicken, grass-fed and grass-finished beef, rabbit, goat, alligator and honey. The farm uses great practices; it is 100% pasture raised, featuring truly free ranging, grass fed and grass finished meats.",
+        "tags": [
+          "farm",
+          "market"
+        ],
+        "primary_tag": "farm",
+        "address": "10441 Kentucky St., Bonita Springs, FL 34135",
+        "phone": "239-776-5802",
+        "url": "https://www.circlecfarmfl.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.779425,
+          26.336465
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "mercola",
+        "enabled": true,
+        "name": "Mercola Market of Cape Coral",
+        "description": "Mercola Market is a cafe serving a variety of organic coffee, drinks, and foods, and it is also the physical storefront to Dr. Mercola's online powerhouse market of holistic-health-minded supplements, books, and home products.",
+        "why_on_wapf_list": "Dr. Mercola is a longtime influencer in the online holistic health world. He is a beacon of speaking out against tyranny and as the author of 'The Truth About COVID-19' and a popular podcast 'Take Control of Your Health', he seeks to awaken people to agendas playing out around us. His market sells lots of nutritional supplements, healthy home products, and features biodynamically-farmed products. The cafe portion of the market features organic foods as well.",
+        "tags": [
+          "market",
+          "cafe"
+        ],
+        "primary_tag": "cafe",
+        "address": "125 SW Third Pl, Cape Coral, FL 33991",
+        "phone": "239-599-9400",
+        "url": "https://www.mercolamarketcc.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.97935,
+          26.64817
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "francis",
+        "enabled": true,
+        "name": "Francis Farm",
+        "description": "Francis Farm is on 2.5 acres located in the Ranchettes in Punta Gorda. They grow a variety of field crops, as well as microgreens. They also raise bees, chickens, turkeys, and nigerian dwarf dairy goats.",
+        "why_on_wapf_list": "They grow and sell organic microgreens and fresh chicken eggs.",
+        "tags": [
+          "farm"
+        ],
+        "primary_tag": "farm",
+        "address": "6500 Alan Blvd., Punta Gorda, FL 33982",
+        "phone": "239-470-1860",
+        "url": "https://www.francisfarmfl.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.96269,
+          26.932505
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "dehart",
+        "enabled": true,
+        "name": "DeHart Family Farm",
+        "description": "DeHart Family Farm is a small family farm that sells orgaic free range chicken eggs, qual eggs, goat milk products, and unique homemade jams and relishes.",
+        "why_on_wapf_list": "This small family farm sells organic free range eggs, goat milk products, and organic homemade products like jams and relishes.",
+        "tags": [
+          "farm",
+          "market"
+        ],
+        "primary_tag": "farm",
+        "address": "33400 Bermont Road, Punta Gorda, FL 33982",
+        "phone": "941-380-4453",
+        "url": "https://www.facebook.com/DehartFamilyFarm/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.89951,
+          26.94666
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "alday",
+        "enabled": true,
+        "name": "Alday Farm",
+        "description": "Alday Farm raises cattle and goats, producing pastured 100% grass-fed raw cow milk. It also produces raw A2/A2 goat milk (fed organic grain but no corn, soy, wheat, or barley, so it is gluten-free as well). They also have free choice non-GMO alfalfa and also eat non-GMO Lespedeza grass pellets which is a natural dewormer. This farm offers butter, cream, and other dairy. Their products are sold at various stores (their site shares vendor locations).",
+        "why_on_wapf_list": "Alday Farm raises cattle and goats, producing pastured 100% grass-fed raw cow milk. It also produces raw A2/A2 goat milk.",
+        "tags": [
+          "farm",
+          "raw_dairy"
+        ],
+        "primary_tag": "farm",
+        "address": "7304 Redge Rainey Rd, Ona, FL 33865",
+        "url": "http://www.aldayfarm.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.9799,
+          27.35381
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "betterfood",
+        "enabled": true,
+        "name": "Better Food Farm",
+        "description": "An Estero farm selling farm fresh cow and goat milk, pasture raised chicken eggs. Helen Jonas is the farmer. Pick-up at her farm on Wednesdays 10-12 or Saturdays 10-12.",
+        "why_on_wapf_list": "This farm sells pastured 100% grass-fed raw cow milk, goat milk, Greek yogurt, cream, eggs, and whey.",
+        "tags": [
+          "farm",
+          "raw_dairy"
+        ],
+        "primary_tag": "farm",
+        "address": "20500 Six LS Farm Rd, Estero, FL 33928",
+        "url": "https://www.facebook.com/BetterFoodFarm"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.66175,
+          26.44354
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "rosy",
+        "enabled": true,
+        "name": "Rosy Tomorrow's Heritage Farm",
+        "description": "This farm's AGA certified 100% grass-fed Longhorn cows, pastured Red Wattle pigs, and pastured Dominique, Australorp and Silver Laced Wyandotte chickens are heritage breeds. All are slow-growing and celebrated for the flavor of their meat and eggs. They raise them organically, holistically, sustainably, humanely, and as close to nature as possible. They also have organic veggies and a restaurant.",
+        "why_on_wapf_list": "This farm raises animals and plants organically and holistically.",
+        "tags": [
+          "farm",
+          "restaurant"
+        ],
+        "primary_tag": "restaurant",
+        "address": "8270 Nalle Grade Rd, North Fort Myers, FL 33917",
+        "phone": "239-567-6000",
+        "url": "https://rosy-tomorrows.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.820054,
+          26.755422
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "threesuns",
+        "enabled": true,
+        "name": "Three Suns Ranch",
+        "description": "Three Suns Ranch produces grass-fed beef and grass-fed bison. They have a retail store that is open on Wednesdays from 2 PM to 6 PM and Saturdays from 10 AM to 2 PM.",
+        "why_on_wapf_list": "Three Suns Ranch produces grass-fed beef and grass-fed bison.",
+        "tags": [
+          "farm",
+          "market"
+        ],
+        "primary_tag": "farm",
+        "address": "2351 SR 31, Punta Gorda, FL 33982",
+        "phone": "941-639-7070",
+        "url": "https://threesunsranch.com/purchase-meat/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.7608,
+          26.99786
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "vanderbilt",
+        "enabled": true,
+        "name": "Vanderbilt Farmers Market",
+        "description": "A year-round farmers market open Saturdays 8 AM - 1 PM",
+        "why_on_wapf_list": "This market provides community and the opportunity to buy local foods and other goods.",
+        "tags": [
+          "farmers_market"
+        ],
+        "primary_tag": "farmers_market",
+        "address": "2355 Vanderbilt Beach Rd, Naples, FL 34109",
+        "phone": "239-293-0666",
+        "url": "https://www.vanderbiltfarmersmarket.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.772069,
+          26.24568
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "pineridge",
+        "enabled": true,
+        "name": "Pine Ridge Road Farmers Market",
+        "description": "A year-round farmers market open Sundays 9 AM - 1 PM",
+        "why_on_wapf_list": "This market provides community and the opportunity to buy local foods and other goods.",
+        "tags": [
+          "farmers_market"
+        ],
+        "primary_tag": "farmers_market",
+        "address": "3370 Pine Ridge Road, Naples, FL 34105",
+        "phone": "239-200-4401",
+        "url": "http://www.naplesmarketplace.net/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.749827,
+          26.211095
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "southcollier",
+        "enabled": true,
+        "name": "South Collier Farmers Market",
+        "description": "A year-round farmers market open Fridays 9 AM - 2 PM",
+        "why_on_wapf_list": "This market provides community and the opportunity to buy local foods and other goods.",
+        "tags": [
+          "farmers_market"
+        ],
+        "primary_tag": "farmers_market",
+        "address": "6060 Collier Blvd, Naples, FL 34114",
+        "url": "https://www.facebook.com/SouthCollierFarmersMarket/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.698889,
+          26.0459
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "thirdstreet",
+        "enabled": true,
+        "name": "Third Street South Farmers Market",
+        "description": "A year-round farmers market open Saturdays 7:30 AM - 11:30 AM",
+        "why_on_wapf_list": "This market provides community and the opportunity to buy local foods and other goods.",
+        "tags": [
+          "farmers_market"
+        ],
+        "primary_tag": "farmers_market",
+        "address": "13th Avenue South, Naples, FL 34101",
+        "url": "https://thirdstreetsouth.com/the-third-street-south-farmers-market/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.79555,
+          26.13211
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "bonitafm",
+        "enabled": true,
+        "name": "Bonita Springs Farmers Market",
+        "description": "A farmers market open Saturdays and Sundays 8 AM - 1 PM",
+        "why_on_wapf_list": "This market provides community and the opportunity to buy local foods and other goods.",
+        "tags": [
+          "farmers_market"
+        ],
+        "primary_tag": "farmers_market",
+        "address": "26795 S Bay Dr, Bonita Springs, FL 34134",
+        "phone": "239-691-9249",
+        "url": "https://www.facebook.com/BonitaSpringsFarmersMarketPromenade"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.80901,
+          26.3499
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "efc",
+        "enabled": true,
+        "name": "EFC Farms",
+        "description": "A farm aiming to provide the freshest, locally grown produce in southwest Florida using all-natural organic growing techniques. They have had an on-farm market in the past, but it is currently 'to be determined'. They also do farm tours by appointment only.",
+        "why_on_wapf_list": "This farm grows aquaponic lettuce, raw honey, organic and traditional produce (fruits and veggies) and does it organically.",
+        "tags": [
+          "market",
+          "farm"
+        ],
+        "primary_tag": "farm",
+        "address": "6901 Hendry Creek, Fort Myers, FL 33908",
+        "phone": "239-288-5117",
+        "url": "https://eastforkcreek.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.8694,
+          26.51461
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "grasshopper",
+        "enabled": true,
+        "name": "Grasshopper Organics",
+        "description": "A co-op providing organic foods at wholesale prices.",
+        "why_on_wapf_list": "This is a co-op providing organic foods.",
+        "tags": [
+          "coop"
+        ],
+        "primary_tag": "coop",
+        "address": "US 41 and 96th Avenue, Naples, FL 34108",
+        "phone": "239-592-6700",
+        "url": "http://grasshopperorganics.org/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.801552,
+          26.258792
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "cornerstone",
+        "enabled": true,
+        "name": "Cornerstone Edibles Family Farm",
+        "description": "This community-oriented garden and grove is the land that supports their farm-to-table agriculture, nutrition education, and faith-rooted initiatives. Proceeds from their community vegetables, herbs and soon to be tropical fruit sales support this valued community work. They desire to become a cooperative of families that have decided to create a vibrant, sustainable place in which to live a balanced, relationally-focused life, caring for God’s creation and inspiring the people around them toward abundant kingdom homesteading.",
+        "why_on_wapf_list": "This group is looking to build community and grow food in a holistic, natural way.",
+        "tags": [
+          "community_garden",
+          "farm"
+        ],
+        "primary_tag": "community_garden",
+        "address": "8200 Immokalee Road, Naples, FL 34119",
+        "phone": "239-354-9160",
+        "url": "https://www.cornerstonenaples.org/cornerstone-edibles/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.704505,
+          26.27188
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "fullcircle",
+        "enabled": true,
+        "name": "Full Circle Real Foods",
+        "description": "This farm and several that it helps source from utilize good holistic practices in raising animals and they provide beef, chicken, eggs, pork, and raw dairy.",
+        "why_on_wapf_list": "This farm (and the ones it partners with) use no GMOs, no hormones, no vaccines, and they do not spray herbicides or harmful chemicals. They provide nutrient dense grass-fed beef, pastured pork, pastured eggs, pastured chicken, and grass-fed raw dairy.",
+        "tags": [
+          "farm",
+          "market"
+        ],
+        "primary_tag": "farm",
+        "address": "20997 174th Street, Live Oak, FL 32060",
+        "phone": "386-776-2770",
+        "url": "https://fullcirclerealfoods.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -83.18642,
+          30.13587
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "worden",
+        "enabled": true,
+        "name": "Worden Farm",
+        "description": "Worden Farm is an 85-acre family farm in Southwest Florida, USA, founded and actively run by Chris Worden, Ph.D. and Eva Worden, Ph.D., growing certified-organic crops, with sustainable, regenerative, climate-wise agricultural practices since 2003. Worden Farm produce is safe, affordable, nutrient-dense, delicious, 100% USDA-certified organic and available directly to the local community in season, Fall through Spring, through a farm box program, a members-only organic farm stand, and local farmers markets.",
+        "why_on_wapf_list": "This farm grows organic crops and tries to provide for and connect to its community.",
+        "tags": [
+          "farm",
+          "coop",
+          "organic_veg"
+        ],
+        "primary_tag": "farm",
+        "address": "34900 Bermont Rd, Punta Gorda, FL 33982",
+        "url": "https://wordenfarm.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.87699,
+          26.9469
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "jerseyacres",
+        "enabled": true,
+        "name": "Jersey Acres Farm",
+        "description": "Florida Raw Milk Producer and Provider. Jersey and Jersey cross cows grass fed on pasture that is chemical fertilizer, pesticide and herbicide free. Jersey Acres Farm provides fresh local Florida raw milk and dairy products. Their cows are out on pasture eating grass and hay 98% of the time; the food cows were meant to eat.",
+        "why_on_wapf_list": "This farm produces grass-fed raw dairy products.",
+        "tags": [
+          "farm",
+          "raw_dairy"
+        ],
+        "primary_tag": "farm",
+        "address": "13339 M&J Rd Myakka City, FL 34251",
+        "phone": "941-322-2162",
+        "url": "https://www.facebook.com/floridarawmilk/"
+      },
+      "geometry": {
+        "coordinates": [
+          -82.18281,
+          27.29719
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "williamitisfm",
+        "enabled": true,
+        "name": "Dr. Anthony Williamitis MD Fort Myers Office",
+        "description": "Dr. Williamitis is a general practitioner who also is a pediatrician. He is a true believer of 'you are what you eat'. He stresses to his patients the importance of fruits and vegetables. He also has a farm from which he grows moringa, raw honey, fruits, and raises egg-laying chickens. He even sells some of the foods he raises.",
+        "why_on_wapf_list": "Dr. Williamitis is a holistically-minded, nutrition-oriented physician and pediatrician who is in favor of bodily sovereignty and is even an organic farmer.",
+        "tags": [
+          "healing_arts",
+          "pediatrics",
+          "farm",
+          "md"
+        ],
+        "primary_tag": "md",
+        "address": "3900 Broadway Suite A-1, Fort Myers, FL 39901",
+        "phone": "239-790-9025",
+        "url": "https://anthonywilliamitismd.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.86897,
+          26.605755
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "williamitisbonita",
+        "enabled": true,
+        "name": "Dr. Anthony Williamitis MD Bonita Springs Office",
+        "description": "Dr. Williamitis is a general practitioner who also is a pediatrician. He is a true believer of 'you are what you eat'. He stresses to his patients the importance of fruits and vegetables. He also has a farm from which he grows moringa, raw honey, fruits, and raises egg-laying chickens. He even sells some of the foods he raises.",
+        "why_on_wapf_list": "Dr. Williamitis is a holistically-minded, nutrition-oriented physician and pediatrician who is in favor of bodily sovereignty and is even an organic farmer.",
+        "tags": [
+          "healing_arts",
+          "pediatrics",
+          "farm",
+          "md"
+        ],
+        "primary_tag": "md",
+        "myThing": "yellow",
+        "address": "9200 Bonita Beach Road Southeast, Bonita Springs, FL 34135",
+        "phone": "239-947-6808",
+        "url": "https://anthonywilliamitismd.com/"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.79771,
+          26.332325
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_name": "doctorbrie",
+        "enabled": true,
+        "name": "Pediatric and Perinatal Chiropractic Center",
+        "description": "Pediatric and Perinatal Chiropractic Center is a holistic chiropractic center in Fort Myers. The doctors at this office can serve as primary care provider for both children and their parents. They also have their own whole foods supplements.",
+        "why_on_wapf_list": "Dr. Brie and her teammates employ holistic and natural practices to encourage health in their patients, and they are generally in line with WAPF principles. They encourage parental freedoms and choice when it comes to vaccines.",
+        "tags": [
+          "healing_arts",
+          "chiro",
+          "pediatrics"
+        ],
+        "primary_tag": "chiro",
+        "address": "12731 World Plaza Ln. Bldg 83 Suite 1, Fort Myers Fort Myers, FL 33907",
+        "phone": "239-887-3283",
+        "url": "https://www.doctorbrie.com"
+      },
+      "geometry": {
+        "coordinates": [
+          -81.87827,
+          26.55856
+        ],
+        "type": "Point"
+      }
+    }
+  ],
+  "type": "FeatureCollection",
+  "tagDescriptions": [
+    {
+      "tag": "farm",
+      "description": "Farm",
+      "parent_category": "farming",
+      "plural_description": "Farms"
+    },
+    {
+      "tag": "market",
+      "description": "Market",
+      "parent_category": "food",
+      "plural_description": "Markets"
+    },
+    {
+      "tag": "chiro",
+      "description": "Chiropractic",
+      "parent_category": "healing_arts",
+      "plural_description": "Chiropractors"
+    },
+    {
+      "tag": "cafe",
+      "description": "Cafe",
+      "parent_category": "food",
+      "plural_description": "Cafes"
+    },
+    {
+      "tag": "restaurant",
+      "description": "Restaurant",
+      "parent_category": "food",
+      "plural_description": "Restaurants"
+    },
+    {
+      "tag": "food",
+      "description": "Food",
+      "parent_category": "food",
+      "plural_description": "Food"
+    },
+    {
+      "tag": "healing_arts",
+      "description": "Healing Arts",
+      "parent_category": "healing_arts",
+      "plural_description": "Healing Arts"
+    },
+    {
+      "tag": "md",
+      "description": "Medical Doctor",
+      "parent_category": "healing_arts",
+      "plural_description": "Medical Doctors"
+    },
+    {
+      "tag": "dental",
+      "description": "Dental",
+      "parent_category": "healing_arts",
+      "plural_description": "Dentists"
+    },
+    {
+      "tag": "pediatrics",
+      "description": "Pediatrics",
+      "parent_category": "healing_arts",
+      "plural_description": "Pediatricians"
+    },
+    {
+      "tag": "acupuncture",
+      "description": "Acupuncture",
+      "parent_category": "healing_arts",
+      "plural_description": "Acupuncturists"
+    },
+    {
+      "tag": "hbot",
+      "description": "Hyperbaric Oxygen Treatment (HBOT)",
+      "parent_category": "healing_arts",
+      "plural_description": "Hyperbaric Oxygen Treatment (HBOT)"
+    },
+    {
+      "tag": "pemf",
+      "description": "Pulsed Electromagnetic Field (PEMF) Therapy",
+      "parent_category": "healing_arts",
+      "plural_description": "Pulsed Electromagnetic Field (PEMF) Therapy"
+    },
+    {
+      "tag": "raw_dairy",
+      "description": "Raw Dairy",
+      "parent_category": "food",
+      "plural_description": "Raw Dairy"
+    },
+    {
+      "tag": "farmers_market",
+      "description": "Farmers Market",
+      "parent_category": "food",
+      "plural_description": "Farmers Markets"
+    },
+    {
+      "tag": "coop",
+      "description": "Co-operative",
+      "parent_category": "food",
+      "plural_description": "Co-operatives"
+    },
+    {
+      "tag": "community_garden",
+      "description": "Community Garden",
+      "parent_category": "food",
+      "plural_description": "Community Gardens"
+    },
+    {
+      "tag": "organic_veg",
+      "description": "Organic Produce",
+      "parent_category": "food",
+      "plural_description": "Organic Produce"
+    },
+    {
+      "tag": "grocery",
+      "description": "Grocery Store",
+      "parent_category": "food",
+      "plural_description": "Grocery Stores"
+    },
+    {
+      "tag": "wapf_member_operated",
+      "description": "Operated by WAPF Member",
+      "parent_category": "other",
+      "plural_description": "Operated by WAPF Members"
+    },
+    {
+      "tag": "cryo",
+      "description": "Cryotherapy",
+      "parent_category": "healing_arts",
+      "plural_description": "Cryotherapy"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+<!doctype html>
+<head>
+  <meta charset='utf-8' />
+  <title>{% block title %}{% endblock %}- JoeKalb.com</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1' />
+  <script src="{{url_for('static',filename='script/jquery.min.js')}}"></script>
+  {% block additional_js %}{% endblock %}
+  <link href="{{url_for('static',filename='css/holistic.css')}}" rel='stylesheet' />
+  {% block additional_css %}{% endblock %}
+  <link rel="icon" type="image/png" href="{{url_for('static',filename='wapf-favicon.png')}}">
+</head>
+<nav>
+  <h1 class="center">SWFL Holistic Resources</h1>
+</nav>
+<section class="content">
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+  {% block content %}{% endblock %}
+</section>

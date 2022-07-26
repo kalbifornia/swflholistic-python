@@ -1,0 +1,33 @@
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <title>Weston A Price Foundation - Naples Chapter Directory of Tagged Resources</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <script src="{{url_for('static',filename='script/jquery.min.js')}}"></script>
+    <script src="{{url_for('static',filename='script/wapf.js')}}"></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+    <link rel="icon" type="image/png" href="{{url_for('static',filename='wapf-favicon.png')}}">
+    <link href="{{url_for('static',filename='css/holistic.css')}}" rel='stylesheet' />
+  </head>
+  <body>
+    <script>
+      function viewFeature(short_name) {
+        window.location.href="/feature/" + short_name;
+      }
+    </script>
+    <div class="divViewDetailsContainer" id="divTagDetails">
+      {% if tag == None %}
+        There is no tag in the data set with this identifier.
+      {% else %}
+        <h2>WAPF Naples Resources Tagged as "{{tag.description}}"</h2>
+        {% for feature in tag.features %}
+          <div class="divTaggedItem">
+            <h3>{{feature.name}}</h3>
+            <button class="button-view-details" id="button-view-feature-{{feature.short_name}}" onclick="viewFeature('{{feature.short_name}}')">View Details</button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+    <div class="divReturnHome center"><a href="/">Return to Home Page (with Map)</a></div>
+  </body>
+</html>

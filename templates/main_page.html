@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+
+{%block title %}SWFL Holistic Resources{% endblock %}
+
+{%block additional_css %}
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+{% endblock %}
+{%block additional_js %}
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+{% endblock %}
+
+{%block content %}
+  {% set farm_features = [] %}
+  {% set healing_arts_features = [] %}
+  {% set food_features = [] %}
+  {% set other_features = [] %}
+  {% for feature in features %}
+    {% if feature.primary_tag_obj.parent_category == "farm" %}
+      {% do farm_features.append(feature) %}
+    {% elif feature.primary_tag_obj.parent_category == "healing_arts" %}
+      {% do healing_arts_features.append(feature) %}
+    {% elif feature.primary_tag_obj.parent_category == "food" %}
+      {% do food_features.append(feature) %}
+    {% elif feature.primary_tag_obj.parent_category == "other" %}
+      {% do other_features.append(feature) %}
+    {% endif %}
+  {% endfor %}
+
+  <div class="divMainHeader center">
+    <h1>Resource Map</h1>
+  </div>
+  <div id="map" class="divMap">
+    <!-- Will be filled in by JavaScript -->
+  </div>
+  <div id="directory" class="divDirectory">
+    <h2 class="center"><a href="#directory">Directory</a></h2>
+    <p class="">Note: This directory was initially created for the <a href="https://westonaprice.org">Weston A. Price Foundation</a> - Naples chapter</p>
+    <div id="farmingCategory" class="divParentCategory">
+      {% set feature_primary_tags = [] %}
+      {% for feature in farm_features %}
+        {% if feature.primary_tag_obj not in feature_primary_tags %}
+          {% do feature_primary_tags.append(feature.primary_tag_obj) %}
+        {% endif %}
+      {% endfor %}
+      {% for primary_tag in feature_primary_tags %}
+        <div id="primary-tag-{{primary_tag.tag_name}}" class="divPrimaryTag"><h3>{{primary_tag.plural_description}}</h3></div>
+        {% for feature in farm_features %}
+          {% if feature.primary_tag_obj == primary_tag %}
+            <div class="divDirectoryItem">
+              <p class="divDirectoryItemName"><a href="feature/{{feature.short_name}}">{{feature.name}}</a></p>
+              <p>{{feature.description}}</p>
+              <p>{{feature.address}}</p>
+              {% if feature.phone != none and feature.phone != "XXXXX" %}
+                <p>{{feature.phone}}</p>
+              {% endif %}
+              <button class="button-view-on-map" id="button-view-on-map-${{feature.short_name}}" onclick="onClickFeature({{feature.longitude}},{{feature.latitude}})" type="button">View on Map</button>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div>
+    <div id="healingArtsCategory" class="divParentCategory">
+      {% set feature_primary_tags = [] %}
+      {% for feature in healing_arts_features %}
+        {% if feature.primary_tag_obj not in feature_primary_tags %}
+          {% do feature_primary_tags.append(feature.primary_tag_obj) %}
+        {% endif %}
+      {% endfor %}
+      {% for primary_tag in feature_primary_tags %}
+        <div id="primary-tag-{{primary_tag.tag_name}}" class="divPrimaryTag"><h3>{{primary_tag.plural_description}}</h3></div>
+        {% for feature in healing_arts_features %}
+          {% if feature.primary_tag_obj == primary_tag %}
+            <div class="divDirectoryItem">
+              <p class="divDirectoryItemName"><a href="feature/{{feature.short_name}}">{{feature.name}}</a></p>
+              <p>{{feature.description}}</p>
+              <p>{{feature.address}}</p>
+              {% if feature.phone != none and feature.phone != "XXXXX" %}
+                <p>{{feature.phone}}</p>
+              {% endif %}
+              <button class="button-view-on-map" id="button-view-on-map-${{feature.short_name}}" onclick="onClickFeature({{feature.longitude}},{{feature.latitude}})" type="button">View on Map</button>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div>
+    <div id="foodCategory" class="divParentCategory">
+      {% set feature_primary_tags = [] %}
+      {% for feature in food_features %}
+        {% if feature.primary_tag_obj not in feature_primary_tags %}
+          {% do feature_primary_tags.append(feature.primary_tag_obj) %}
+        {% endif %}
+      {% endfor %}
+      {% for primary_tag in feature_primary_tags %}
+        <div id="primary-tag-{{primary_tag.tag_name}}" class="divPrimaryTag"><h3>{{primary_tag.plural_description}}</h3></div>
+        {% for feature in food_features %}
+          {% if feature.primary_tag_obj == primary_tag %}
+            <div class="divDirectoryItem">
+              <p class="divDirectoryItemName"><a href="feature/{{feature.short_name}}">{{feature.name}}</a></p>
+              <p>{{feature.description}}</p>
+              <p>{{feature.address}}</p>
+              {% if feature.phone != none and feature.phone != "XXXXX" %}
+                <p>{{feature.phone}}</p>
+              {% endif %}
+              <button class="button-view-on-map" id="button-view-on-map-${{feature.short_name}}" onclick="onClickFeature({{feature.longitude}},{{feature.latitude}})" type="button">View on Map</button>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div>
+    <div id="otherCategory" class="divParentCategory">
+      {% set feature_primary_tags = [] %}
+      {% for feature in other_features %}
+        {% if feature.primary_tag_obj not in feature_primary_tags %}
+          {% do feature_primary_tags.append(feature.primary_tag_obj) %}
+        {% endif %}
+      {% endfor %}
+      {% for primary_tag in feature_primary_tags %}
+        <div id="primary-tag-{{primary_tag.tag_name}}" class="divPrimaryTag"><h3>{{primary_tag.plural_description}}</h3></div>
+        {% for feature in other_features %}
+          {% if feature.primary_tag_obj == primary_tag %}
+            <div class="divDirectoryItem">
+              <p class="divDirectoryItemName"><a href="feature/{{feature.short_name}}">{{feature.name}}</a></p>
+              <p>{{feature.description}}</p>
+              <p>{{feature.address}}</p>
+              {% if feature.phone != none and feature.phone != "XXXXX" %}
+                <p>{{feature.phone}}</p>
+              {% endif %}
+              <button class="button-view-on-map" id="button-view-on-map-${{feature.short_name}}" onclick="onClickFeature({{feature.longitude}},{{feature.latitude}})" type="button">View on Map</button>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <script>
+  // The value for 'accessToken' begins with 'pk...'
+  mapboxgl.accessToken = 'pk.eyJ1Ijoia2FsYmlmb3JuaWEiLCJhIjoiY2w1MXBoczRkMDRjazNjbjlhandjZ3ZpciJ9.mjBOUTv1mm-zgQ2rvUlRvQ';
+  var naplesCenterCoordinates = [-81.794294, 26.142198];
+  var geoJsonData = {{geo_json_data|safe}};
+  var tagsMapData = {{tags_map_data|safe}};
+
+  const map = new mapboxgl.Map({
+    container: 'map',
+    // Replace YOUR_STYLE_URL with your style URL.
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: naplesCenterCoordinates,
+    zoom: 6.5
+  });
+
+  // Add zoom and rotation controls to the map.
+  map.addControl(new mapboxgl.NavigationControl());
+
+  function onClickFeature(lng,lat) {
+    $('html, body').animate({
+        scrollTop: $("#map").offset().top
+    }, 200);
+
+    map.flyTo({
+      center: [lng,lat],
+      essential: false,
+      zoom: 15
+    });
+  }
+
+  function populateMapWithMarkers() {
+    for (const feature of geoJsonData.features) {
+      const el = document.createElement("div");
+
+      if (feature.properties.primary_tag == "farm") {
+        el.className = "marker marker-farm";
+      } else {
+        el.className = "marker marker-default";
+      }
+
+      tagURLs = [];
+      for (const tag of feature.properties.tags) {
+        console.log(tag);
+        console.log(tagsMapData[tag].description);
+        var tagURL = `<a href="/tag/${tag}">${tagsMapData[tag].description}</a>`;
+        tagURLs.push(tagURL);
+      }
+
+      var htmlToDisplay = `<h3>${feature.properties.name}</h3>
+      <p>${feature.properties.address}</p>
+      <p>Tagged as: ${tagURLs.join(", ")}</p>
+      <button class="button-view-details" id="button-view-details-${feature.properties.short_name}">View Details</button>`;
+      $(document).on('click', `#button-view-details-${feature.properties.short_name}`, function() {
+        window.location.href="/feature/${feature.properties.short_name}";
+      });
+
+      new mapboxgl.Marker(el)
+        .setLngLat(feature.geometry.coordinates)
+        .setPopup(
+          new mapboxgl.Popup({maxWidth: "300px"})
+            .setHTML(htmlToDisplay)
+        ).addTo(map);
+      }
+  }
+
+  map.on('load', () => {
+    populateMapWithMarkers();
+  });
+
+  </script>
+{% endblock %}
