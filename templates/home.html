@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{%block title %}About This Holistic Resources Directory{% endblock %}
+
+{%block content %}
+  <div class="divMainHeader center">
+    <h1>Holistic Resources Directory</h1>
+  </div>
+  <div class="divContent center">
+    <label for="select-area center"><h3>Select a WAPF Chapter Map</h3></label>
+    <select class="selectArea largeSelect center" id="select-area">
+      <option value="none" selected disabled hidden>Choose</option>
+      {% for loopArea in areas %}
+      <option value="{{loopArea.short_name}}">{{loopArea.wapf_chapter_name}}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="divContent">This directory (and the maps included) are here to help people find good holistic health resources in their area. The directory started out as a PDF document put together by the leader of the <a href="https://westonaprice.org">Weston A. Price Foundation</a> - Naples chapter. A WAPF member, software developer Joe Kalb, thought it might be useful to have the directory accessible online with the locations mapped out. So he created this site: it is currently set up to support one map per WAPF chapter.</div>
+  <div class="divContent">Feel free to check out the map for a specific WAPF chapter below, or <a href="/holistic/addfeature">add a resouce</a> to the directory.</div>
+
+  <script>
+  $('#select-area').change(function() {
+    window.location.href=`/holistic/area/${$(this).val()}`;
+  });
+
+  </script>
+{% endblock %}
