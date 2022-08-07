@@ -28,7 +28,19 @@
 
   <div class="divMainHeader center">
     <h1>{{area.short_display_name}} Holistic Resource Map</h1>
-    <a href="#directory">Jump to Directory</a>
+    <div class="flex-center">
+      <div>
+        <a href="#directory">Jump to Directory</a>
+      </div>
+      <div>
+        <select class="selectArea" id="select-area">
+          <option value="none" selected disabled hidden>Choose Another Map</option>
+          {% for loopArea in areas %}
+          <option value="{{loopArea.short_name}}">{{loopArea.wapf_chapter_name}}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
   </div>
   <div id="map" class="divMap">
     <!-- Will be filled in by JavaScript -->
