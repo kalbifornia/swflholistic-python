@@ -12,6 +12,7 @@ class Feature(db.Model):
     description = Column("description",String(1000))
     why_on_wapf_list = Column("why_on_wapf_list",String(1000))
     tags = relationship("Tag",secondary="featuretag", order_by="FeatureTag.tag_name", back_populates="features")
+    areas = relationship("Area",secondary="areafeature", order_by="AreaFeature.area_short_name", back_populates="features")
     primary_tag = Column("primary_tag",String(20),ForeignKey("tag.tag_name"))
     primary_tag_obj = relationship("Tag",back_populates="features_primary_tag_for")
     longitude = Column("longitude",Float)
@@ -65,6 +66,21 @@ class Tag(db.Model):
         }
         return j
 
+class Area(db.Model):
+    __tablename__ = "area"
+    short_name = Column("short_name",String(20),primary_key=True)
+    short_display_name = Column("short_display_name",String(30))
+    name = Column("name",String(100))
+    wapf_chapter_name = Column("wapf_chapter_name",String(100))
+    longitude = Column("longitude",Float)
+    latitude = Column("latitude",Float)
+    features = relationship("Feature",secondary="areafeature", order_by="AreaFeature.feature_short_name", back_populates="areas")
+
+class AreaFeature(db.Model):
+    __tablename__ = "areafeature"
+    area_short_name = Column("area_short_name",String(20),ForeignKey("area.short_name"))
+    feature_short_name = Column("feature_short_name",String(20),ForeignKey("feature.short_name"))
+    __table_args__ = (PrimaryKeyConstraint("area_short_name","feature_short_name"),)
 
 class FeatureTag(db.Model):
     __tablename__ = "featuretag"

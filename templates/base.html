@@ -6,15 +6,35 @@
   <script src="{{url_for('static',filename='script/jquery.min.js')}}"></script>
   {% block additional_js %}{% endblock %}
   <link href="{{url_for('static',filename='css/holistic.css')}}" rel='stylesheet' />
+  <link href="{{url_for('static',filename='fontawesome-free-5.15.4-web/css/all.min.css')}}" rel='stylesheet' />
   {% block additional_css %}{% endblock %}
   <link rel="icon" type="image/png" href="{{url_for('static',filename='wapf-favicon.png')}}">
 </head>
-<nav>
-  <h1 class="center">SWFL Holistic Resources</h1>
-</nav>
 <section class="content">
   <header>
-    {% block header %}{% endblock %}
+    <div class="navbar">
+      <a href="/holistic"><img src="{{url_for('static',filename='png/holistic-resources.png')}}" height="50" width="50" /></a>
+      <nav>
+        <ul>
+          <li class="desktop-only"><a class="navbar-link" href="/holistic/">Home</a></li>
+          <li class="desktop-only"><a class="navbar-link" href="/holistic/addfeature">Add a Resource</a></li>
+
+          <li>
+            <i tabindex="0" id="navbar-dropdown" class="fas fa-bars fa-2x circle-background navbar-icon mobile-only"></i>
+            <div id="navbar-dropdown-content" class="dropdown-content invisible">
+              <ul class="dropdown-ul">
+                <li id="navbar-dropdown-home" class="navbar-dropdown-item" tabindex="0">Home</li>
+                <li id="navbar-dropdown-share" class="navbar-dropdown-item" tabindex="0">Share a Reversal</li>
+                <li id="navbar-dropdown-about" class="navbar-dropdown-item" tabindex="0">About</li>
+                <li id="navbar-dropdown-contact" class="navbar-dropdown-item" tabindex="0">Contact</li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="navbar-space-filler">
+    </div>
   </header>
   {% block content %}{% endblock %}
 </section>

@@ -1,16 +1,52 @@
+:root {
+  --navbar-height: 60px;
+}
+
+* {
+   box-sizing: border-box;
+   padding: 0;
+   margin: 0;
+}
+
 body {
   font-family: Helvetica, Arial, sans-serif;
   margin: 0;
   padding: 0;
 }
 
+div.divMainHeader {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+div.divMainHeader h1 {
+  margin-bottom: 5px;
+}
+
 .center {
   text-align: center;
 }
 
+div.divViewDetailsSection {
+  margin-top: 15px;
+  margin-left: 15px;
+  margin-bottom: 15px;
+}
+
+div.divViewDetailsSection p {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+div.divViewDetailsSubsection {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
 div.divMap {
   position: relative;
-  width: 100vw;
+  left: 2vw;
+  width: 96vw;
   height: 60vh;
 }
 
@@ -39,29 +75,57 @@ div.divMap {
 }
 
 .divDirectory {
-  padding: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 15px;
+  padding-top: 30px;
+}
+
+.aNoStyle {
+  color: black;
+  text-decoration: none;
+}
+
+div.divContent {
+  padding: 10px;
+}
+
+div.divContent label {
+  display: block;
 }
 
 .divDirectoryItem {
+  margin-top: 10px;
   padding-bottom: 5px;
   padding-left: 15px;
-  border-bottom-style: solid;
+  /*border-bottom-style: solid;
   border-bottom-width: 3px;
-  border-bottom-color: gray;
+  border-bottom-color: gray;*/
 }
 
-.divPrimaryTag {
-  border-top-width: 3px;
-  border-top-color: red;
-  border-top-style: solid;
+.divDirectoryItem div {
+  margin-bottom: 10px;
 }
 
-.divPrimaryTag h3 {
-  text-transform: uppercase;
+.divDirectoryItem div.divDirectoryItemName {
+  margin-bottom: 5px;
 }
 
 .divDirectoryItemName {
   font-weight: bold;
+  margin-bottom: 0px;
+}
+
+.divPrimaryTag {
+  border-top-width: 5px;
+  border-top-color: darkred;
+  border-top-style: solid;
+  margin-top: 10px;
+}
+
+.divPrimaryTag h3 {
+  /*text-transform: uppercase;*/
+  margin-top: 10px;
 }
 
 .divDirectoryItemInfo {
@@ -70,4 +134,134 @@ div.divMap {
 
 .divViewDetailsContainer {
   padding: 15px;
+}
+
+.invisible {
+  display: none;
+}
+
+.navbar {
+  /*background-color: red;*/
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--navbar-height);
+  width: 100%;
+  top: 0px;
+  padding-left: 5vw;
+  padding-right: 5vw;
+  background-color: lightgray;
+  z-index: 2; /*This is to get in front of the selectize inputs with z-index 1*/
+}
+
+.navbar-space-filler {
+  height: var(--navbar-height);
+}
+
+.navbar ul {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+
+i.navbar-icon {
+  margin: 0 15px;
+  color: var(--dr-light-blue);
+  cursor: pointer;
+  margin-right: 15px;
+}
+
+.navbar-link {
+  text-decoration: none;
+  font-weight: bold;
+  padding-right: 20px;
+  justify-content: center;
+}
+
+a.navbar-link:visited {
+  color: var(--dr-light-blue);
+}
+
+i.circle-background {
+  display: inline-block;
+  border-radius: 60px;
+  padding: 0.5em 0.5em;
+  background-color: lightgray;
+}
+
+li.navbar-dropdown-item {
+  color: var(--dr-light-blue);
+  font-family: var(--h1-font);
+  cursor: pointer;
+  font-weight: bold;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+li.navbar-dropdown-item:hover {
+  background-color: lightgray;
+}
+
+.mobile-only, i.mobile-only {
+  display: none;
+}
+
+div.error-details {
+  color: red;
+}
+
+select.largeSelect {
+  font-size: 24px;
+}
+
+div.new-feature-content {
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+div.new-feature-input {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+div.new-feature-input label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+div.new-feature-input label span.smallText {
+  font-size: 10px;
+}
+
+div.new-feature-input input {
+  width: 80vw;
+  padding: 10px;
+  border-radius: 10px;
+  border-width: 1px;
+}
+
+div.new-feature-input select {
+  padding: 5px;
+  border-radius: 10px;
+  border-width: 1px;
+}
+
+div.new-feature-input textarea {
+  width: 80vw;
+  padding: 5px;
+  border-radius: 10px;
+  border-width: 1px;
+  resize: none;
+}
+
+button.standard-button {
+  padding: 10px;
+  border-width: 2px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
 }

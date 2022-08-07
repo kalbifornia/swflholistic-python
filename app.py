@@ -1,10 +1,15 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, request
 from flask_graphql import GraphQLView
 from flask_sqlalchemy import SQLAlchemy
 import typing
 import graphene
 import os
 import json
+from sqlalchemy.exc import IntegrityError
+import traceback
+import werkzeug
+import smtplib
+from smtplib import SMTPException
 
 app = Flask(__name__)
 app.jinja_env.add_extension('jinja2.ext.do')
@@ -15,12 +20,35 @@ db = SQLAlchemy(app)
 
 from models import Feature as FeatureModel
 from models import Tag as TagModel
+from models import Area as AreaModel
 
-def generate_geo_json_data():
+
+def send_success_email(payload):
+    sender = 'from@fromdomain.com'
+    receivers = ['joekalb@protonmail.com']
+
+    message = """From: From Person <from@fromdomain.com>
+To: Joe Kalb <joekalb@protonmail.com>
+Subject: SMTP e-mail test
+
+This is a test e-mail message.
+"""
+
+    try:
+        smtpObj = smtplib.SMTP('localhost')
+        smtpObj.sendmail(sender,receivers,message)
+        print("Successfully sent email")
+    except Exception:
+        traceback.print_exc()
+        print("Error: unable to send email")
+
+
+def generate_geo_json_data(area):
     features_json_dicts = []
-    all_enabled_features = FeatureModel.query.filter_by(enabled=True)
-    for feature in all_enabled_features:
-        features_json_dicts.append(feature.to_json_dict())
+
+    for feature in area.features:
+        if feature.enabled:
+            features_json_dicts.append(feature.to_json_dict())
 
     j = {
         "features": features_json_dicts,
@@ -57,8 +85,10 @@ def generate_tags_map_data():
 
 def load_database_from_json():
     json_obj = ""
-    with open("static/json/wapf-naples.json", "r") as json_file:
+    with open("./static/json/wapf-naples.json", "r") as json_file:
         json_obj = json.load(json_file)
+
+    swfl_area_model = AreaModel(short_name="swfl",name="Southwest Florida",wapf_chapter_name="WAPF Naples Chapter",short_display_name="SWFL",latitude=26.142198,longitude=-81.794294)
 
     for tag in json_obj['tagDescriptions']:
         tm = TagModel(tag_name=tag['tag'],
@@ -90,6 +120,7 @@ def load_database_from_json():
         for tag in feature['properties']['tags']:
             print(tag)
             fm.tags.append(TagModel.query.filter_by(tag_name=tag).first())
+        fm.areas.append(swfl_area_model)
         db.session.add(fm)
 
     db.session.commit()
@@ -114,84 +145,233 @@ def generate_json_from_database():
 
     return json.dumps(j,indent=2)
 
-@app.route("/")
-def index():
-    geo_json_data = generate_geo_json_data()
-    tags_map_data = generate_tags_map_data()
-    all_enabled_features = FeatureModel.query.filter_by(enabled=True)
-    return render_template("main_page.html",features=all_enabled_features,geo_json_data=geo_json_data,tags_map_data=tags_map_data)
+@app.route("/holistic")
+def holistic_home_page_redirect():
+    return redirect("/holistic/");
 
-@app.route("/feature/<short_name>")
+@app.route("/holistic/")
+def holistic_home():
+    all_areas = AreaModel.query.all()
+    return render_template("home.html",areas=all_areas)
+
+@app.route("/swflholistic")
+def swflholistic_redirect():
+    return redirect("/holistic/area/swfl")
+
+@app.route("/swflholistic/viewtag.html")
+def viewtag_redirect():
+    return redirect("/holistic/tag/{tag}".format(tag=request.args.get("tag")))
+
+@app.route("/swflholistic/viewdetail.html")
+def viewdetail_redirect():
+    return redirect("/holistic/feature/{feature_short_name}".format(feature_short_name=request.args.get("short_name")))
+
+
+@app.route("/holistic/area/<area_short_name>")
+def index(area_short_name):
+    area = AreaModel.query.filter_by(short_name=area_short_name).first()
+    areas = AreaModel.query.all()
+    if area == None:
+        return "No area in data set with identifier {area_short_name}".format(area_short_name=area_short_name)
+    geo_json_data = generate_geo_json_data(area)
+    tags_map_data = generate_tags_map_data()
+    area_enabled_features = []
+    for feature in area.features:
+        if feature.enabled:
+            area_enabled_features.append(feature)
+    return render_template("main_page.html",features=area_enabled_features,geo_json_data=geo_json_data,tags_map_data=tags_map_data,area=area,areas=areas)
+
+@app.route("/holistic/feature/<short_name>")
 def featurePage(short_name):
     feature = FeatureModel.query.filter_by(short_name = short_name, enabled = True).first()
     return render_template("feature.html",feature=feature)
 
-@app.route("/tag/<tag_name>")
+@app.route("/holistic/tag/<tag_name>")
 def tagPage(tag_name):
     tag = TagModel.query.filter_by(tag_name = tag_name).first()
     print(tag.features)
     return render_template("tag.html",tag=tag)
 
-@app.route("/viewdetails.html")
-def details():
-    return render_template("viewdetails.html")
-
-@app.route("/viewtag.html")
-def tag():
-    return render_template("viewtag.html")
-
-@app.route("/load-json-from-database")
+@app.route("/holistic/load-json-from-database")
 def build_json_from_database():
     return generate_json_from_database()
 
-@app.route("/load-database-from-json-XYZ")
+@app.route("/holistic/load-database-from-json-XYZ")
 def load_database_from_json_xyz():
     load_database_from_json()
     return "Loaded the database."
 
-@app.route("/do-the-load")
-def do_the_load():
-    feature1 = FeatureModel(short_name="dagostino",enabled=True,name="D'Agostino Chiropractic",description="Family chiropractic center which aims to help their patients thrive by correcting their underlying structural and chemical health imbalances by scientifically utilizing natural healing methods",why_on_wapf_list="Dr. D'Agostino is a WAPF member who utilizes diet and other natural healing methods",primary_tag="chiro",address="1338 Del Prado Blvd S, Cape Coral, FL 33990",phone="239-573-8918",url="https://www.drtonycapecoral.com",longitude=-81.940857,latitude=26.627038,type="Point")
-    feature2 = FeatureModel(short_name="doctorbrie",enabled=True,name="Pediatric and Perinatal Chiropractic Center",description="Pediatric and Perinatal Chiropractic Center is a holistic chiropractic center in Fort Myers. The doctors at this office can serve as primary care provider for both children and their parents. They also have their own whole foods supplements.",why_on_wapf_list="Dr. Brie and her teammates employ holistic and natural practices to encourage health in their patients, and they are generally in line with WAPF principles. They encourage parental freedoms and choice when it comes to vaccines.",primary_tag="chiro",address="12731 World Plaza Ln. Bldg 83 Suite 1, Fort Myers Fort Myers, FL 33907",phone="239-887-3283",url="https://www.doctorbrie.com",longitude=-81.87827,latitude=26.55856,type="Point")
+@app.route("/holistic/addfeature")
+def add_feature():
+    all_areas = AreaModel.query.all()
+    all_tags = TagModel.query.all()
+    return render_template("new_feature.html",all_areas=all_areas,all_tags=all_tags)
 
-    chiro_tag = TagModel(tag_name="chiro",description="Chiropractic",plural_description="Chiropractors",parent_category="healing_arts")
-    wapf_member_operated_tag = TagModel(tag_name="wapf_member_operated",description="Operated by WAPF Member",plural_description="Operated by WAPF Members",parent_category="other")
-    healing_arts_tag = TagModel(tag_name="healing_arts",description="Healing Arts",plural_description="Healing Arts",parent_category="healing_arts")
-    pediatrics_tag = TagModel(tag_name="pediatrics",description="Pediatrics",parent_category="healing_arts",plural_description="Pediatricians")
+@app.route("/holistic/api/feature", methods = ['POST'])
+def api_feature():
+    try:
+        print("\r\n\r\n\r\n\r\n")
+        print("Before get_json(), request is: {request}".format(request=request))
+        input_payload = request.get_json()
 
-    feature1.tags.append(chiro_tag)
-    feature1.tags.append(wapf_member_operated_tag)
-    feature1.tags.append(healing_arts_tag)
+        print("Loaded input_payload {input_payload}".format(input_payload=input_payload))
 
-    feature2.tags.append(chiro_tag)
-    feature2.tags.append(healing_arts_tag)
-    feature2.tags.append(pediatrics_tag)
+        name = None
+        enabled = None
+        short_name = None #not required
+        description = None
+        why_on_wapf_list = None
+        longitude = None
+        latitude = None
+        primary_tag = None
+        address = None
+        phone = None    #not required
+        url = None  #not required
+        type = None
 
-    db.session.add(feature1)
-    db.session.add(feature2)
-    db.session.commit()
+        try:
+            name = input_payload["name"]
+            enabled = input_payload["enabled"]
+            description = input_payload["description"]
+            why_on_wapf_list = input_payload["why_on_wapf_list"]
+            longitude = input_payload["longitude"]
+            latitude = input_payload["latitude"]
+            primary_tag = input_payload["primary_tag"]
+            address = input_payload["address"]
+            type = input_payload["type"]
+        except KeyError as ke:
+            error_j = {"status":"error","error_message":"Missing required field {key}".format(key=ke)}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
 
-    tags_json_dicts = []
-    allTags = TagModel.query.all()
-    for tag in allTags:
-        tags_json_dicts.append(tag.to_json_dict())
+        try:
+            short_name = input_payload["short_name"]
+        except KeyError as ke:
+            print("optional field short_name not entered")
 
-    j = {
-        "features": [feature1.to_json_dict(),feature2.to_json_dict()],
-        "type": "FeatureCollection",
-        "tagDescriptions": tags_json_dicts,
+        try:
+            phone = input_payload["phone"]
+        except KeyError as ke:
+            print("optional field phone not entered")
 
-    }
+        try:
+            url = input_payload["url"]
+        except KeyError as ke:
+            print("optional field url not entered")
 
-    json_output = json.dumps(j,indent=2)
+        if short_name != None and not isinstance(short_name,str):
+            error_j = {"status":"error","error_message":"short_name must be of type string."}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
 
-    output = "Did the load... {json_output}.".format(json_output=json_output)
+        if short_name == None or short_name == "":
+            short_name = "autogen"
 
-    with open("static/json/new_json.json", "w") as fo:
-        fo.write(json_output)
+        f = FeatureModel.query.filter_by(short_name=short_name).first()
+        if f != None:
+            i = 0
+            while True:
+                str_gen_short_name = "{short_name}{i}".format(short_name=short_name,i=i)
+                f = FeatureModel.query.filter_by(short_name=str_gen_short_name).first()
+                if f != None:
+                    i = i + 1
+                else:
+                    short_name = str_gen_short_name
+                    break
 
-    return output
+        if not isinstance(name,str) or name == "":
+            error_j = {"status":"error","error_message":"name must have a string value with length >= 1."}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+        elif not isinstance(enabled,bool):
+            error_j = {"status":"error","error_message":"enabled must have a boolean value."}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+        elif not isinstance(description,str) or description == "":
+            error_j = {"status":"error","error_message":"description must have a string value with length >= 1."}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+        elif not isinstance(why_on_wapf_list,str) or why_on_wapf_list == "":
+            error_j = {"status":"error","error_message":"why_on_wapf_list must have a string value with length >= 1."}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+        elif not isinstance(longitude,float):
+            error_j = {"status":"error","error_message":"longitude must be a float"}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+        elif not isinstance(latitude,float):
+            error_j = {"status":"error","error_message":"latitude must be a float"}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+        elif not isinstance(primary_tag,str) or primary_tag == "":
+            error_j = {"status":"error","error_message":"primary_tag must have a string value with length >= 1"}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+        elif TagModel.query.filter_by(tag_name=primary_tag).first() == None:
+            error_j = {"status":"error","error_message":"Entered primary_tag {primary_tag} is not a valid value.".format(primary_tag=primary_tag)}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+        elif not isinstance(address,str) or address == "":
+            error_j = {"status":"error","error_message":"address must have a string value with length >= 1."}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+        elif not isinstance(type,str) or type == "":
+            error_j = {"status":"error","error_message":"type must have a string value with length >= 1."}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
 
+        tags = input_payload["tags"]
+        areas = input_payload["areas"]
+
+        new_fm = FeatureModel(name=name,
+            enabled=enabled,
+            short_name=short_name,
+            description=description,
+            why_on_wapf_list=why_on_wapf_list,
+            longitude=longitude,
+            latitude=latitude,
+            primary_tag=primary_tag,
+            address=address,
+            phone=phone,url=url,
+            type=type)
+
+        for tag in tags:
+            tm = TagModel.query.filter_by(tag_name=tag).first()
+            if tm != None:
+                new_fm.tags.append(tm)
+            else:
+                error_j = {"status":"error","error_message":"tags entry '{tag_name}' is invalid.".format(tag_name=tag)}
+                return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+
+
+        for area in areas:
+            am = AreaModel.query.filter_by(short_name=area).first()
+            if am != None:
+                new_fm.areas.append(am)
+            else:
+                error_j = {"status":"error","error_message":"areas entry '{area_short_name}' is invalid.".format(area_short_name=area)}
+                return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+
+        db.session.add(new_fm)
+        db.session.commit()
+
+        send_success_email(input_payload)
+
+        success_j = j = {
+            "status": "success",
+            "short_name": short_name
+        }
+        return json.dumps(success_j),200,{'Content-Type': 'application/json'}
+    except werkzeug.exceptions.BadRequest as br:
+        traceback.print_exc()
+        error_j = {
+            "status":"error",
+            "error_message":str(br)
+        }
+        return json.dumps(error_j),400,{'Content-Type': 'application/json'}
+    except IntegrityError as ie:
+        traceback.print_exc()
+        error_j = {
+            "status":"error",
+            "error_message":"Could not insert feature into database; data integrity error (technical issue). Details: {details}".format(details=str(ie))
+        }
+        return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+    except Exception as ex:
+        traceback.print_exc()
+        error_message = "Could not insert feature into database. Technical reason: {reason}".format(reason=str(ex))
+        error_j = {
+            "status":"error",
+            "error_message":error_message
+        }
+        return json.dumps(error_j),500,{'Content-Type': 'application/json'}
 
 if __name__ == "__main__":
     app.run()
