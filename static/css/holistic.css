@@ -55,9 +55,28 @@ div.divViewDetailsSubsection {
 
 div.divMap {
   position: relative;
-  left: 2vw;
-  width: 96vw;
+  width: 100vw;
   height: 60vh;
+}
+
+div.divMapCheckboxes {
+  background-color: lightgray;
+  border-color: black;
+  border-width: 1px;
+  border-style: solid;
+  position: absolute;
+  top: 5px;
+  right: 0px;
+  z-index: 10;
+  padding: 5px;
+}
+
+div.divMapCheckboxes label {
+  font-weight: bold;
+}
+
+div.divMapContainer {
+  position: relative;
 }
 
 .marker {
@@ -162,7 +181,7 @@ div.divContent label {
   padding-left: 5vw;
   padding-right: 5vw;
   background-color: lightgray;
-  z-index: 2; /*This is to get in front of the selectize inputs with z-index 1*/
+  z-index: 20; /*This is to get in front of the selectize inputs with z-index 1*/
 }
 
 .navbar-space-filler {

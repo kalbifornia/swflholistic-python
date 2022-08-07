@@ -42,8 +42,14 @@
       </div>
     </div>
   </div>
-  <div id="map" class="divMap">
-    <!-- Will be filled in by JavaScript -->
+  <div id="div-map-container" class="divMapContainer">
+    <div id="map" class="divMap">
+      <!-- Will be filled in by JavaScript -->
+    </div>
+    <div id="div-map-checkboxes" class="divMapCheckboxes">
+      <label for="input-scroll-zoom">Scroll Zoom</label>
+      <input id="input-scroll-zoom" type="checkbox" />
+    </div>
   </div>
   <a name="directory"></a>
   <div id="divDirectory" class="divDirectory">
@@ -170,7 +176,18 @@
   });
 
   // Add zoom and rotation controls to the map.
-  map.addControl(new mapboxgl.NavigationControl());
+  map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+
+  // disable map zoom when using scroll
+  map.scrollZoom.disable();
+
+  function onClickScrollZoom() {
+    if ($('#input-scroll-zoom').is(":checked")) {
+      map.scrollZoom.enable();
+    } else {
+      map.scrollZoom.disable();
+    }
+  }
 
   function onClickFeature(lng,lat) {
     $('html, body').animate({
@@ -223,6 +240,10 @@
 
   $('#select-area').change(function() {
     window.location.href=`/holistic/area/${$(this).val()}`;
+  });
+
+  $('#input-scroll-zoom').change(function() {
+    onClickScrollZoom();
   });
 
   </script>
