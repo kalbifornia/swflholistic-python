@@ -16,6 +16,7 @@ app.jinja_env.add_extension('jinja2.ext.do')
 app.config.from_file(os.path.join(".", "config/default_app_config.json"), load=json.load,silent=False)  #default settings
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("SQLALCHEMY_DATABASE_URI","Specified environment variable is not set.")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS","Specified environment variable is not set.")
+app.config["SQLALCHEMY_POOL_RECYCLE"] = 60
 db = SQLAlchemy(app)
 
 from models import Feature as FeatureModel
