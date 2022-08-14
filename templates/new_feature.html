@@ -53,10 +53,10 @@
   </div>
 
   <div class="new-feature-input">
-    <label for="select-tags">Tags for this Resource*</label>
-    <select id="select-tags" multiple>
-      {% for tag in all_tags %}
-      <option value="{{tag.tag_name}}">{{tag.description}}</option>
+    <label for="select-areas">Area(s) this Resource is in*</label>
+    <select id="select-areas" multiple>
+      {% for area in all_areas %}
+      <option value="{{area.short_name}}">{{area.short_display_name}} ({{area.wapf_chapter_name}})</option>
       {% endfor %}
     </select>
   </div>
@@ -72,13 +72,14 @@
   </div>
 
   <div class="new-feature-input">
-    <label for="select-areas">Area(s) this Resource is in*</label>
-    <select id="select-areas" multiple>
-      {% for area in all_areas %}
-      <option value="{{area.short_name}}">{{area.short_display_name}} ({{area.wapf_chapter_name}})</option>
+    <label for="select-tags">All Tags for this Resource*</label>
+    <select id="select-tags" multiple>
+      {% for tag in all_tags %}
+      <option value="{{tag.tag_name}}">{{tag.description}}</option>
       {% endfor %}
     </select>
   </div>
+
   <div class="new-feature-input">
     <button class="standard-button" id="button-add-feature">Add Holistic Resource</button>
   </div>
@@ -207,7 +208,7 @@
     }
 
     if (!isPrimaryTagInTags) {
-      alert("Please select a Primary Tag which is also in the overall list of Tags for this Resouce.");
+      alert("Please select a Primary Tag which is also in the overall list of All Tags for this Resouce.");
       $('#select-primary-tag').focus();
       return false;
     }
@@ -263,6 +264,19 @@
     }
   }
 
+  function clearOutInputFields() {
+    $('#input-name').val("");
+    $('#input-short-name').val("");
+    $('#input-description').val("");
+    $('#input-why-on-wapf-list').val("");
+    $('#input-address').val("");
+    $('#input-phone').val("");
+    $('#input-url').val("");
+    $('#select-tags').empty();
+    $('#select-primary-tag').empty();
+    $('#select-areas').empty();
+  }
+
   function addFeatureToDatabase(longitude,latitude) {
 
     addFeaturePayload = {
@@ -301,6 +315,7 @@
       $('#div-success-details').removeClass("invisible");
       $('#div-success-details').append(`Successfully added feature to database with short_name identifier <strong>${responseJson["short_name"]}</strong>. To avoid spam, the site developer (Joe) will have to confirm the entry before it starts showing up in the map and directory. Thank you for your addition to the Holistic directory!`);
       $('#div-error-details').empty();
+      clearOutInputFields();
     })
     .catch((response) => {
       response.json().then((json) => {
@@ -321,16 +336,22 @@
   }
   $('#button-add-feature').click(addFeature);
 
-  $('#select-tags').selectize({
+  var selectTags = $('#select-tags').selectize({
     plugins: ["remove_button"],
     create: false,
     sortField: 'text',
-    selectOnTab: false
+    selectOnTab: false,
   });
 
   $('#select-primary-tag').selectize({
     create: false,
-    sortField: 'text'
+    sortField: 'text',
+    onChange: function(value, isOnInitialize) {
+        var selectTagsVal = $('#select-tags').val();
+        if (selectTagsVal == null || selectTagsVal.length == 0) {
+          $('#select-tags')[0].selectize.setValue([value]);
+        }
+    }
   });
 
   $('#select-areas').selectize({
