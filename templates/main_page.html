@@ -54,6 +54,12 @@
   <a name="directory"></a>
   <div id="divDirectory" class="divDirectory">
     <h2 class="center"><a href="#directory" class="aNoStyle">Directory</a></h2>
+    <h5 class="center invisible"><a href="javascript:toggleFilters()" id="aToggleFilters">Show Filters</a></h5>
+      <div id="divFilters" class="invisible">
+        {% for tag in tags %}
+        <input type="checkbox" id="input-show-tag-{{tag.tag_name}}" checked onclick="doFilter('{{tag.tag_name}}')">{{tag.description}}</input><br/>
+        {% endfor %}
+      </div>
       <div id="farmingCategory" class="divParentCategory">
       {% set feature_primary_tags = [] %}
       {% for feature in farm_features %}
@@ -232,6 +238,20 @@
             .setHTML(htmlToDisplay)
         ).addTo(map);
       }
+  }
+
+  function toggleFilters() {
+    if ($('#divFilters').hasClass('invisible')) {
+      $('#divFilters').removeClass('invisible');
+      $('#aToggleFilters').html("Hide Filters");
+    } else {
+      $('#divFilters').addClass('invisible');
+      $('#aToggleFilters').html("Show Filters");
+    }
+  }
+
+  function doFilter(tagName) {
+    alert("Do some filterin' for tagName " + tagName + "!");
   }
 
   map.on('load', () => {

@@ -172,6 +172,7 @@ def viewdetail_redirect():
 def index(area_short_name):
     area = AreaModel.query.filter_by(short_name=area_short_name).first()
     areas = AreaModel.query.all()
+    tags = TagModel.query.all()
     if area == None:
         return "No area in data set with identifier {area_short_name}".format(area_short_name=area_short_name)
     geo_json_data = generate_geo_json_data(area)
@@ -180,7 +181,7 @@ def index(area_short_name):
     for feature in area.features:
         if feature.enabled:
             area_enabled_features.append(feature)
-    return render_template("main_page.html",features=area_enabled_features,geo_json_data=geo_json_data,tags_map_data=tags_map_data,area=area,areas=areas)
+    return render_template("main_page.html",tags=tags,features=area_enabled_features,geo_json_data=geo_json_data,tags_map_data=tags_map_data,area=area,areas=areas)
 
 @app.route("/holistic/feature/<short_name>")
 def featurePage(short_name):
