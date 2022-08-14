@@ -4,9 +4,11 @@
 
 {%block additional_css %}
   <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+  <link href="{{url_for('static',filename='css/selectize.bootstrap5.css')}}" rel="stylesheet" />
 {% endblock %}
 {%block additional_js %}
   <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+  <script src="{{url_for('static',filename='script/selectize.js')}}"></script>
 {% endblock %}
 
 {%block content %}
@@ -16,7 +18,7 @@
     <h1>New Holistic Resource</h1>
 
     <div class="new-feature-input">
-      <label for="input-name">Name</label>
+      <label for="input-name">Name*</label>
       <input id="input-name" />
     </div>
 
@@ -26,17 +28,17 @@
     </div>
 
   <div class="new-feature-input">
-    <label for="input-description">Description</label>
+    <label for="input-description">Description*</label>
     <textarea id="input-description" rows="3" /></textarea>
   </div>
 
   <div class="new-feature-input">
-    <label for="input-why-on-wapf-list" type="textarea">Why this belongs on WAPF list</label>
+    <label for="input-why-on-wapf-list" type="textarea">Why this belongs on WAPF list*</label>
     <textarea id="input-why-on-wapf-list" rows="3"></textarea>
   </div>
 
   <div class="new-feature-input">
-    <label for="input-address">Address</label>
+    <label for="input-address">Address*</label>
     <input id="input-address"/>
   </div>
 
@@ -51,7 +53,7 @@
   </div>
 
   <div class="new-feature-input">
-    <label for="select-tags">Tags for this Resource</label>
+    <label for="select-tags">Tags for this Resource*</label>
     <select id="select-tags" multiple>
       {% for tag in all_tags %}
       <option value="{{tag.tag_name}}">{{tag.description}}</option>
@@ -60,7 +62,7 @@
   </div>
 
   <div class="new-feature-input">
-    <label for="select-primary-tag">Primary Tag for this Resource</label>
+    <label for="select-primary-tag">Primary Tag for this Resource*</label>
     <select id="select-primary-tag">
       <option value="none" selected disabled hidden>Select an Option</option>
       {% for tag in all_tags %}
@@ -70,7 +72,7 @@
   </div>
 
   <div class="new-feature-input">
-    <label for="select-areas">Area(s) this Resource is in</label>
+    <label for="select-areas">Area(s) this Resource is in*</label>
     <select id="select-areas" multiple>
       {% for area in all_areas %}
       <option value="{{area.short_name}}">{{area.short_display_name}} ({{area.wapf_chapter_name}})</option>
@@ -159,12 +161,6 @@
 
     let phone = $('#input-phone').val();
 
-    if (phone.length == 0) {
-      alert("Please enter a Phone value (or ----- if unknown).");
-      $('#input-phone').focus();
-      return false;
-    }
-
     if (phone.length > 30) {
       alert("Please enter a Phone value with 30 characters or less.");
       $('#input-phone').focus();
@@ -173,7 +169,7 @@
 
     let pattern = /^(([-]|[0-9])+)$/gmi;
     let result = phone.match(pattern);
-    if (result == null) {
+    if (phone.length > 0 && result == null) {
       alert("Please enter a Phone value using only digits (0-9) and dashes (-)");
       $('#input-phone').focus();
       return false;
@@ -233,10 +229,9 @@
       $('#div-loading-details').empty();
       $('#div-loading-details').append("Loading your feature into the system...");
       //get longitude and latitude
-      fetch("https://nominatim.openstreetmap.org/search?q=" + $('#input-address').val() + "&format=json",
+      fetch("https://api.mapbox.com/geocoding/v5/mapbox.places/" + $('#input-address').val() + ".json?limit=1&proximity=ip&types=place%2Cpostcode%2Caddress&access_token=pk.eyJ1Ijoia2FsYmlmb3JuaWEiLCJhIjoiY2w1NTVyaWJiMTJ0ZjNtbzM3eW5kYTZuaSJ9.Uo8fTtCdrHQc9C5ibBbPUg",
         {
-          "method":"GET",
-          "headers": {"User-Agent":navigator.userAgent}
+          "method":"GET"
         }
       )
       .then(response => response.json())
@@ -245,18 +240,21 @@
         var latitude = 0.0;
 
         try {
-          longitude = parseFloat(result[0]["lon"]);
-          latitude = parseFloat(result[0]["lat"]);
+          longitude = parseFloat(result["features"][0]["geometry"]["coordinates"][0]);
+          latitude = parseFloat(result["features"][0]["geometry"]["coordinates"][1]);
+          console.log("longitude = " + longitude);
+          console.log("latitude = " + latitude);
           var address = $('#input-address').val();
-          var openStreetMapAddress = result[0]["display_name"];
+          var mapboxAddress = result["features"][0]["place_name"];
 
-          var answer = confirm("The address you entered (" + address + ") was looked up by an OpenStreetMap service, which converted it to this address to find it on the map:\r\n\r\n" + openStreetMapAddress + "\r\n\r\nHit OK to accept this address for map location purposes, or Cancel to change it.");
+          var answer = confirm("The address you entered (" + address + ") was searched online, which converted it to this address to find it on the map:\r\n\r\n" + mapboxAddress + "\r\n\r\nHit OK to accept this address for map location purposes, or Cancel to change it.");
           if (!answer) {
             $('#div-loading-details').empty();
             $('#input-address').focus();
             return;
           }
         } catch (e) {
+          console.error(e);
           alert("Could not get find a valid address or latitude/longitude based on input address of: " + $('#input-address').val() + ".\r\n\r\nPlease enter a new address for this Resource.");
           return;
         }
@@ -322,5 +320,33 @@
     });
   }
   $('#button-add-feature').click(addFeature);
+
+  /* These inputs don't actually require selectize, but it gets them styled the same way as the actually selectized "select" fields. */
+  $('#input-name').selectize({});
+  $('#input-short-name').selectize({});
+  //$('#input-description').selectize({});
+  //$('#input-why-on-wapf-list').selectize({});
+  $('#input-address').selectize({});
+  $('#input-phone').selectize({});
+  $('#input-url').selectize({});
+
+  $('#select-tags').selectize({
+    plugins: ["remove_button"],
+    create: false,
+    sortField: 'text',
+    selectOnTab: false
+  });
+
+  $('#select-primary-tag').selectize({
+    create: false,
+    sortField: 'text'
+  });
+
+  $('#select-areas').selectize({
+    plugins: ["remove_button"],
+    create: false,
+    sortField: 'text',
+    selectOnTab: false
+  });
 </script>
 {% endblock %}
