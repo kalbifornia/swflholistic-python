@@ -71,13 +71,22 @@
         <div id="primary-tag-{{primary_tag.tag_name}}" class="divPrimaryTag"><h3>{{primary_tag.plural_description}}</h3></div>
         {% for feature in farm_features %}
           {% if feature.primary_tag_obj == primary_tag %}
-            <div class="divDirectoryItem">
+            <div class="divDirectoryItem" id="divDirectoryItem-{{feature.short_name}}">
               <div class="divDirectoryItemName"><a href="/holistic/feature/{{feature.short_name}}">{{feature.name}}</a></div>
               <div>{{feature.description}}</div>
               <div>{{feature.address}}</div>
               {% if feature.phone != none and feature.phone != "XXXXX" %}
                 <div>{{feature.phone}}</div>
               {% endif %}
+              <div>Tagged as:
+                {% for tag in feature.tags %}
+                  {% if loop.last %}
+                    <a href="/holistic/tag/{{tag.tag_name}}">{{tag.description}}</a>
+                  {% else %}
+                    <a href="/holistic/tag/{{tag.tag_name}}">{{tag.description}}</a>,
+                  {% endif %}
+                {% endfor %}
+              </div>
               <div>
                 <button class="standard-button" id="button-view-on-map-${{feature.short_name}}" onclick="onClickFeature({{feature.longitude}},{{feature.latitude}})" type="button">View on Map</button>
               </div>
@@ -97,13 +106,22 @@
         <div id="primary-tag-{{primary_tag.tag_name}}" class="divPrimaryTag"><h3>{{primary_tag.plural_description}}</h3></div>
         {% for feature in healing_arts_features %}
           {% if feature.primary_tag_obj == primary_tag %}
-            <div class="divDirectoryItem">
+            <div class="divDirectoryItem" id="divDirectoryItem-{{feature.short_name}}">
               <div class="divDirectoryItemName"><a href="/holistic/feature/{{feature.short_name}}">{{feature.name}}</a></div>
               <div>{{feature.description}}</div>
               <div>{{feature.address}}</div>
               {% if feature.phone != none and feature.phone != "XXXXX" %}
                 <div>{{feature.phone}}</div>
               {% endif %}
+              <div>Tagged as:
+                {% for tag in feature.tags %}
+                  {% if loop.last %}
+                    <a href="/holistic/tag/{{tag.tag_name}}">{{tag.description}}</a>
+                  {% else %}
+                    <a href="/holistic/tag/{{tag.tag_name}}">{{tag.description}}</a>,
+                  {% endif %}
+                {% endfor %}
+              </div>
               <div>
                 <button class="standard-button" id="button-view-on-map-${{feature.short_name}}" onclick="onClickFeature({{feature.longitude}},{{feature.latitude}})" type="button">View on Map</button>
               </div>
@@ -123,13 +141,22 @@
         <div id="primary-tag-{{primary_tag.tag_name}}" class="divPrimaryTag"><h3>{{primary_tag.plural_description}}</h3></div>
         {% for feature in food_features %}
           {% if feature.primary_tag_obj == primary_tag %}
-            <div class="divDirectoryItem">
+            <div class="divDirectoryItem" id="divDirectoryItem-{{feature.short_name}}">
               <div class="divDirectoryItemName"><a href="/holistic/feature/{{feature.short_name}}">{{feature.name}}</a></div>
               <div>{{feature.description}}</div>
               <div>{{feature.address}}</div>
               {% if feature.phone != none and feature.phone != "XXXXX" %}
                 <div>{{feature.phone}}</div>
               {% endif %}
+              <div>Tagged as:
+                {% for tag in feature.tags %}
+                  {% if loop.last %}
+                    <a href="/holistic/tag/{{tag.tag_name}}">{{tag.description}}</a>
+                  {% else %}
+                    <a href="/holistic/tag/{{tag.tag_name}}">{{tag.description}}</a>,
+                  {% endif %}
+                {% endfor %}
+              </div>
               <div>
                 <button class="standard-button" id="button-view-on-map-${{feature.short_name}}" onclick="onClickFeature({{feature.longitude}},{{feature.latitude}})" type="button">View on Map</button>
               </div>
@@ -149,13 +176,22 @@
         <div id="primary-tag-{{primary_tag.tag_name}}" class="divPrimaryTag"><h3>{{primary_tag.plural_description}}</h3></div>
         {% for feature in other_features %}
           {% if feature.primary_tag_obj == primary_tag %}
-            <div class="divDirectoryItem">
+            <div class="divDirectoryItem" id="divDirectoryItem-{{feature.short_name}}">
               <div class="divDirectoryItemName"><a href="/holistic/feature/{{feature.short_name}}">{{feature.name}}</a></div>
               <div>{{feature.description}}</div>
               <div>{{feature.address}}</div>
               {% if feature.phone != none and feature.phone != "XXXXX" %}
                 <div>{{feature.phone}}</div>
               {% endif %}
+              <div>Tagged as:
+                {% for tag in feature.tags %}
+                  {% if loop.last %}
+                    <a href="/holistic/tag/{{tag.tag_name}}">{{tag.description}}</a>
+                  {% else %}
+                    <a href="/holistic/tag/{{tag.tag_name}}">{{tag.description}}</a>,
+                  {% endif %}
+                {% endfor %}
+              </div>
               <div>
                 <button class="standard-button" id="button-view-on-map-${{feature.short_name}}" onclick="onClickFeature({{feature.longitude}},{{feature.latitude}})" type="button">View on Map</button>
               </div>
@@ -172,6 +208,7 @@
   var centerCoordinates = [{{area.longitude}}, {{area.latitude}}];
   var geoJsonData = {{geo_json_data|safe}};
   var tagsMapData = {{tags_map_data|safe}};
+  var allMapMarkers = [];
 
   const map = new mapboxgl.Map({
     container: 'map',
@@ -208,6 +245,11 @@
   }
 
   function populateMapWithMarkers() {
+    for (const marker of allMapMarkers) {
+      marker.remove();
+    }
+    allMapMarkers = [];
+
     for (const feature of geoJsonData.features) {
       const el = document.createElement("div");
 
@@ -218,9 +260,14 @@
       }
 
       tagURLs = [];
+      numShownTags = 0;
       for (const tag of feature.properties.tags) {
         var tagURL = `<a href="/holistic/tag/${tag}">${tagsMapData[tag].description}</a>`;
         tagURLs.push(tagURL);
+
+        if ($(`#input-show-tag-${tag}`).is(":checked")) {
+          numShownTags++;
+        }
       }
 
       var htmlToDisplay = `<h3>${feature.properties.name}</h3>
@@ -231,13 +278,21 @@
         window.location.href=`/holistic/feature/${feature.properties.short_name}`;
       });
 
-      new mapboxgl.Marker(el)
-        .setLngLat(feature.geometry.coordinates)
-        .setPopup(
-          new mapboxgl.Popup({maxWidth: "300px"})
-            .setHTML(htmlToDisplay)
-        ).addTo(map);
+      if (numShownTags > 0) {
+        var newMarker = new mapboxgl.Marker(el)
+          .setLngLat(feature.geometry.coordinates)
+          .setPopup(
+            new mapboxgl.Popup({maxWidth: "300px"})
+              .setHTML(htmlToDisplay)
+          )
+          .addTo(map);
+
+          allMapMarkers.push(newMarker);
+          $(`#divDirectoryItem-${feature.properties.short_name}`).removeClass("invisible");
+      } else {
+        $(`#divDirectoryItem-${feature.properties.short_name}`).addClass("invisible");
       }
+    }
   }
 
   function toggleFilters() {
@@ -251,7 +306,7 @@
   }
 
   function doFilter(tagName) {
-    alert("Do some filterin' for tagName " + tagName + "!");
+    populateMapWithMarkers();
   }
 
   map.on('load', () => {

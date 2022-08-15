@@ -64,7 +64,6 @@
   <div class="new-feature-input">
     <label for="select-primary-tag">Primary Tag for this Resource*</label>
     <select id="select-primary-tag">
-      <option value="none" selected disabled hidden>Select an Option</option>
       {% for tag in all_tags %}
       <option value="{{tag.tag_name}}">{{tag.description}}</option>
       {% endfor %}
