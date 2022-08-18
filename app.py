@@ -146,6 +146,10 @@ def generate_json_from_database():
 
     return json.dumps(j,indent=2)
 
+@app.route("/")
+def home_page():
+    return "Under Construction... Future Website of Joe Kalb, the Holistic Health Software Engineer"
+
 @app.route("/holistic")
 def holistic_home_page_redirect():
     return redirect("/holistic/");
@@ -157,6 +161,10 @@ def holistic_home():
 
 @app.route("/swflholistic")
 def swflholistic_redirect():
+    return redirect("/holistic/area/swfl")
+
+@app.route("/swflholistic/")
+def swflholistic_slash_redirect():
     return redirect("/holistic/area/swfl")
 
 @app.route("/swflholistic/viewtag.html")
