@@ -315,7 +315,6 @@
       $('#div-success-details').removeClass("invisible");
       $('#div-success-details').append(`Successfully added feature to database with short_name identifier <strong>${responseJson["short_name"]}</strong>. To avoid spam, the site developer (Joe) will have to confirm the entry before it starts showing up in the map and directory. Thank you for your addition to the Holistic directory!`);
       $('#div-error-details').empty();
-      console.log("What up2");
       $('html, body').animate({
         scrollTop: $("#div-success-details").offset().top
       }, 1000);
