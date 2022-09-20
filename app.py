@@ -148,7 +148,27 @@ def generate_json_from_database():
 
 @app.route("/")
 def home_page():
-    return "Under Construction... Future Website of Joe Kalb, the Holistic Health Software Engineer"
+    return redirect("/dev")
+
+@app.route("/dev")
+def dev_home_page():
+    return render_template("dev/index.html")
+
+@app.route("/dev/index.html")
+def dev_home_page_redirect():
+    return redirect("/dev")
+
+@app.route("/dev/experience.html")
+def dev_experience_page():
+    return render_template("dev/experience.html")
+
+@app.route("/dev/about.html")
+def dev_about_page():
+    return render_template("dev/about.html")
+
+@app.route("/dev/contact.html")
+def dev_contact_page():
+    return render_template("dev/contact.html")
 
 @app.route("/holistic")
 def holistic_home_page_redirect():
@@ -157,7 +177,7 @@ def holistic_home_page_redirect():
 @app.route("/holistic/")
 def holistic_home():
     all_areas = AreaModel.query.all()
-    return render_template("home.html",areas=all_areas)
+    return render_template("holistic/home.html",areas=all_areas)
 
 @app.route("/swflholistic")
 def swflholistic_redirect():
@@ -189,18 +209,18 @@ def index(area_short_name):
     for feature in area.features:
         if feature.enabled:
             area_enabled_features.append(feature)
-    return render_template("main_page.html",tags=tags,features=area_enabled_features,geo_json_data=geo_json_data,tags_map_data=tags_map_data,area=area,areas=areas)
+    return render_template("holistic/main_page.html",tags=tags,features=area_enabled_features,geo_json_data=geo_json_data,tags_map_data=tags_map_data,area=area,areas=areas)
 
 @app.route("/holistic/feature/<short_name>")
 def featurePage(short_name):
     feature = FeatureModel.query.filter_by(short_name = short_name, enabled = True).first()
-    return render_template("feature.html",feature=feature)
+    return render_template("holistic/feature.html",feature=feature)
 
 @app.route("/holistic/tag/<tag_name>")
 def tagPage(tag_name):
     tag = TagModel.query.filter_by(tag_name = tag_name).first()
     print(tag.features)
-    return render_template("tag.html",tag=tag)
+    return render_template("holistic/tag.html",tag=tag)
 
 @app.route("/holistic/load-json-from-database")
 def build_json_from_database():
@@ -215,7 +235,7 @@ def load_database_from_json_xyz():
 def add_feature():
     all_areas = AreaModel.query.all()
     all_tags = TagModel.query.all()
-    return render_template("new_feature.html",all_areas=all_areas,all_tags=all_tags)
+    return render_template("holistic/new_feature.html",all_areas=all_areas,all_tags=all_tags)
 
 @app.route("/holistic/api/feature", methods = ['POST'])
 def api_feature():

@@ -1,0 +1,44 @@
+{% extends 'dev/base.html' %}
+
+{%block title %}JoeKalb.com/dev | The Holistic Health Software Engineer{% endblock %}
+
+{%block content %}
+  <script>
+    $('#a-home').addClass("current");
+  </script>
+  <section id="showcase-section">
+    <div id="showcase">
+      <div class="container">
+        <div class="showcase-content">
+          <h1><span class="text-primary">Joe Kalb: The Holistic Health Software Engineer</h1>
+          <p class="lead">I develop software and build websites which empower men and women to improve their health, reverse chronic disease, and take control over their lives. <a class="withUnderline" href="dev/experience.html#holistic-examples">See Examples</a></p>
+          <p class="lead">If you desire technical help with a holistic-minded website, project, or position, please reach out.</p>
+          <a class="btn" href="dev/contact.html">Contact Joe</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <section id="features">
+    <div class="box bg-light">
+      <div class="box-feature-content">
+        <h1>My Dev Experience</h1>
+        <p>I have 15 years of software dev experience spanning full-stack engineering, web development, app development, team leadership, solution architecture, and more...</p>
+      </div>
+      <div class="box-feature-button">
+        <a href="dev/experience.html" class="btn btn-dark">Experience</a>
+      </div>
+    </div>
+    <div class="box bg-primary">
+        <div class="box-feature-content">
+          <h1>My Why</h1>
+          <p>I have a fiery passion for helping empower others to strive toward abundant health. I intend to align my tech work, personally and professionally, with this passion... </p>
+        </div>
+        <div class="box-feature-button">
+          <a href="dev/about.html" class="btn btn-dark">The Why</a>
+        </div>
+    </div>
+  </section>
+{% endblock %}

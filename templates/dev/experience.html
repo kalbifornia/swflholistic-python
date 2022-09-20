@@ -1,0 +1,96 @@
+{% extends 'dev/base.html' %}
+
+{%block title %}Joe's Dev Experience | The Holistic Health Software Engineer{% endblock %}
+
+{%block content %}
+<section id="section-experience">
+  <div class="div-content" id="div-experience">
+    <div class="div-experience-heading" id="div-holistic-experience-heading">
+      <h1>Joe's Holistic Projects</h3>
+    </div>
+    <div class="div-experience-content" id="div-holistic-experience-content">
+      <div class="slider">
+        <input type="radio" name="toggle" id="btn-1" checked>
+        <input type="radio" name="toggle" id="btn-2">
+        <input type="radio" name="toggle" id="btn-3">
+
+        <div class="slider-controls">
+          <label for="btn-1"></label>
+          <label for="btn-2"></label>
+          <label for="btn-3"></label>
+        </div>
+
+        <ul class="slides">
+          <li class="slide">
+            <div class="slide-content">
+              <h2 class="slide-title">DiseaseReversals.com</h2>
+              <h4>Overview</h4>
+              <p class="slide-text">Joe's website which collects and displays anecdotes of real-world disease reversals, categorizes the reversals by disease and by diet.</p>
+              <h4>Tech Stack</h4>
+              <p>Built using PHP and MySQL backend, Javascript, HTML, and CSS frontend</p>
+              <a href="http://diseasereversals.com" class="slide-link" target="_blank">Website of Healing</a>
+            </div>
+            <p class="slide-image">
+              <a href="http://diseasereversals.com" target="_blank">
+                <img src="{{url_for('static',filename='png/DR_005_2CFlat_Full.png')}}" alt="DiseaseReversals.com" width="558" height="343">
+              </a>
+            </p>
+          </li>
+          <li class="slide">
+            <div class="slide-content">
+              <h2 class="slide-title">You Cured What?!</h2>
+              <h4>Overview</h4>
+              <p class="slide-text">The podcast Joe created, hosted, produced, and built the website for. Podcast focuses on inspirational real-world healing from chronic disease.</p>
+              <h4>Tech Stack</h4>
+              <p>Website built using HTML, CSS, Wordpress (including custom code)</p>
+              <a href="http://youcuredwhat.com" class="slide-link" target="_blank">The Podcast of Reversing the Irreversible</a>
+            </div>
+            <p class="slide-image">
+              <a href="http://youcuredwhat.com" target="_blank">
+                <img src="{{url_for('static',filename='png/YCW_FIN-01_Square-1400.png')}}" target="_blank" alt="You Cured What?! The podcast of reversing the irreversible" width="350" height="350">
+              </a>
+            </p>
+          </li>
+          <li class="slide">
+            <div class="slide-content">
+              <h2 class="slide-title">Holistic Resources Directory</h2>
+              <h4>Overview</h4>
+              <p class="slide-text">Website I built to map out, categorize, and feature local holistically-minded farms, medical practices, and businesses.</p>
+              <h4>Tech Stack</h4>
+              <p>Built using Python, Flask, SQLAlchemy, MySQL, HTML, Javascript, and CSS</p>
+              <a href="https://joekalb.com/holistic" class="slide-link">Holistic Directory</a>
+            </div>
+            <p class="slide-image">
+              <a href="https://joekalb.com/holistic" target="_blank">
+                <img src="{{url_for('static',filename='png/holistic-resources.png')}}" alt="Holistic Resources" width="350" height="350">
+              </a>
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="div-experience-heading" id="div-misc-experience-heading">
+    <h1>Joe's Miscellaneous Projects</h3>
+    </div>
+    <div class="div-experience-content" id="div-misc-expereience-content">
+      <ul>
+        <li><a href="https://github.com/kalbifornia">Joe's GitHub</a>: See some of the stuff Joe has toyed around with</li>
+        <li><a href="https://medium.com/@joseph.j.kalb">Joe's Medium</a>: See what Joe has written technically about</li>
+        <li><a href="https://twitter.com/HookShotsApp">Hook Shots App</a>: Back in 2015 Joe released the Hook Shots App (a fun, lighthearted, competetitive basketball app for iOS and Android). It is now outdated and no longer in the app store, but its Twitter page still lives on.</li>
+      </ul>
+    </div>
+    <div class="div-experience-heading" id="div-corporate-experience-heading">
+      <h1>Joe's Corporate Experience</h3>
+    </div>
+    <div class="div-experience-content" id="div-corporate-experience-content">
+      <ul>
+        <li>I have over a dozen years of corporate software development experience. I've worked as an entry-level programmer, a senior dev, a team lead, and a senior architect, with many roles in between.</li>
+        <li>In recent years, I have focused on integration and API development and architecture, helping my company connect with a wide variety of external partners and systems.</li>
+        <li>My corporate experience has been primarily in the insurance industry, but I intend to work for a company working towards a holistic cause I believe in.</li>
+        <li><a href="{{url_for('static',filename='pdf/JoeKalbMissionDrivenSoftwareEngineer.pdf')}}">See Joe's resume (PDF)</li>
+        <li><a href="https://www.linkedin.com/in/joekalb/">Joe's LinkedIn</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+{% endblock %}
