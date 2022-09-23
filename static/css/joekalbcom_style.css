@@ -2,6 +2,7 @@
 :root {
   --jk-light-blue: #00a5e3;
   --jk-dark-blue: #2a4e90;
+  --jk-dark-blue-pressed: #204482;
   --jk-green: #9ccb3c;
   --jk-light-gray: lightgray;
   --navbar-height: 120px;
@@ -479,8 +480,75 @@ div.div-content {
   }
 }
 
+.center {
+  text-align: center;
+}
+
 .div-experience-heading {
   text-align: center;
+}
+
+.div-experience-content {
+  margin-bottom: 40px;
+}
+
+.div-contact-form-entry {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.label-contact-form-entry {
+  display: block;
+  font-weight: 700;
+}
+
+.label-contact-input {
+  display: block;
+}
+
+.div-contact-form-container {
+  padding: 15px;
+  background-color: var(--jk-light-gray);
+}
+
+.contact-input {
+  width: 80vw;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border-width: 1px;
+  border-color: gray;
+  border-style: solid;
+  resize: none;
+  font-size: 16px;
+}
+
+.textarea-contact-form-entry {
+  display: block;
+  height: 50vh;
+  width: 80vw;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border-width: 1px;
+  border-color: gray;
+  border-style: solid;
+  resize: none;
+  font-size: 16px;
+  font-family: var(--body-font);
+}
+
+button.button-contact-form-entry {
+  text-align: center;
+  padding: 15px;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+  cursor: pointer;
+  background-color: var(--jk-dark-blue);
+  font-weight: 700;
+}
+
+button.button-contact-form-entry:active {
+  background-color: var(--jk-dark-blue-pressed);
 }
 
 /* Footer */

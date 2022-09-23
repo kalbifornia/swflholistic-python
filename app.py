@@ -10,6 +10,14 @@ import traceback
 import werkzeug
 import smtplib
 from smtplib import SMTPException
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
+required_env_vars = ["SENDGRID_API_KEY","SQLALCHEMY_DATABASE_URI","SENDGRID_FROM_EMAIL","SENDGRID_TO_EMAILS"]
+for env_var in required_env_vars:
+    env_val = os.environ.get(env_var)
+    if env_val == None:
+        raise Exception("Required env var {env_var} not set".format(env_var=env_var))
 
 app = Flask(__name__)
 app.jinja_env.add_extension('jinja2.ext.do')
@@ -25,20 +33,25 @@ from models import Area as AreaModel
 
 
 def send_success_email(payload):
-    sender = 'from@fromdomain.com'
-    receivers = ['joekalb@protonmail.com']
+    sender = os.environ.get("SENDGRID_FROM_EMAIL")
+    receivers = os.environ.get("SENDGRID_TO_EMAILS").split(",")
+    subject = 'Holistic Resource added to directory'
+    html_content = """Holistic resource added to directory, please confirm via your PythonAnywhere database account.
 
-    message = """From: From Person <from@fromdomain.com>
-To: Joe Kalb <joekalb@protonmail.com>
-Subject: SMTP e-mail test
-
-This is a test e-mail message.
-"""
-
+    {payload}
+    """.format(payload=payload)
+    message = Mail(
+        from_email=sender,
+        to_emails=receivers,
+        subject=subject,
+        html_content=html_content)
     try:
-        smtpObj = smtplib.SMTP('localhost')
-        smtpObj.sendmail(sender,receivers,message)
-        print("Successfully sent email")
+        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        response = sg.send(message)
+        print("Responses for holistic resource added-to-directory email...")
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
     except Exception:
         traceback.print_exc()
         print("Error: unable to send email")
@@ -170,6 +183,64 @@ def dev_about_page():
 def dev_contact_page():
     return render_template("dev/contact.html")
 
+@app.route("/dev/sendContactEmail", methods = ['POST'])
+def dev_send_contact_email_page():
+    try:
+        print("\r\n\r\n\r\n\r\n")
+        print("Before get_json(), request is: {request}".format(request=request))
+        input_payload = request.get_json()
+
+        print("Loaded input_payload {input_payload}".format(input_payload=input_payload))
+
+        name = None
+        email = None
+        message = None
+
+        try:
+            name = input_payload["name"]
+            email = input_payload["email"]
+            message = input_payload["message"]
+
+        except KeyError as ke:
+            error_j = {"status":"error","error_message":"Missing required field {key}".format(key=ke)}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+
+        subject = "Message from {name} on JoeKalb.com/dev".format(name=name)
+        html_message =  subject + "<br /><br />From Email: " + email + "<br /><br />" + message
+        email_message = Mail(
+            from_email=os.environ.get("SENDGRID_FROM_EMAIL"),
+            to_emails=os.environ.get("SENDGRID_TO_EMAILS").split(","),
+            subject="Message from {name} on JoeKalb.com/dev".format(name=name),
+            html_content=html_message)
+
+        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        response = sg.send(email_message)
+        print("Responses for sending contact email for JoeKalb.com/dev...")
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+        success_j = j = {
+            "status": "success"
+        }
+        return json.dumps(success_j),200,{'Content-Type': 'application/json'}
+
+    except werkzeug.exceptions.BadRequest as br:
+        traceback.print_exc()
+        error_j = {
+            "status":"error",
+            "error_message":str(br)
+        }
+        return json.dumps(error_j),400,{'Content-Type': 'application/json'}
+
+    except Exception as ex:
+        traceback.print_exc()
+        error_message = "Could not send contact email. Technical reason: {reason}".format(reason=str(ex))
+        error_j = {
+            "status":"error",
+            "error_message":error_message
+        }
+        return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+    return
 @app.route("/holistic")
 def holistic_home_page_redirect():
     return redirect("/holistic/");

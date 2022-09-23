@@ -6,5 +6,106 @@
 <script>
   $('#a-contact').addClass("current");
 </script>
-CONTACT
+
+<div class="div-contact-form-container" id="div-contact-form">
+  <h1 class="center">Contact Joe</h1>
+  <p>Please enter any information about a holistic-health or freedom-minded project, website, or position that may benefit from Joe's development expertise.</p>
+
+  <div class="div-contact-form-entry">
+    <label for="input-sender-name" class="label-contact-form-entry">Your Name</label>
+    <input class="contact-input" id="input-sender-name" placeholder="Enter your name here..."></input>
+  </div>
+
+  <div class="div-contact-form-entry">
+    <label for="input-sender-email" class="label-contact-form-entry">Your Email Address</label>
+    <input class="contact-input" id="input-sender-email" placeholder="Enter your email address here..."/>
+  </div>
+
+  <div class="div-contact-form-entry">
+    <label for="textarea-sender-message" class="label-contact-form-entry">Your Message</label>
+    <textarea type="text" id="textarea-sender-message" class="textarea-contact-form-entry" placeholder="Enter your message here..."></textarea>
+  </div>
+
+  <div class="div-contact-form-entry">
+    <button class="button-contact-form-entry" id="button-contact">
+      Send Message
+    </button>
+  </div>
+
+  <div id="div-success-details" class="invisible"></div>
+  <div id="div-error-details" class="invisible"></div>
+</div>
+
+<script>
+  function sendContactMessage() {
+    if ($('#input-sender-name').val() == "") {
+      alert("Please enter your name in the contact form.");
+      return;
+    }
+
+    var emailAddress = $('#input-sender-email').val();
+    if (emailAddress == "") {
+      alert("Please enter your email address in the contact form.");
+      return;
+    }
+
+    let regex = new RegExp("([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\"\(\[\]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])");
+    if (!regex.test(emailAddress)) {
+      alert("The entered email address (" + emailAddress + ") is not valid.");
+      return;
+    }
+
+    if ($('#textarea-sender-message').val() == "") {
+      alert("Please enter a message in the contact form.");
+      return;
+    }
+
+    sendContactEmailPayload = {
+      name: $('#input-sender-name').val(),
+      email: $('#input-sender-email').val(),
+      message: $('#textarea-sender-message').val()
+    }
+
+    sendContactEmailJSON = JSON.stringify(sendContactEmailPayload);
+    fetch("/dev/sendContactEmail", {
+      "method": "POST",
+      "headers": {"Content-Type": "application/json"},
+      "body": sendContactEmailJSON
+    })
+    .then((response) => {
+      if (response.ok) {
+        var responseJson = response.json();
+        return responseJson;
+      }
+      return Promise.reject(response);
+    })
+    .then((responseJson) => {
+      console.log(responseJson);
+      $('#div-success-details').empty();
+      $('#div-success-details').removeClass("invisible");
+      $('#div-success-details').append(`Successfully sent message to Joe's email.`);
+      $('#div-error-details').empty();
+      $('html, body').animate({
+        scrollTop: $("#div-success-details").offset().top
+      }, 1000);
+      clearOutInputFields();
+    })
+    .catch((response) => {
+      response.json().then((json) => {
+        $('#div-error-details').removeClass("invisible");
+        console.log(json["error_message"]);
+        $('#div-error-details').empty();
+        $('#div-error-details').append(`Technical error returned from server: ${json["error_message"]}<br /><br />Please report this to the developer, joekalb (at) protonmail (dot) com to look into.`);
+        return;
+      }).catch((response) => {
+        //Catching the non-JSON error response case
+        $('#div-error-details').empty();
+        $('#div-error-details').append(`Technical error returned from server. Technical note: This was NOT a JSON error response.<br /><br />Please report this to the developer, joekalb (at) protonmail (dot) com to look into.`);
+        alert("Catching the non-JSON error response case. " + response);
+      });
+    });
+  }
+
+  $('#button-contact').click(sendContactMessage);
+</script>
 {% endblock %}
