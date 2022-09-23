@@ -511,6 +511,11 @@ div.div-content {
   background-color: var(--jk-light-gray);
 }
 
+.div-content-container {
+  padding: 15px;
+  background-color: var(--jk-light-gray);
+}
+
 .contact-input {
   width: 80vw;
   padding: 6px 12px;
