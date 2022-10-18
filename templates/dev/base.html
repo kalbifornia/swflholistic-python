@@ -4,6 +4,7 @@
   <title>{% block title %}{% endblock %}- JoeKalb.com</title>
   <meta name='viewport' content='width=device-width, initial-scale=1' />
   <script src="{{url_for('static',filename='script/jquery.min.js')}}"></script>
+  <script src="{{url_for('static',filename='script/common_joekalbcom.js')}}"></script>
   {% block additional_js %}{% endblock %}
   <link href="{{url_for('static',filename='css/joekalbcom_style.css')}}" rel='stylesheet' />
   <link href="{{url_for('static',filename='fontawesome-free-5.15.4-web/css/all.min.css')}}" rel='stylesheet' />
@@ -18,17 +19,31 @@
 <body>
   <section class="content">
     <header>
-      <nav id="navbar">
-        <div class="container">
-          <h1 class="logo"><a href="/dev/index.html">JoeKalb.com/dev</a></h1>
+      <div class="navbar">
+        <h1 class="logo"><a href="/dev/index.html">JoeKalb.com/dev</a></h1>
+        <nav>
           <ul>
-            <li><a id="a-home" href="/dev">Home</a></li>
-            <li><a id="a-about" href="/dev/about.html">About</a></li>
-            <li><a id="a-experience" href="/dev/experience.html">Experience</a></li>
-            <li><a id="a-contact" href="/dev/contact.html">Contact</a></li>
+            <li class="desktop-only"><a class="navbar-link" id="a-home" href="/dev">Home</a></li>
+            <li class="desktop-only"><a class="navbar-link" id="a-about" href="/dev/about.html">About</a></li>
+            <li class="desktop-only"><a class="navbar-link" id="a-experience" href="/dev/experience.html">Experience</a></li>
+            <li class="desktop-only"><a class="navbar-link" id="a-contact" href="/dev/contact.html">Contact</a></li>
+            <li>
+              <i id="navbar-dropdown" class="fas fa-bars fa-2x circle-background navbar-icon mobile-only"></i>
+              <div id="navbar-dropdown-content" class="dropdown-content">
+                <ul class="dropdown-ul">
+                  <li id="navbar-dropdown-home" class="navbar-dropdown-item">Home</li>
+                  <li id="navbar-dropdown-about" class="navbar-dropdown-item">About</li>
+                  <li id="navbar-dropdown-experience" class="navbar-dropdown-item">Experience</li>
+                  <li id="navbar-dropdown-contact" class="navbar-dropdown-item">Contact</li>
+                </ul>
+              </div>
+            </li>
           </ul>
-        </div>
-      </nav>
+        </nav>
+
+      </div>
+      <div class="navbar-space-filler">
+      </div>
     </header>
 
     {% block content %}{% endblock %}
@@ -38,4 +53,7 @@
     </footer>
 
   </section>
+  <script>
+    initializeNavbarDropdown();
+  </script>
 </body>

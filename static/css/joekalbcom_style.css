@@ -138,44 +138,6 @@ p {
 .py-2 { padding: 20px 0; }
 .py-3 { padding: 30px 0; }
 
-/* Navbar */
-#navbar {
-  background: #fff;
-  color: var(--jk-dark-blue);
-  overflow: auto;
-}
-
-#navbar a {
-  color: #var(--jk-dark-blue);
-}
-
-#navbar .logo {
-  float: left;
-  padding-top: 20px;
-}
-
-#navbar ul {
-  list-style: none;
-  float: right;
-}
-
-#navbar ul li {
-  float: left;
-}
-
-#navbar ul li a {
-  display: block;
-  padding: 20px;
-  text-align: center;
-}
-
-#navbar ul li a:hover,
-#navbar ul li a.current {
-  background: #ccc;
-  color: var(--jk-dark-blue);
-  font-weight: bold;
-}
-
 /* Showcase */
 #showcase {
   --background-image: url('../img/joekalbfaceonly.jpg');
@@ -565,4 +527,101 @@ button.button-contact-form-entry:active {
   background: #444;
   color: #fff;
   padding: 20px;
+}
+
+.mobile-only, i.mobile-only {
+  display: none;
+}
+
+.invisible {
+  display: none;
+}
+
+.dropdown-content {
+  position: absolute;
+  right: 6px;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 5;
+}
+
+.navbar {
+  /*background-color: red;*/
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: var(--navbar-height);
+  top: 0px;
+  padding-left: 5vw;
+  padding-right: 5vw;
+  background-color: white;
+  z-index: 2; /*This is to get in front of the selectize inputs with z-index 1*/
+}
+
+.navbar-space-filler {
+  height: var(--navbar-height);
+}
+
+.navbar ul {
+  display: flex;
+  align-items: center;
+}
+
+.navbar li {
+  list-style: none;
+}
+
+i.navbar-icon {
+  margin: 0 15px;
+  color(--jk-light-blue);
+  cursor: pointer;
+  margin-right: 15px;
+}
+
+.navbar-link {
+  text-decoration: none;
+  font-weight: bold;
+  padding-right: 20px;
+  justify-content: center;
+}
+
+/*a.navbar-link:visited {
+  color: var(--jk-light-blue);
+}*/
+
+i.circle-background {
+  display: inline-block;
+  border-radius: 60px;
+  padding: 0.5em 0.5em;
+  background-color: lightgray;
+  color: var(--jk-dark-blue);
+}
+
+li.navbar-dropdown-item {
+  color: var(--jk-dark-blue);
+  font-family: var(--h1-font);
+  cursor: pointer;
+  font-weight: bold;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+li.navbar-dropdown-item:hover {
+  background-color: lightgray;
+}
+
+.navbar ul li a.current {
+  color: black;
+}
+
+.navbar li.current {
+  color: black;
+}
+
+ul.dropdown-ul {
+  display: inline !important;
 }

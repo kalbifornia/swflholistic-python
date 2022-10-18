@@ -2,6 +2,14 @@
   display: inline-block;
 }
 
+.mobile-only, i.mobile-only {
+  display: inherit;
+}
+
+.desktop-only {
+  display: none;
+}
+
 #showcase .showcase-content {
   padding-top: 30px;
   padding-bottom: 30px;
