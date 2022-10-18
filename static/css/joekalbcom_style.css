@@ -530,7 +530,7 @@ button.button-contact-form-entry:active {
 }
 
 .mobile-only, i.mobile-only {
-  display: none;
+  display: none !important;
 }
 
 .invisible {

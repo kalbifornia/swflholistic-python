@@ -3,7 +3,7 @@
 }
 
 .mobile-only, i.mobile-only {
-  display: inherit;
+  display: inherit !important;
 }
 
 .desktop-only {
