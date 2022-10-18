@@ -357,6 +357,8 @@ div.div-content {
   left: 0;
 
   display: flex;
+  flex-direction: row;
+
   justify-content: space-between;
   padding: 20px;
   width: 100%;
