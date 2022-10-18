@@ -3,6 +3,9 @@
 {%block title %}Joe's Dev Experience | The Holistic Health Software Engineer{% endblock %}
 
 {%block content %}
+<script>
+  $('#a-experience').addClass("current");
+</script>
 <section id="section-experience">
   <div class="div-content" id="div-experience">
     <div class="div-experience-heading" id="holistic-examples">
@@ -20,53 +23,59 @@
           <label for="btn-3"></label>
         </div>
 
-        <ul class="slides">
-          <li class="slide">
+        <div class="slides">
+          <div class="slide">
             <div class="slide-content">
               <h2 class="slide-title">DiseaseReversals.com</h2>
               <h4>Overview</h4>
               <p class="slide-text">Joe's website which collects and displays anecdotes of real-world disease reversals, categorizes the reversals by disease and by diet.</p>
               <h4>Tech Stack</h4>
               <p>Built using PHP and MySQL backend, Javascript, HTML, and CSS frontend</p>
-              <a href="http://diseasereversals.com" class="slide-link" target="_blank">Website of Healing</a>
+              <div class="slide-link">
+                <a href="http://diseasereversals.com" target="_blank">Website of Healing</a>
+              </div>
             </div>
-            <p class="slide-image">
+            <div class="slide-image square">
               <a href="http://diseasereversals.com" target="_blank">
-                <img src="{{url_for('static',filename='png/DR_005_2CFlat_Full.png')}}" alt="DiseaseReversals.com" width="558" height="343">
+                <img src="{{url_for('static',filename='png/DR_004_4C_IconOnly_C.png')}}" alt="DiseaseReversals.com" />
               </a>
-            </p>
-          </li>
-          <li class="slide">
+            </div>
+          </div>
+          <div class="slide">
             <div class="slide-content">
               <h2 class="slide-title">You Cured What?!</h2>
               <h4>Overview</h4>
               <p class="slide-text">The podcast Joe created, hosted, produced, and built the website for. Podcast focuses on inspirational real-world healing from chronic disease.</p>
               <h4>Tech Stack</h4>
               <p>Website built using HTML, CSS, Wordpress (including custom code)</p>
-              <a href="http://youcuredwhat.com" class="slide-link" target="_blank">The Podcast of Reversing the Irreversible</a>
+              <div class="slide-link">
+                <a href="http://youcuredwhat.com" target="_blank">The Podcast of Reversing the Irreversible</a>
+              </div>
             </div>
-            <p class="slide-image">
+            <div class="slide-image square">
               <a href="http://youcuredwhat.com" target="_blank">
-                <img src="{{url_for('static',filename='png/YCW_FIN-01_Square-1400.png')}}" target="_blank" alt="You Cured What?! The podcast of reversing the irreversible" width="350" height="350">
+                <img src="{{url_for('static',filename='png/YCW_FIN-01_Square-1400.png')}}" target="_blank" alt="You Cured What?! The podcast of reversing the irreversible" />
               </a>
-            </p>
-          </li>
-          <li class="slide">
+            </div>
+          </div>
+          <div class="slide">
             <div class="slide-content">
               <h2 class="slide-title">Holistic Resources Directory</h2>
               <h4>Overview</h4>
               <p class="slide-text">Website I built to map out, categorize, and feature local holistically-minded farms, medical practices, and businesses.</p>
               <h4>Tech Stack</h4>
               <p>Built using Python, Flask, SQLAlchemy, MySQL, HTML, Javascript, and CSS</p>
-              <a href="https://joekalb.com/holistic" class="slide-link">Holistic Directory</a>
+              <div class="slide-link">
+                <a href="https://joekalb.com/holistic">Holistic Directory</a>
+              </div>
             </div>
-            <p class="slide-image">
+            <div class="slide-image square">
               <a href="https://joekalb.com/holistic" target="_blank">
-                <img src="{{url_for('static',filename='png/holistic-resources.png')}}" alt="Holistic Resources" width="350" height="350">
+                <img src="{{url_for('static',filename='png/holistic-resources.png')}}" alt="Holistic Resources" />
               </a>
-            </p>
-          </li>
-        </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="div-experience-heading" id="div-misc-experience-heading">
@@ -74,7 +83,7 @@
     </div>
     <div class="div-experience-content" id="div-misc-expereience-content">
       <ul>
-        <li><a href="https://github.com/kalbifornia">Joe's GitHub</a>: See some of the stuff Joe has toyed around with</li>
+        <li><a href="https://github.com/kalbifornia">Joe's GitHub</a>: See some of the dev work Joe has tinkered with</li>
         <li><a href="https://medium.com/@joseph.j.kalb">Joe's Medium</a>: See what Joe has written technically about</li>
         <li><a href="https://twitter.com/HookShotsApp">Hook Shots App</a>: Back in 2015 Joe released the Hook Shots App (a fun, lighthearted, competetitive basketball app for iOS and Android). It is now outdated and no longer in the app store, but its Twitter page still lives on.</li>
       </ul>

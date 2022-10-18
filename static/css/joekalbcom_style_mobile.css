@@ -1,0 +1,65 @@
+#features {
+  display: inline-block;
+}
+
+#showcase .showcase-content {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+#showcase .showcase-content h1 {
+  font-size: 40px;
+  line-height: 1.2em;
+}
+
+#showcase .showcase-content p {
+  line-height: 1.4em;
+  font-size: 20px;
+}
+
+.slide {
+  flex-direction: column-reverse;
+}
+
+.slider {
+  width: 100%;
+  min-width: 200px;
+  height: 700px;
+}
+
+.slide-content {
+  width: 100%;
+}
+
+.slide {
+  padding: 10px;
+  padding-bottom: 40px;
+}
+
+h2.slide-title {
+  font-size: 24px;
+  margin-bottom: 0px;
+}
+
+.div-content {
+  padding: 25px;
+}
+
+.slide-image {
+  text-align: center;
+}
+
+.slide-image.square a img {
+  height: 150px;
+  width: 150px;
+}
+
+.slide-image.diseasereversals a img {
+  height: 92px;
+  width: 150px;
+}
+
+.slide-link {
+  width: 100%;
+  text-align: center;
+}

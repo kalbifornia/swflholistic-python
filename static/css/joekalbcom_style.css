@@ -183,13 +183,14 @@ p {
   --background-position: left bottom;
   background-color: var(--jk-light-gray);
   background-size: cover;
-  height: 600px;
+  min-height: 600px;
 }
 
 #showcase .showcase-content {
   color: #fff;
   text-align: center;
-  padding-top: 170px;
+  padding-top: 80px;
+  padding-bottom: 80px;
 }
 
 #showcase .showcase-content h1 {
@@ -428,7 +429,9 @@ div.div-content {
 
 .slide-image img {
   max-width: 100%;
+  max-height: 80%;
 }
+
 
 /* Slide animations */
 #btn-1:checked ~ .slides .slide:nth-child(1) {
