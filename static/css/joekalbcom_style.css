@@ -304,7 +304,7 @@ div.div-content {
   width: 200px;
   text-align: center;
   transform: translatex(-50%);
-  z-index: 1000;
+  z-index: 1;
 
   list-style: none;
   text-align: center;
@@ -561,7 +561,7 @@ button.button-contact-form-entry:active {
   padding-left: 5vw;
   padding-right: 5vw;
   background-color: white;
-  z-index: 2; /*This is to get in front of the selectize inputs with z-index 1*/
+  z-index: 2;
 }
 
 .navbar-space-filler {
