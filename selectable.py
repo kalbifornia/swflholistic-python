@@ -4,3 +4,9 @@ class Selectable():
         self.starting_letter = starting_letter
         self.short_name = short_name
         self.type = type
+
+class SelectableFilter():
+    def __init__(self,display_name,short_name,type):
+        self.display_name = display_name
+        self.short_name = short_name
+        self.type = type

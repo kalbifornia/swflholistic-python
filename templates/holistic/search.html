@@ -7,9 +7,9 @@
       <div class="search-header-title">
         <h2>Find Resources by {{selectable_type}}</h2>
       </div>
-      {% if selectable_type == "Category" and selectable_filter_type == "City" %}
+      {% if selectable_type == "Category" and selectable_filter != None and selectable_filter.type == "City" %}
       <div class="search-header-subtitle">
-        <h3>City: {{selectable_filter_display_value}}</h3>
+        <h3>City: {{selectable_filter.display_name}}</h3>
         {% if toggle_print %}
         <div class="search-subtitle-printable"><a href="#">View Printable Directory for Naples, FL</a></div>
         {% endif %}
@@ -17,11 +17,11 @@
       {% endif %}
       <div class="search-header-description">
         <div class="search-header-description-main">Select a category to view a directory of resources by type.</div>
-      {% if selectable_type == "Category" and selectable_filter_type == None %}
+      {% if selectable_type == "Category" and selectable_filter == None %}
         <div class="search-header-description-detail">Includes all resources by default. To view resources avaialble in a specific region, first select the city below.</div>
       {% endif %}
       </div>
-      {% if selectable_type == "Category" and selectable_filter_type == None %}
+      {% if selectable_type == "Category" and selectable_filter == None %}
       <div class="search-header-dropdown">
         <select id="select-search-city">
           <option selected disabled hidden>City</option>

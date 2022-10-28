@@ -33,6 +33,7 @@ from models import Area as AreaModel
 from models import AreaFeature as AreaFeatureModel
 
 from selectable import Selectable
+from selectable import SelectableFilter
 
 
 def send_success_email(payload):
@@ -288,8 +289,7 @@ selectables
 @app.route("/holistic/search/")
 def holistic_search():
     search_type = "Category"   #default to Category
-    selectable_filter_type = None
-    selectable_filter_value = None
+    selectable_filter = None
 
     args = request.args
     if "type" in args:
@@ -303,9 +303,7 @@ def holistic_search():
     if "city" in args:
         area = AreaModel.query.filter_by(short_name=args["city"]).first()
         if area != None:
-            selectable_filter_type = "City"
-            selectable_filter_short_name = area.short_name
-            selectable_filter_display_value = area.name
+            selectable_filter = SelectableFilter(type="City",short_name=area.short_name,display_name=area.name)
 
     all_areas = AreaModel.query.all()
     all_cities = []
@@ -313,11 +311,11 @@ def holistic_search():
         all_cities.append(area)
     all_cities = sorted(all_areas, key=lambda a: a.name)
 
-    if (search_type == "Category" and selectable_filter_short_name == None):
+    if (search_type == "Category" and selectable_filter == None):
         all_enabled_features = FeatureModel.query.filter_by(enabled=True)
         selectables_by_letter = get_category_selectables_by_letter(all_enabled_features)
-    elif (search_type == "Category" and selectable_filter_short_name != None):
-        all_areafeatures_for_city = AreaFeatureModel.query.filter_by(area_short_name=selectable_filter_short_name)
+    elif (search_type == "Category" and selectable_filter != None and selectable_filter.short_name != None):
+        all_areafeatures_for_city = AreaFeatureModel.query.filter_by(area_short_name=selectable_filter.short_name)
         all_enabled_features_for_city = []
         for areafeature in all_areafeatures_for_city:
             feature = FeatureModel.query.filter_by(short_name=areafeature.feature_short_name).first()
@@ -325,7 +323,7 @@ def holistic_search():
                 all_enabled_features_for_city.append(feature)
         selectables_by_letter = get_category_selectables_by_letter(all_enabled_features_for_city)
 
-    return render_template("holistic/search.html",selectable_type=search_type,selectable_filter_type=selectable_filter_type,selectable_filter_display_value=selectable_filter_display_value,selectable_filter_short_name=selectable_filter_short_name,selectables_by_letter=selectables_by_letter,all_cities=all_cities)
+    return render_template("holistic/search.html",selectable_type=search_type,selectable_filter=selectable_filter,selectables_by_letter=selectables_by_letter,all_cities=all_cities)
 
 @app.route("/swflholistic")
 @app.route("/swflholistic/")
