@@ -30,6 +30,9 @@ db = SQLAlchemy(app)
 from models import Feature as FeatureModel
 from models import Tag as TagModel
 from models import Area as AreaModel
+from models import AreaFeature as AreaFeatureModel
+
+from selectable import Selectable
 
 
 def send_success_email(payload):
@@ -241,21 +244,92 @@ def dev_send_contact_email_page():
         }
         return json.dumps(error_j),500,{'Content-Type': 'application/json'}
     return
-@app.route("/holistic")
-def holistic_home_page_redirect():
-    return redirect("/holistic/");
 
+def get_category_selectables_by_letter(features):
+    selectables_by_letter = {}
+    category_tags = set()
+    selectable_type = "Category"
+    for feature in features:
+        category_tags.add(feature.primary_tag_obj)
+
+    for tag in category_tags:
+        starting_letter = tag.plural_description[0].upper()
+        selectable = Selectable(type=selectable_type,display_name=tag.plural_description,short_name=tag.tag_name,starting_letter=starting_letter)
+
+        if starting_letter not in selectables_by_letter:
+            selectables_by_letter.update({starting_letter:[selectable]})
+        else:
+            selectables_list = selectables_by_letter[starting_letter]
+            selectables_list.append(selectable)
+            selectables_list = sorted(selectables_list, key=lambda s: s.display_name)
+            selectables_by_letter.update({starting_letter:selectables_list})
+    return selectables_by_letter
+
+@app.route("/holistic")
 @app.route("/holistic/")
 def holistic_home():
-    all_areas = AreaModel.query.all()
-    return render_template("holistic/home.html",areas=all_areas)
-
-@app.route("/swflholistic")
-def swflholistic_redirect():
     return redirect("/holistic/area/swfl")
 
+#Holistic Search
+"""
+selectable_type (Category/City/Resource) [e.g. "Find Resources by _____"]
+
+selectable_filter_type (City/Category/None)
+[e.g. "Find Resources by Category for _______"]
+
+selectable_filter_value (string or None)
+
+selectables
+	display_name
+	short_name
+    starting_letter
+"""
+@app.route("/holistic/search")
+@app.route("/holistic/search/")
+def holistic_search():
+    search_type = "Category"   #default to Category
+    selectable_filter_type = None
+    selectable_filter_value = None
+
+    args = request.args
+    if "type" in args:
+        if args["type"] == "category":
+            search_type = "Category"
+        elif args["type"] == "city":
+            search_type = "City"
+        elif args["type"] == "resource":
+            search_type = "Resource"
+
+    if "city" in args:
+        area = AreaModel.query.filter_by(short_name=args["city"]).first()
+        if area != None:
+            selectable_filter_type = "City"
+            selectable_filter_short_name = area.short_name
+            selectable_filter_display_value = area.name
+
+    all_areas = AreaModel.query.all()
+    all_cities = []
+    for area in all_areas:
+        all_cities.append(area)
+    all_cities = sorted(all_areas, key=lambda a: a.name)
+
+    if (search_type == "Category" and selectable_filter_short_name == None):
+        all_enabled_features = FeatureModel.query.filter_by(enabled=True)
+        selectables_by_letter = get_category_selectables_by_letter(all_enabled_features)
+    elif (search_type == "Category" and selectable_filter_short_name != None):
+        all_areafeatures_for_city = AreaFeatureModel.query.filter_by(area_short_name=selectable_filter_short_name)
+        all_enabled_features_for_city = []
+        for areafeature in all_areafeatures_for_city:
+            feature = FeatureModel.query.filter_by(short_name=areafeature.feature_short_name).first()
+            if feature.enabled:
+                all_enabled_features_for_city.append(feature)
+        selectables_by_letter = get_category_selectables_by_letter(all_enabled_features_for_city)
+
+    return render_template("holistic/search.html",selectable_type=search_type,selectable_filter_type=selectable_filter_type,selectable_filter_display_value=selectable_filter_display_value,selectable_filter_short_name=selectable_filter_short_name,selectables_by_letter=selectables_by_letter,all_cities=all_cities)
+
+@app.route("/swflholistic")
 @app.route("/swflholistic/")
-def swflholistic_slash_redirect():
+def swflholistic_redirect():
     return redirect("/holistic/area/swfl")
 
 @app.route("/swflholistic/viewtag.html")
@@ -266,6 +340,9 @@ def viewtag_redirect():
 def viewdetail_redirect():
     return redirect("/holistic/feature/{feature_short_name}".format(feature_short_name=request.args.get("short_name")))
 
+@app.route("/holistic/about")
+def about():
+    return render_template("holistic/about.html")
 
 @app.route("/holistic/area/<area_short_name>")
 def index(area_short_name):

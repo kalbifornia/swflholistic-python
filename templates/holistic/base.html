@@ -3,38 +3,62 @@
   <meta charset='utf-8' />
   <title>{% block title %}{% endblock %}- JoeKalb.com</title>
   <meta name='viewport' content='width=device-width, initial-scale=1' />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="description" content="Holistic Health Directory: A geographic directory connecting people with quality holistic health resources">
+  <meta name="keywords" content="holistic,holistic health,healthy,software engineer,developer,web design,web developer,full-stack developer">
   <script src="{{url_for('static',filename='script/jquery.min.js')}}"></script>
   {% block additional_js %}{% endblock %}
-  <link href="{{url_for('static',filename='css/holistic.css')}}" rel='stylesheet' />
-  <link href="{{url_for('static',filename='fontawesome-free-5.15.4-web/css/all.min.css')}}" rel='stylesheet' />
+  <link href="{{url_for('static',filename='css/holistic_v2.css')}}" rel='stylesheet' />
+  <link href="{{url_for('static',filename='fontawesome-6.2/css/fontawesome.min.css')}}" rel='stylesheet' />
+  <link href="{{url_for('static',filename='fontawesome-6.2/css/brands.min.css')}}" rel='stylesheet' />
+  <link href="{{url_for('static',filename='fontawesome-6.2/css/solid.min.css')}}" rel='stylesheet' />
   {% block additional_css %}{% endblock %}
-  <link rel="icon" type="image/png" href="{{url_for('static',filename='wapf-favicon.png')}}">
+  <!--<link rel="icon" type="image/png" href="{{url_for('static',filename='wapf-favicon.png')}}">-->
 </head>
 <section class="content">
   <header>
     <div class="navbar">
-      <a href="/holistic"><img src="{{url_for('static',filename='png/holistic-resources.png')}}" height="50" width="50" /></a>
-      <nav>
-        <ul>
-          <li class="desktop-only"><a class="navbar-link" href="/holistic/">Home</a></li>
-          <li class="desktop-only"><a class="navbar-link" href="/holistic/addfeature">Add a Resource</a></li>
-
-          <li>
-            <i tabindex="0" id="navbar-dropdown" class="fas fa-bars fa-2x circle-background navbar-icon mobile-only"></i>
-            <div id="navbar-dropdown-content" class="dropdown-content invisible">
-              <ul class="dropdown-ul">
-                <li id="navbar-dropdown-home" class="navbar-dropdown-item" tabindex="0">Home</li>
-                <li id="navbar-dropdown-share" class="navbar-dropdown-item" tabindex="0">Share a Reversal</li>
-                <li id="navbar-dropdown-about" class="navbar-dropdown-item" tabindex="0">About</li>
-                <li id="navbar-dropdown-contact" class="navbar-dropdown-item" tabindex="0">Contact</li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-      </nav>
+      <div class="navbar-top-section">
+        <div class="navbar-logo">
+          <span class="helper-vert-align"></span>
+          <a href="/holistic"><!--<img src="{{url_for('static',filename='png/holistic-resources.png')}}"> </img>-->
+            <i class="fa-solid fa-suitcase-medical fa-3x"></i>
+          </a>
+        </div>
+        <div class="navbar-main-text">
+          <div class="navbar-title">Holistic Health Directory</div>
+          <div class="navbar-description">A geographic directory connecting people with quality holistic health resources.</div>
+        </div>
+      </div>
+      <div class="navbar-bottom-section">
+        <nav>
+          <ul>
+            <li><a class="navbar-link" id="a-view-map" href="/holistic">View Map</a></li>
+            <li><a class="navbar-link" id="a-search-by-city" href="/holistic/search/city">Search by City</a></li>
+            <li><a class="navbar-link" id="a-search-by-category" href="/holistic/search/category">Search by Category</a></li>
+            <li><a class="navbar-link" id="a-by-resource" href="/holistic/search/resource">Search By Resource</a></li>
+            <li><a class="navbar-link" id="a-add-a-resource" href="/holistic/addfeature">Add a Resource</a></li>
+        </nav>
+      </div>
     </div>
-    <div class="navbar-space-filler">
-    </div>
+    <div class="navbar-space-filler"></div>
   </header>
   {% block content %}{% endblock %}
+  <footer>
+    <div class="footer">
+      <div class="footer-links">
+        <a href="/holistic/about">About</a>
+        <span class="footer-divider">|</span>
+        <a href="/dev/contact.html">Get in Touch</a>
+      </div>
+      <div class="footer-social">
+        <a href="#"><i class="fa-brands fa-facebook fa-2x"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram fa-2x"></i></a>
+        <a href="#"><i class="fa-brands fa-twitter fa-2x"></i></a>
+      </div>
+      <div class="footer-empty">
+      </div>
+    </div>
+    <div class="footer-space-filler"></div>
+  </footer>
 </section>

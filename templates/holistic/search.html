@@ -1,0 +1,152 @@
+{% extends 'holistic/base.html' %}
+
+{%block title %}Holistic Health Directory{% endblock %}
+
+{%block content %}
+    <div class="search-header">
+      <div class="search-header-title">
+        <h2>Find Resources by {{selectable_type}}</h2>
+      </div>
+      {% if selectable_type == "Category" and selectable_filter_type == "City" %}
+      <div class="search-header-subtitle">
+        <h3>City: {{selectable_filter_display_value}}</h3>
+        {% if toggle_print %}
+        <div class="search-subtitle-printable"><a href="#">View Printable Directory for Naples, FL</a></div>
+        {% endif %}
+      </div>
+      {% endif %}
+      <div class="search-header-description">
+        <div class="search-header-description-main">Select a category to view a directory of resources by type.</div>
+      {% if selectable_type == "Category" and selectable_filter_type == None %}
+        <div class="search-header-description-detail">Includes all resources by default. To view resources avaialble in a specific region, first select the city below.</div>
+      {% endif %}
+      </div>
+      {% if selectable_type == "Category" and selectable_filter_type == None %}
+      <div class="search-header-dropdown">
+        <select id="select-search-city">
+          <option selected disabled hidden>City</option>
+          {% for city in all_cities %}
+            <option value="{{city.short_name}}">{{city.name}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endif %}
+      <div class="search-header-letters">
+        {% if "A" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_A">A</a>{% else %}<a>A</a>{% endif %}
+        {% if "B" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_B">B</a>{% else %}<a>B</a>{% endif %}
+        {% if "C" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_C">C</a>{% else %}<a>C</a>{% endif %}
+        {% if "D" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_D">D</a>{% else %}<a>D</a>{% endif %}
+        {% if "E" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_E">E</a>{% else %}<a>E</a>{% endif %}
+        {% if "F" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_F">F</a>{% else %}<a>F</a>{% endif %}
+        {% if "G" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_G">G</a>{% else %}<a>G</a>{% endif %}
+        {% if "H" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_H">H</a>{% else %}<a>H</a>{% endif %}
+        {% if "I" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_I">I</a>{% else %}<a>I</a>{% endif %}
+        {% if "J" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_J">J</a>{% else %}<a>J</a>{% endif %}
+        {% if "K" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_K">K</a>{% else %}<a>K</a>{% endif %}
+        {% if "L" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_L">L</a>{% else %}<a>L</a>{% endif %}
+        {% if "M" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_M">M</a>{% else %}<a>M</a>{% endif %}
+        {% if "N" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_N">N</a>{% else %}<a>N</a>{% endif %}
+        {% if "O" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_O">O</a>{% else %}<a>O</a>{% endif %}
+        {% if "P" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_P">P</a>{% else %}<a>P</a>{% endif %}
+        {% if "Q" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_Q">Q</a>{% else %}<a>Q</a>{% endif %}
+        {% if "R" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_R">R</a>{% else %}<a>R</a>{% endif %}
+        {% if "S" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_S">S</a>{% else %}<a>S</a>{% endif %}
+        {% if "T" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_T">T</a>{% else %}<a>T</a>{% endif %}
+        {% if "U" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_U">U</a>{% else %}<a>U</a>{% endif %}
+        {% if "V" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_V">V</a>{% else %}<a>V</a>{% endif %}
+        {% if "W" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_W">W</a>{% else %}<a>W</a>{% endif %}
+        {% if "X" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_X">X</a>{% else %}<a>X</a>{% endif %}
+        {% if "Y" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_Y">Y</a>{% else %}<a>Y</a>{% endif %}
+        {% if "Z" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_Z">Z</a>{% else %}<a>Z</a>{% endif %}
+      </div>
+    </div>
+
+    <div class="groupings-by-letters">
+      <div class="grouping-by-letter">
+        {% set ordered_letter_keys = selectables_by_letter.keys()|sort() %}
+        {% for letter_key in ordered_letter_keys %}
+          <div class="header-by-letter" id="letter_{{ letter_key }}">{{ letter_key }}</div>
+          <div class="objects-by-letter">
+            {% set selectables_for_letter = selectables_by_letter[letter_key] %}
+            {% for selectable in selectables_for_letter %}
+            <button type="button" class="object-by-letter" id="button-{{selectable.short_name}}">
+              {{selectable.display_name}}
+            </button>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <script>
+      var searchType = "{{selectable_type}}";
+      $('#select-search-city').change(function() {
+        if (searchType == "Category") {
+          window.location.href = "/holistic/search?type=category&city=" + $('#select-search-city').val();
+        }
+      });
+
+      $('.jump_to_letter').click(function() {
+        var clicked_element = $(event.target).attr('id');
+        var jump_to_letter = "";
+
+        if (clicked_element == "#jump_to_letter_A") {
+          jump_to_letter = "#letter_A";
+        } else if (clicked_element == "#jump_to_letter_B") {
+          jump_to_letter = "#letter_B";
+        } else if (clicked_element == "#jump_to_letter_C") {
+          jump_to_letter = "#letter_C";
+        } else if (clicked_element == "#jump_to_letter_D") {
+          jump_to_letter = "#letter_D";
+        } else if (clicked_element == "#jump_to_letter_E") {
+          jump_to_letter = "#letter_E";
+        } else if (clicked_element == "#jump_to_letter_F") {
+          jump_to_letter = "#letter_F";
+        } else if (clicked_element == "#jump_to_letter_G") {
+          jump_to_letter = "#letter_G";
+        } else if (clicked_element == "#jump_to_letter_H") {
+          jump_to_letter = "#letter_H";
+        } else if (clicked_element == "#jump_to_letter_I") {
+          jump_to_letter = "#letter_I";
+        } else if (clicked_element == "#jump_to_letter_J") {
+          jump_to_letter = "#letter_J";
+        } else if (clicked_element == "#jump_to_letter_K") {
+          jump_to_letter = "#letter_K";
+        } else if (clicked_element == "#jump_to_letter_L") {
+          jump_to_letter = "#letter_L";
+        } else if (clicked_element == "#jump_to_letter_M") {
+          jump_to_letter = "#letter_M";
+        } else if (clicked_element == "#jump_to_letter_N") {
+          jump_to_letter = "#letter_N";
+        } else if (clicked_element == "#jump_to_letter_O") {
+          jump_to_letter = "#letter_O";
+        } else if (clicked_element == "#jump_to_letter_P") {
+          jump_to_letter = "#letter_P";
+        } else if (clicked_element == "#jump_to_letter_Q") {
+          jump_to_letter = "#letter_Q";
+        } else if (clicked_element == "#jump_to_letter_R") {
+          jump_to_letter = "#letter_R";
+        } else if (clicked_element == "#jump_to_letter_S") {
+          jump_to_letter = "#letter_S";
+        } else if (clicked_element == "#jump_to_letter_T") {
+          jump_to_letter = "#letter_T";
+        } else if (clicked_element == "#jump_to_letter_U") {
+          jump_to_letter = "#letter_U";
+        } else if (clicked_element == "#jump_to_letter_V") {
+          jump_to_letter = "#letter_V";
+        } else if (clicked_element == "#jump_to_letter_W") {
+          jump_to_letter = "#letter_W";
+        } else if (clicked_element == "#jump_to_letter_X") {
+          jump_to_letter = "#letter_X";
+        } else if (clicked_element == "#jump_to_letter_Y") {
+          jump_to_letter = "#letter_Y";
+        } else if (clicked_element == "#jump_to_letter_Z") {
+          jump_to_letter = "#letter_Z";
+        }
+
+        var top = $(jump_to_letter).position().top;
+        var navbarHeight = $('.navbar').first().height();
+        var newScroll = top - navbarHeight;
+        $('html').scrollTop(newScroll);
+      });
+    </script>
+{% endblock %}
