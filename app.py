@@ -293,17 +293,25 @@ def holistic_search():
 
     args = request.args
     if "type" in args:
-        if args["type"] == "category":
-            search_type = "Category"
-        elif args["type"] == "city":
-            search_type = "City"
-        elif args["type"] == "resource":
-            search_type = "Resource"
+        if args["type"].upper() == "CATEGORY":
+            search_type = "category"
+        elif args["type"].upper() == "CITY":
+            search_type = "city"
+        elif args["type"].upper() == "RESOURCE":
+            search_type = "resource"
 
-    if "city" in args:
-        area = AreaModel.query.filter_by(short_name=args["city"]).first()
-        if area != None:
-            selectable_filter = SelectableFilter(type="City",short_name=area.short_name,display_name=area.name)
+    if "cities" in args:
+        cities = args["cities"].split(",")
+        short_names = []
+        display_names = []
+        for city in cities:
+            area = AreaModel.query.filter_by(short_name=city).first()
+            if area != None:
+                short_names.append(area.short_name)
+                display_names.append(area.name)
+
+        if len(short_names) > 0:
+            selectable_filter = SelectableFilter(type="city",short_names=short_names,display_names=display_names)
 
     all_areas = AreaModel.query.all()
     all_cities = []
@@ -311,17 +319,18 @@ def holistic_search():
         all_cities.append(area)
     all_cities = sorted(all_areas, key=lambda a: a.name)
 
-    if (search_type == "Category" and selectable_filter == None):
+    if (search_type == "category" and selectable_filter == None):
         all_enabled_features = FeatureModel.query.filter_by(enabled=True)
         selectables_by_letter = get_category_selectables_by_letter(all_enabled_features)
-    elif (search_type == "Category" and selectable_filter != None and selectable_filter.short_name != None):
-        all_areafeatures_for_city = AreaFeatureModel.query.filter_by(area_short_name=selectable_filter.short_name)
-        all_enabled_features_for_city = []
-        for areafeature in all_areafeatures_for_city:
-            feature = FeatureModel.query.filter_by(short_name=areafeature.feature_short_name).first()
-            if feature.enabled:
-                all_enabled_features_for_city.append(feature)
-        selectables_by_letter = get_category_selectables_by_letter(all_enabled_features_for_city)
+    elif (search_type == "category" and selectable_filter != None):
+        all_enabled_features_for_cities = []
+        for city_short_name in selectable_filter.short_names:
+            all_areafeatures_for_city = AreaFeatureModel.query.filter_by(area_short_name=city_short_name)
+            for areafeature in all_areafeatures_for_city:
+                feature = FeatureModel.query.filter_by(short_name=areafeature.feature_short_name).first()
+                if feature.enabled:
+                    all_enabled_features_for_cities.append(feature)
+        selectables_by_letter = get_category_selectables_by_letter(all_enabled_features_for_cities)
 
     return render_template("holistic/search.html",selectable_type=search_type,selectable_filter=selectable_filter,selectables_by_letter=selectables_by_letter,all_cities=all_cities)
 

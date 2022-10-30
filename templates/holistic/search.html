@@ -7,9 +7,21 @@
       <div class="search-header-title">
         <h2>Find Resources by {{selectable_type}}</h2>
       </div>
-      {% if selectable_type == "Category" and selectable_filter != None and selectable_filter.type == "City" %}
+      {% if selectable_type == "category" and selectable_filter != None and selectable_filter.type == "city" %}
       <div class="search-header-subtitle">
-        <h3>City: {{selectable_filter.display_name}}</h3>
+        {% if selectable_filter.display_names|count == 1 %}
+        <h3>City: {{selectable_filter.display_names[0]}}</h3>
+        {%elif selectable_filter.display_names|count > 1 %}
+        <h3>Cities:
+          {% for display_name in selectable_filter.display_names %}
+            {% if loop.last %}
+              {{display_name}}
+            {% else %}
+              {{display_name}},
+            {% endif %}
+          {% endfor %}
+        </h3>
+        {% endif %}
         {% if toggle_print %}
         <div class="search-subtitle-printable"><a href="#">View Printable Directory for Naples, FL</a></div>
         {% endif %}
@@ -17,20 +29,45 @@
       {% endif %}
       <div class="search-header-description">
         <div class="search-header-description-main">Select a category to view a directory of resources by type.</div>
-      {% if selectable_type == "Category" and selectable_filter == None %}
+      {% if selectable_type == "category" and selectable_filter == None %}
         <div class="search-header-description-detail">Includes all resources by default. To view resources avaialble in a specific region, first select the city below.</div>
       {% endif %}
       </div>
-      {% if selectable_type == "Category" and selectable_filter == None %}
+      {% if selectable_type == "category" %}
       <div class="search-header-dropdown">
-        <select id="select-search-city">
-          <option selected disabled hidden>City</option>
+        <div class="multiselect" id="city-multiselect">
+          <div class="selectBox" id="select-search-cities-select-box">
+            <select id="select-search-cities">
+        {% if selectable_filter == None %}
+              <option>City (All)</option>
+        {% elif selectable_filter.type == "city" and selectable_filter.short_names|count == 1 %}
+              <option>City ({{selectable_filter.display_names[0]}})</option>
+        {% else %}
+              <option>Cities ({{selectable_filter.short_names|count}} cities)</option>
+        {% endif %}
+            </select>
+            <div class="overSelect"></div>
+          </div>
+        </div>
+        <div id="cities-checkboxes" class="invisible">
           {% for city in all_cities %}
-            <option value="{{city.short_name}}">{{city.name}}</option>
+            {% if city.short_name in selectable_filter.short_names %}
+          <label for="checkbox-{{city.short_name}}">
+            <input type="checkbox" id="checkbox-{{city.short_name}}" data-val="{{city.short_name}}" checked />
+            {{city.name}}
+          </label>
+            {% else %}
+          <label for="checkbox-{{city.short_name}}">
+            <input type="checkbox" id="checkbox-{{city.short_name}}" data-val="{{city.short_name}}" />
+            {{city.name}}
+          </label>
+            {% endif %}
           {% endfor %}
-        </select>
+        </div>
       </div>
       {% endif %}
+
+
       <div class="search-header-letters">
         {% if "A" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_A">A</a>{% else %}<a>A</a>{% endif %}
         {% if "B" in selectables_by_letter.keys() %}<a class="jump_to_letter" id="#jump_to_letter_B">B</a>{% else %}<a>B</a>{% endif %}
@@ -78,11 +115,50 @@
       </div>
     </div>
     <script>
-      var searchType = "{{selectable_type}}";
-      $('#select-search-city').change(function() {
-        if (searchType == "Category") {
-          window.location.href = "/holistic/search?type=category&city=" + $('#select-search-city').val();
+      var isCitiesDropdownExpanded = false;
+      var selectedCityShortNames = [];
+      {% if selectable_filter.type == "city" %}
+        {% for city in selectable_filter.short_names %}
+          selectedCityShortNames.push("{{city}}");
+        {% endfor %}
+      {% endif %}
+
+      function showCitiesDropdown() {
+        $('#cities-checkboxes').removeClass("invisible");
+        isCitiesDropdownExpanded = true;
+      }
+
+      function hideCitiesDropdownAndRefreshIfNecessary() {
+        $('#cities-checkboxes').addClass("invisible");
+        isCitiesDropdownExpanded = false;
+        var prevSelectedCityShortNames = selectedCityShortNames;
+        selectedCityShortNames = [];
+        $('#cities-checkboxes input:checked').each(function() {
+          selectedCityShortNames.push($(this).attr("data-val"));
+        });
+        if (selectedCityShortNames.sort().toString() != prevSelectedCityShortNames.sort().toString()) {
+          window.location.href="/holistic/search?type={{selectable_type}}&cities=" + selectedCityShortNames;
         }
+      }
+
+      $(document).ready(function() {
+
+        $('body').click(function() {
+          hideCitiesDropdownAndRefreshIfNecessary();
+        });
+
+        $('#cities-checkboxes').click(function(e) {
+          e.stopPropagation();  //Stops the hiding of city dropdown (done in 'body' click function) if clicking inside of that div
+        });
+
+        $('#select-search-cities-select-box').click(function(e) {
+          if (isCitiesDropdownExpanded) {
+            hideCitiesDropdownAndRefreshIfNecessary();
+          } else {
+            showCitiesDropdown();
+          }
+          e.stopPropagation(); //Stops the automatic hiding of city dropdown (done in 'body' click function) if clicking inside of the select box
+        });
       });
 
       $('.jump_to_letter').click(function() {

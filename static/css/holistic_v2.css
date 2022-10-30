@@ -7,6 +7,7 @@
   --common-tb-padding: 10px;
   --common-lr-margin: 10px;
   --common-tb-margin: 10px;
+  --multiselect-width: 300px;
   --navbarfootergray: lightgray;
   --h1-font-size: 28px;
   --h2-font-size: 24px;
@@ -259,4 +260,43 @@ div.objects-by-letter {
 
 a.jump_to_letter {
   cursor: pointer;
+}
+
+.invisible {
+  display: none;
+}
+
+.multiselect {
+  width: var(--multiselect-width);
+}
+
+.selectBox {
+  position: relative;
+}
+
+.selectBox select {
+  width: 100%;
+}
+
+.overSelect {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+#cities-checkboxes {
+  border: 1px #dadada solid;
+  position: absolute;
+  width: var(--multiselect-width);
+  background-color: white;
+}
+
+#cities-checkboxes label {
+  display: block;
+}
+
+#cities-checkboxes label:hover {
+  background-color: blue;
 }

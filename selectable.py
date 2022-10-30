@@ -6,7 +6,7 @@ class Selectable():
         self.type = type
 
 class SelectableFilter():
-    def __init__(self,display_name,short_name,type):
-        self.display_name = display_name
-        self.short_name = short_name
+    def __init__(self,display_names,short_names,type):
+        self.display_names = display_names
+        self.short_names = short_names
         self.type = type
