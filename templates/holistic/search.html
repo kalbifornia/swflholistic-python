@@ -1,11 +1,22 @@
 {% extends 'holistic/base.html' %}
 
 {%block title %}Holistic Health Directory{% endblock %}
+{% if selectable_type == "category" %}
+  {% set selectable_type_display = "Category" %}
+{% elif selectable_type == "city" %}
+  {% set selectable_type_display = "City" %}
+{% elif selectable_type == "resource" %}
+  {% set selectable_type_display = "Resource" %}
+{% endif %}
 
 {%block content %}
     <div class="search-header">
       <div class="search-header-title">
-        <h2>Find Resources by {{selectable_type}}</h2>
+      {% if selectable_type == "category" or selectable_type == "City" %}
+        <h2>Find Resources by {{selectable_type_display}}</h2>
+      {% elif selectable_type == "resource" %}
+        <h2>Browse All Resouces</h2>
+      {% endif %}
       </div>
       {% if selectable_type == "category" and selectable_filter != None and selectable_filter.type == "city" %}
       <div class="search-header-subtitle">

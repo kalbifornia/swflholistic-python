@@ -246,25 +246,57 @@ def dev_send_contact_email_page():
         return json.dumps(error_j),500,{'Content-Type': 'application/json'}
     return
 
+def add_selectable_to_by_letter_dict(selectable,starting_letter,by_letter_dict):
+    if starting_letter not in by_letter_dict:
+        by_letter_dict.update({starting_letter:[selectable]})
+    else:
+        selectables_list = by_letter_dict[starting_letter]
+        selectables_list.append(selectable)
+        selectables_list = sorted(selectables_list, key=lambda s: s.display_name)
+        by_letter_dict.update({starting_letter:selectables_list})
+    return by_letter_dict
+
 def get_category_selectables_by_letter(features):
     selectables_by_letter = {}
     category_tags = set()
-    selectable_type = "Category"
+    selectable_type = "category"
     for feature in features:
         category_tags.add(feature.primary_tag_obj)
 
     for tag in category_tags:
         starting_letter = tag.plural_description[0].upper()
         selectable = Selectable(type=selectable_type,display_name=tag.plural_description,short_name=tag.tag_name,starting_letter=starting_letter)
+        selectables_by_letter = add_selectable_to_by_letter_dict(selectable=selectable,starting_letter=starting_letter,by_letter_dict=selectables_by_letter)
 
-        if starting_letter not in selectables_by_letter:
-            selectables_by_letter.update({starting_letter:[selectable]})
-        else:
-            selectables_list = selectables_by_letter[starting_letter]
-            selectables_list.append(selectable)
-            selectables_list = sorted(selectables_list, key=lambda s: s.display_name)
-            selectables_by_letter.update({starting_letter:selectables_list})
     return selectables_by_letter
+
+def get_city_selectables_by_letter(areas):
+    selectables_by_letter = {}
+    for area in areas:
+        starting_letter = area.name[0].upper()
+        selectable = Selectable(type="city",display_name=area.name,short_name=area.short_name,starting_letter=starting_letter)
+        selectables_by_letter = add_selectable_to_by_letter_dict(selectable=selectable,starting_letter=starting_letter,by_letter_dict=selectables_by_letter)
+
+    return selectables_by_letter
+
+def get_resource_selectables_by_letter(features):
+    selectables_by_letter = {}
+    for feature in features:
+        starting_letter = feature.name[0].upper()
+        selectable = Selectable(type="resource",display_name=feature.name,short_name=feature.short_name,starting_letter=starting_letter)
+        selectables_by_letter = add_selectable_to_by_letter_dict(selectable=selectable,starting_letter=starting_letter,by_letter_dict=selectables_by_letter)
+
+    return selectables_by_letter
+
+def get_all_enabled_features_for_cities(city_short_names):
+    all_enabled_features_for_cities = []
+    for city_short_name in city_short_names:
+        all_areafeatures_for_city = AreaFeatureModel.query.filter_by(area_short_name=city_short_name)
+        for areafeature in all_areafeatures_for_city:
+            feature = FeatureModel.query.filter_by(short_name=areafeature.feature_short_name).first()
+            if feature.enabled:
+                all_enabled_features_for_cities.append(feature)
+    return all_enabled_features_for_cities
 
 @app.route("/holistic")
 @app.route("/holistic/")
@@ -322,15 +354,17 @@ def holistic_search():
     if (search_type == "category" and selectable_filter == None):
         all_enabled_features = FeatureModel.query.filter_by(enabled=True)
         selectables_by_letter = get_category_selectables_by_letter(all_enabled_features)
-    elif (search_type == "category" and selectable_filter != None):
-        all_enabled_features_for_cities = []
-        for city_short_name in selectable_filter.short_names:
-            all_areafeatures_for_city = AreaFeatureModel.query.filter_by(area_short_name=city_short_name)
-            for areafeature in all_areafeatures_for_city:
-                feature = FeatureModel.query.filter_by(short_name=areafeature.feature_short_name).first()
-                if feature.enabled:
-                    all_enabled_features_for_cities.append(feature)
+    elif (search_type == "category" and selectable_filter != None and selectable_filter.type == "city"):
+        all_enabled_features_for_cities = get_all_enabled_features_for_cities(city_short_names=selectable_filter.short_names)
         selectables_by_letter = get_category_selectables_by_letter(all_enabled_features_for_cities)
+    elif (search_type == "city"):
+        selectables_by_letter = get_city_selectables_by_letter(all_areas)
+    elif (search_type == "resource" and selectable_filter == None):
+        all_enabled_features = FeatureModel.query.filter_by(enabled=True)
+        selectables_by_letter = get_resource_selectables_by_letter(all_enabled_features)
+    elif (search_type == "resource" and selectable_filter != None and selectable_filter.type == "city"):
+        all_enabled_features_for_cities = get_all_enabled_features_for_cities(city_short_names=selectable_filter.short_names)
+        selectables_by_letter = get_resource_selectables_by_letter(all_enabled_features_for_cities)
 
     return render_template("holistic/search.html",selectable_type=search_type,selectable_filter=selectable_filter,selectables_by_letter=selectables_by_letter,all_cities=all_cities)
 
