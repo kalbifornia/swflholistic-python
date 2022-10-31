@@ -305,9 +305,9 @@ def holistic_home():
 
 #Holistic Search
 """
-selectable_type (Category/City/Resource) [e.g. "Find Resources by _____"]
+selectable_type (category/city/resource) [e.g. "Find Resources by _____"]
 
-selectable_filter_type (City/Category/None)
+selectable_filter_type (city/category/None)
 [e.g. "Find Resources by Category for _______"]
 
 selectable_filter_value (string or None)
