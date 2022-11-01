@@ -260,6 +260,7 @@ div.objects-by-letter {
 
 a.jump_to_letter {
   cursor: pointer;
+  font-weight: bold;
 }
 
 .invisible {

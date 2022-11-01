@@ -6,6 +6,7 @@ import graphene
 import os
 import json
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import and_
 import traceback
 import werkzeug
 import smtplib
@@ -137,7 +138,7 @@ def load_database_from_json():
         )
         for tag in feature['properties']['tags']:
             print(tag)
-            fm.tags.append(TagModel.query.filter_by(tag_name=tag).first())
+            fm.tags.append(TagModel.query.filter(TagModel.tag_name==tag).first())
         fm.areas.append(swfl_area_model)
         db.session.add(fm)
 
@@ -146,7 +147,7 @@ def load_database_from_json():
 
 def generate_json_from_database():
     features_json_dicts = []
-    all_enabled_features = FeatureModel.query.filter_by(enabled=True)
+    all_enabled_features = FeatureModel.query.filter(FeatureModel.enabled==True)
     for feature in all_enabled_features:
         features_json_dicts.append(feature.to_json_dict())
 
@@ -261,7 +262,8 @@ def get_category_selectables_by_letter(features):
     category_tags = set()
     selectable_type = "category"
     for feature in features:
-        category_tags.add(feature.primary_tag_obj)
+        for tag in feature.tags:
+            category_tags.add(tag)
 
     for tag in category_tags:
         starting_letter = tag.plural_description[0].upper()
@@ -288,16 +290,6 @@ def get_resource_selectables_by_letter(features):
 
     return selectables_by_letter
 
-def get_all_enabled_features_for_cities(city_short_names):
-    all_enabled_features_for_cities = []
-    for city_short_name in city_short_names:
-        all_areafeatures_for_city = AreaFeatureModel.query.filter_by(area_short_name=city_short_name)
-        for areafeature in all_areafeatures_for_city:
-            feature = FeatureModel.query.filter_by(short_name=areafeature.feature_short_name).first()
-            if feature.enabled:
-                all_enabled_features_for_cities.append(feature)
-    return all_enabled_features_for_cities
-
 @app.route("/holistic")
 @app.route("/holistic/")
 def holistic_home():
@@ -321,7 +313,8 @@ selectables
 @app.route("/holistic/search/")
 def holistic_search():
     search_type = "Category"   #default to Category
-    selectable_filter = None
+    city_filter = None
+    tag_filter = None
 
     args = request.args
     if "type" in args:
@@ -343,7 +336,21 @@ def holistic_search():
                 display_names.append(area.name)
 
         if len(short_names) > 0:
-            selectable_filter = SelectableFilter(type="city",short_names=short_names,display_names=display_names)
+            city_filter = SelectableFilter(type="city",short_names=short_names,display_names=display_names)
+
+    if "tags" in args and search_type == "resource":
+        tags = args["tags"].split(",")
+        short_names = []
+        display_names = []
+
+        for tag_name in tags:
+            tag = TagModel.query.filter_by(tag_name=tag_name).first()
+            if tag != None:
+                short_names.append(tag.tag_name)
+                display_names.append(tag.plural_description)
+
+            if len(short_names) > 0:
+                tag_filter = SelectableFilter(type="tag",short_names=short_names,display_names=display_names)
 
     all_areas = AreaModel.query.all()
     all_cities = []
@@ -351,22 +358,20 @@ def holistic_search():
         all_cities.append(area)
     all_cities = sorted(all_areas, key=lambda a: a.name)
 
-    if (search_type == "category" and selectable_filter == None):
-        all_enabled_features = FeatureModel.query.filter_by(enabled=True)
-        selectables_by_letter = get_category_selectables_by_letter(all_enabled_features)
-    elif (search_type == "category" and selectable_filter != None and selectable_filter.type == "city"):
-        all_enabled_features_for_cities = get_all_enabled_features_for_cities(city_short_names=selectable_filter.short_names)
-        selectables_by_letter = get_category_selectables_by_letter(all_enabled_features_for_cities)
-    elif (search_type == "city"):
-        selectables_by_letter = get_city_selectables_by_letter(all_areas)
-    elif (search_type == "resource" and selectable_filter == None):
-        all_enabled_features = FeatureModel.query.filter_by(enabled=True)
-        selectables_by_letter = get_resource_selectables_by_letter(all_enabled_features)
-    elif (search_type == "resource" and selectable_filter != None and selectable_filter.type == "city"):
-        all_enabled_features_for_cities = get_all_enabled_features_for_cities(city_short_names=selectable_filter.short_names)
-        selectables_by_letter = get_resource_selectables_by_letter(all_enabled_features_for_cities)
+    filtered_features = FeatureModel.query.filter(FeatureModel.enabled==True)
+    if tag_filter != None:
+        filtered_features = filtered_features.filter(FeatureModel.tags.any(TagModel.tag_name.in_(tag_filter.short_names)))
+    if city_filter != None:
+        filtered_features = filtered_features.filter(FeatureModel.areas.any(AreaModel.short_name.in_(city_filter.short_names)))
 
-    return render_template("holistic/search.html",selectable_type=search_type,selectable_filter=selectable_filter,selectables_by_letter=selectables_by_letter,all_cities=all_cities)
+    if search_type == "category":
+        selectables_by_letter = get_category_selectables_by_letter(filtered_features)
+    elif (search_type == "city"):
+        selectables_by_letter = get_city_selectables_by_letter(all_cities)
+    elif (search_type == "resource"):
+        selectables_by_letter = get_resource_selectables_by_letter(filtered_features)
+
+    return render_template("holistic/search.html",selectable_type=search_type,city_filter=city_filter,tag_filter=tag_filter,selectables_by_letter=selectables_by_letter,all_cities=all_cities)
 
 @app.route("/swflholistic")
 @app.route("/swflholistic/")
@@ -387,7 +392,7 @@ def about():
 
 @app.route("/holistic/area/<area_short_name>")
 def index(area_short_name):
-    area = AreaModel.query.filter_by(short_name=area_short_name).first()
+    area = AreaModel.query.filter(AreaModel.short_name==area_short_name).first()
     areas = AreaModel.query.all()
     tags = TagModel.query.all()
     if area == None:
@@ -402,13 +407,12 @@ def index(area_short_name):
 
 @app.route("/holistic/feature/<short_name>")
 def featurePage(short_name):
-    feature = FeatureModel.query.filter_by(short_name = short_name, enabled = True).first()
+    feature = FeatureModel.query.filter(and_(FeatureModel.short_name == short_name, FeatureModel.enabled == True)).first()
     return render_template("holistic/feature.html",feature=feature)
 
 @app.route("/holistic/tag/<tag_name>")
 def tagPage(tag_name):
-    tag = TagModel.query.filter_by(tag_name = tag_name).first()
-    print(tag.features)
+    tag = TagModel.query.filter(TagModel.tag_name == tag_name).first()
     return render_template("holistic/tag.html",tag=tag)
 
 @app.route("/holistic/load-json-from-database")
@@ -484,12 +488,12 @@ def api_feature():
         if short_name == None or short_name == "":
             short_name = "autogen"
 
-        f = FeatureModel.query.filter_by(short_name=short_name).first()
+        f = FeatureModel.query.filter(FeatureModel.short_name==short_name).first()
         if f != None:
             i = 0
             while True:
                 str_gen_short_name = "{short_name}{i}".format(short_name=short_name,i=i)
-                f = FeatureModel.query.filter_by(short_name=str_gen_short_name).first()
+                f = FeatureModel.query.filter(FeatureModel.short_name==str_gen_short_name).first()
                 if f != None:
                     i = i + 1
                 else:
@@ -517,7 +521,7 @@ def api_feature():
         elif not isinstance(primary_tag,str) or primary_tag == "":
             error_j = {"status":"error","error_message":"primary_tag must have a string value with length >= 1"}
             return json.dumps(error_j),500,{'Content-Type': 'application/json'}
-        elif TagModel.query.filter_by(tag_name=primary_tag).first() == None:
+        elif TagModel.query.filter(TagModel.tag_name==primary_tag).first() == None:
             error_j = {"status":"error","error_message":"Entered primary_tag {primary_tag} is not a valid value.".format(primary_tag=primary_tag)}
             return json.dumps(error_j),500,{'Content-Type': 'application/json'}
         elif not isinstance(address,str) or address == "":
@@ -543,7 +547,7 @@ def api_feature():
             type=type)
 
         for tag in tags:
-            tm = TagModel.query.filter_by(tag_name=tag).first()
+            tm = TagModel.query.filter(TagModel.tag_name==tag).first()
             if tm != None:
                 new_fm.tags.append(tm)
             else:
@@ -552,7 +556,7 @@ def api_feature():
 
 
         for area in areas:
-            am = AreaModel.query.filter_by(short_name=area).first()
+            am = AreaModel.query.filter(AreaModel.short_name==area).first()
             if am != None:
                 new_fm.areas.append(am)
             else:
