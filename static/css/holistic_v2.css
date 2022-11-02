@@ -292,6 +292,7 @@ a.jump_to_letter {
   position: absolute;
   width: var(--multiselect-width);
   background-color: white;
+  z-index: 100;
 }
 
 #cities-checkboxes label {
@@ -299,5 +300,21 @@ a.jump_to_letter {
 }
 
 #cities-checkboxes label:hover {
+  background-color: blue;
+}
+
+#tags-checkboxes {
+  border: 1px #dadada solid;
+  position: absolute;
+  width: var(--multiselect-width);
+  background-color: white;
+  z-index: 100;
+}
+
+#tags-checkboxes label {
+  display: block;
+}
+
+#tags-checkboxes label:hover {
   background-color: blue;
 }

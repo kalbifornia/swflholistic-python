@@ -353,10 +353,15 @@ def holistic_search():
                 tag_filter = SelectableFilter(type="tag",short_names=short_names,display_names=display_names)
 
     all_areas = AreaModel.query.all()
+    all_tags = TagModel.query.all()
+
     all_cities = []
+
     for area in all_areas:
         all_cities.append(area)
     all_cities = sorted(all_areas, key=lambda a: a.name)
+
+    all_tags = sorted(all_tags, key=lambda a: a.description)
 
     filtered_features = FeatureModel.query.filter(FeatureModel.enabled==True)
     if tag_filter != None:
@@ -371,7 +376,7 @@ def holistic_search():
     elif (search_type == "resource"):
         selectables_by_letter = get_resource_selectables_by_letter(filtered_features)
 
-    return render_template("holistic/search.html",selectable_type=search_type,city_filter=city_filter,tag_filter=tag_filter,selectables_by_letter=selectables_by_letter,all_cities=all_cities)
+    return render_template("holistic/search.html",selectable_type=search_type,city_filter=city_filter,tag_filter=tag_filter,selectables_by_letter=selectables_by_letter,all_cities=all_cities,all_tags=all_tags)
 
 @app.route("/swflholistic")
 @app.route("/swflholistic/")

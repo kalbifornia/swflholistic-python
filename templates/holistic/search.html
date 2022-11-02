@@ -86,14 +86,47 @@
         <div id="cities-checkboxes" class="invisible">
           {% for city in all_cities %}
             {% if city.short_name in city_filter.short_names %}
-          <label for="checkbox-{{city.short_name}}">
-            <input type="checkbox" id="checkbox-{{city.short_name}}" data-val="{{city.short_name}}" checked />
+          <label for="checkbox-city-{{city.short_name}}">
+            <input type="checkbox" id="checkbox-city-{{city.short_name}}" data-val="{{city.short_name}}" checked />
             {{city.name}}
           </label>
             {% else %}
-          <label for="checkbox-{{city.short_name}}">
-            <input type="checkbox" id="checkbox-{{city.short_name}}" data-val="{{city.short_name}}" />
+          <label for="checkbox-city-{{city.short_name}}">
+            <input type="checkbox" id="checkbox-city-{{city.short_name}}" data-val="{{city.short_name}}" />
             {{city.name}}
+          </label>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      {% if selectable_type == "resource" %}
+      <div class="search-header-dropdown">
+        <div class="multiselect" id="tag-multiselect">
+          <div class="selectBox" id="select-search-tags-select-box">
+            <select id="select-search-tags">
+        {% if tag_filter == None %}
+              <option>Categories (All)</option>
+        {% elif tag_filter.short_names|count == 1 %}
+              <option>Category ({{tag_filter.display_names[0]}})</option>
+        {% else %}
+              <option>Categories ({{tag_filter.short_names|count}} categories)</option>
+        {% endif %}
+            </select>
+            <div class="overSelect"></div>
+          </div>
+        </div>
+        <div id="tags-checkboxes" class="invisible">
+          {% for tag in all_tags %}
+            {% if tag.tag_name in tag_filter.short_names %}
+          <label for="checkbox-tag-{{tag.tag_name}}">
+            <input type="checkbox" id="checkbox-tag-{{tag.tag_name}}" data-val="{{tag.tag_name}}" checked />
+            {{tag.description}}
+          </label>
+            {% else %}
+          <label for="checkbox-tag-{{tag.tag_name}}">
+            <input type="checkbox" id="checkbox-tag-{{tag.tag_name}}" data-val="{{tag.tag_name}}" />
+            {{tag.description}}
           </label>
             {% endif %}
           {% endfor %}
@@ -150,6 +183,8 @@
     </div>
     <script>
       var isCitiesDropdownExpanded = false;
+      var isTagsDropdownExpanded = false;
+
       var selectedCityShortNames = [];
       {% if city_filter != None %}
         {% for city in city_filter.short_names %}
@@ -157,10 +192,10 @@
         {% endfor %}
       {% endif %}
 
-      var selectedTagsShortNames = [];
+      var selectedTags = [];
       {% if tag_filter != None %}
         {% for tag in tag_filter.short_names %}
-          selectedTagsShortNames.push("{{tag}}");
+          selectedTags.push("{{tag}}");
         {% endfor %}
       {% endif %}
 
@@ -169,39 +204,92 @@
         isCitiesDropdownExpanded = true;
       }
 
-      function hideCitiesDropdownAndRefreshIfNecessary() {
-        $('#cities-checkboxes').addClass("invisible");
-        isCitiesDropdownExpanded = false;
+      function showTagsDropdown() {
+        $('#tags-checkboxes').removeClass("invisible");
+        isTagsDropdownExpanded = true;
+      }
+
+      function refreshIfNecessary() {
         var prevSelectedCityShortNames = selectedCityShortNames;
         selectedCityShortNames = [];
         $('#cities-checkboxes input:checked').each(function() {
           selectedCityShortNames.push($(this).attr("data-val"));
         });
         if (selectedCityShortNames.sort().toString() != prevSelectedCityShortNames.sort().toString()) {
-          newWindowLocationHref = "/holistic/search?type={{selectable_type}}&cities=" + selectedCityShortNames;
-          if (selectedTagsShortNames.length > 0) {
-            var commaSeparatedTags = selectedTagsShortNames.join(",");
+          newWindowLocationHref = "/holistic/search?type={{selectable_type}}&cities=" + selectedCityShortNames.join(",");
+          if (selectedTags.length > 0) {
+            var commaSeparatedTags = selectedTags.join(",");
             newWindowLocationHref += "&tags=" + commaSeparatedTags;
+          }
+          window.location.href = newWindowLocationHref;
+        }
+
+        var prevSelectedTags = selectedTags;
+        selectedTags = [];
+        $('#tags-checkboxes input:checked').each(function() {
+          selectedTags.push($(this).attr("data-val"));
+        });
+        if (selectedTags.sort().toString() != prevSelectedTags.sort().toString()) {
+          newWindowLocationHref = "/holistic/search?type={{selectable_type}}&tags=" + selectedTags.join(",");
+          if (selectedCityShortNames.length > 0) {
+            var commaSeparatedCities = selectedCityShortNames.join(",");
+            newWindowLocationHref += "&cities=" + commaSeparatedCities;
           }
           window.location.href = newWindowLocationHref;
         }
       }
 
+      function hideCitiesDropdown() {
+        $('#cities-checkboxes').addClass("invisible");
+        isCitiesDropdownExpanded = false;
+
+      }
+
+      function hideTagsDropdown() {
+        $('#tags-checkboxes').addClass("invisible");
+        isTagsDropdownExpanded = false;
+      }
+
       $(document).ready(function() {
 
         $('body').click(function() {
-          hideCitiesDropdownAndRefreshIfNecessary();
+          hideCitiesDropdown();
+          hideTagsDropdown();
+          refreshIfNecessary();
         });
 
         $('#cities-checkboxes').click(function(e) {
           e.stopPropagation();  //Stops the hiding of city dropdown (done in 'body' click function) if clicking inside of that div
         });
 
+        $('#tags-checkboxes').click(function(e) {
+          e.stopPropagation();  //Stops the hiding of tag dropdown (done in 'body' click function) if clicking inside of that div
+        });
+
         $('#select-search-cities-select-box').click(function(e) {
           if (isCitiesDropdownExpanded) {
-            hideCitiesDropdownAndRefreshIfNecessary();
+            hideCitiesDropdown();
+            refreshIfNecessary();
           } else {
             showCitiesDropdown();
+          }
+
+          if (isTagsDropdownExpanded) {
+            hideTagsDropdown();
+          }
+          e.stopPropagation(); //Stops the automatic hiding of city dropdown (done in 'body' click function) if clicking inside of the select box
+        });
+
+        $('#select-search-tags-select-box').click(function(e) {
+          if (isTagsDropdownExpanded) {
+            hideTagsDropdown();
+            refreshIfNecessary();
+          } else {
+            showTagsDropdown();
+          }
+
+          if (isCitiesDropdownExpanded) {
+            hideCitiesDropdown();
           }
           e.stopPropagation(); //Stops the automatic hiding of city dropdown (done in 'body' click function) if clicking inside of the select box
         });
