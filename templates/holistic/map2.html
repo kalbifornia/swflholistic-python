@@ -1,0 +1,261 @@
+{% extends 'holistic/base.html' %}
+
+{%block title %}Holistic Resources for {{ city.name }}{% endblock %}
+
+{%block additional_css %}
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+  <link href="{{url_for('static',filename='css/holistic.css')}}" rel='stylesheet' />
+{% endblock %}
+{%block additional_js %}
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+{% endblock %}
+
+{%block content %}
+  {% set farm_features = [] %}
+  {% set healing_arts_features = [] %}
+  {% set food_features = [] %}
+  {% set other_features = [] %}
+  {% for feature in features %}
+    {% if feature.primary_tag_obj.parent_category == "farming" %}
+      {% do farm_features.append(feature) %}
+    {% elif feature.primary_tag_obj.parent_category == "healing_arts" %}
+      {% do healing_arts_features.append(feature) %}
+    {% elif feature.primary_tag_obj.parent_category == "food" %}
+      {% do food_features.append(feature) %}
+    {% elif feature.primary_tag_obj.parent_category == "other" %}
+      {% do other_features.append(feature) %}
+    {% endif %}
+  {% endfor %}
+
+  <div class="map-header">
+    <div class="map-title"><h1>Resource Map</h1></div>
+    <div class="map-subtitle">
+      <div class="map-subtitle-text">Select a resource to view more information.</div>
+      <div class="map-subtitle-dropdown">
+        <select id="select-map-city">
+        {% for loop_city in cities %}
+          {% if city.short_name == loop_city.short_name %}
+          <option id="{{loop_city.short_name}}" selected>{{loop_city.name}}</option>
+          {% else %}
+          <option id="{{loop_city.short_name}}">{{loop_city.name}}</option>
+          {% endif %}
+        {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="map-content">
+    <div id="area-map" class="actual-map">
+      <!-- Will be filled in by JavaScript -->
+    </div>
+    <div id="div-area-map-checkboxes" class="map-checkboxes">
+      <label for="input-scroll-zoom">Scroll Zoom</label>
+      <input id="input-scroll-zoom" type="checkbox" />
+    </div>
+  </div>
+
+  <div id="resource-details-modal" class="modal invisible">
+    <div class="modal-content">
+      <span class="modal-close">&times;</span>
+      <div class="modal-content-main">
+        <div class="modal-resource-header" id="modal-resource-name"></div>
+        <div class="modal-resource-field" id="modal-resource-field-description">
+          <div class="modal-resource-field-name">Description</div>
+          <div class="modal-resource-field-value"></div>
+        </div>
+        <div class="modal-resource-field" id="modal-resource-field-holistic-details">
+          <div class="modal-resource-field-name">Holistic Details</div>
+          <div class="modal-resource-field-value"></div>
+        </div>
+        <div class="modal-resource-field" id="modal-resource-field-website">
+          <div class="modal-resource-field-name">Website</div>
+          <div class="modal-resource-field-value"></div>
+        </div>
+        <div class="modal-resource-field" id="modal-resource-field-address">
+          <div class="modal-resource-field-name">Address</div>
+          <div class="modal-resource-field-value"></div>
+        </div>
+        <div class="modal-resource-field" id="modal-resource-field-phone">
+          <div class="modal-resource-field-name">Phone Number</div>
+          <div class="modal-resource-field-value"></div>
+        </div>
+        <div class="modal-resource-field" id="modal-resource-field-tags">
+          <div class="modal-resource-field-name">Tags</div>
+          <div class="modal-resource-field-value"></div>
+        </div>
+        <div class="modal-resource-field" id="modal-resource-field-cities">
+          <div class="modal-resource-field-name">Cities</div>
+          <div class="modal-resource-field-value"></div>
+        </div>
+      </div>
+  </div>
+
+  <script>
+  // The value for 'accessToken' begins with 'pk...'
+  mapboxgl.accessToken = 'pk.eyJ1Ijoia2FsYmlmb3JuaWEiLCJhIjoiY2w1MXBoczRkMDRjazNjbjlhandjZ3ZpciJ9.mjBOUTv1mm-zgQ2rvUlRvQ';
+  var centerCoordinates = [{{city.longitude}}, {{city.latitude}}];
+  var citiesFilter = ["{{city.short_name}}"];
+  var tagsFilter = [];
+  var geoJsonData = {{geo_json_data|safe}};
+  var tagsMapData = {{tags_map_data|safe}};
+  var citiesMapData = {{cities_map_data|safe}};
+  var allMapMarkers = [];
+
+  const map = new mapboxgl.Map({
+    container: 'area-map',
+    // Replace YOUR_STYLE_URL with your style URL.
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: centerCoordinates,
+    zoom: 6.5
+  });
+
+  // Add zoom and rotation controls to the map.
+  map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+
+  // disable map zoom when using scroll
+  map.scrollZoom.disable();
+
+  function onClickScrollZoom() {
+    if ($('#input-scroll-zoom').is(":checked")) {
+      map.scrollZoom.enable();
+    } else {
+      map.scrollZoom.disable();
+    }
+  }
+
+  function popUpFeatureModal(propsJSON) {
+    var propsObj = JSON.parse(propsJSON);
+
+    var nameHTMLElement = $('#modal-resource-name');
+    nameHTMLElement.empty();
+    if (propsObj.name != null) {
+      nameHTMLElement.html(`<h2>${propsObj.name}</h2>`);
+    }
+
+    var descriptionHTMLElement = $('#modal-resource-field-description div.modal-resource-field-value');
+    descriptionHTMLElement.empty();
+    if (propsObj.description != null) {
+      descriptionHTMLElement.html(propsObj.description);
+    } else {
+      descriptionHTMLElement.html("N/A");
+    }
+
+    var holisticDetailsHTMLElement = $('#modal-resource-field-holistic-details div.modal-resource-field-value');
+    holisticDetailsHTMLElement.empty();
+    if (propsObj.why_on_wapf_list != null) {
+      holisticDetailsHTMLElement.html(propsObj.why_on_wapf_list);
+    } else {
+      holisticDetailsHTMLElement.html("N/A");
+    }
+
+    var websiteHTMLElement = $('#modal-resource-field-website div.modal-resource-field-value');
+    websiteHTMLElement.empty();
+    if (propsObj.url != null) {
+      websiteHTMLElement.html(`<a href="${propsObj.url}">${propsObj.url}</a>`);
+    } else {
+      websiteHTMLElement.html("N/A");
+    }
+
+    var addressHTMLElement = $('#modal-resource-field-address div.modal-resource-field-value');
+    addressHTMLElement.empty();
+    if (propsObj.address != null) {
+      addressHTMLElement.html(propsObj.address);
+    } else {
+      addressHTMLElement.html("N/A");
+    }
+    var phoneHTMLElement = $('#modal-resource-field-phone div.modal-resource-field-value');
+    phoneHTMLElement.empty();
+    if (propsObj.phone != null) {
+      phoneHTMLElement.html(propsObj.phone);
+    } else {
+      phoneHTMLElement.html("N/A");
+    }
+
+    var tagsHTMLElement = $('#modal-resource-field-tags div.modal-resource-field-value');
+    tagsHTMLElement.empty();
+    if (propsObj.tags != null) {
+      var tagURLs = [];
+      for (tagIndex in propsObj.tags) {
+        var tag = propsObj.tags[tagIndex];
+        var tagURL = `<a href="/holistic/search?type=resource&tags=${tag}&cities=${citiesFilter.join(",")}">${tagsMapData[tag].description}</a>`;
+        tagURLs.push(tagURL);
+      }
+      tagsHTMLElement.html(tagURLs.join(", "));
+    } else {
+      tagsHTMLElement.html("N/A");
+    }
+
+    var citiesHTMLElement = $('#modal-resource-field-cities div.modal-resource-field-value');
+    citiesHTMLElement.empty();
+    if (propsObj.areas != null) {
+      var cityURLs = [];
+      for (cityIndex in propsObj.areas) {
+        var city = propsObj.areas[cityIndex];
+        var cityURL = `<a href="/holistic/search?type=resource&cities=${city}&tags=${tagsFilter.join(",")}">${citiesMapData[city].display_name}</a>`;
+        cityURLs.push(cityURL);
+        console.log(cityURL);
+      }
+      citiesHTMLElement.html(cityURLs.join(", "));
+    } else {
+      citiesHTMLElement.html("N/A");
+    }
+
+    $('#resource-details-modal').removeClass("invisible");
+  }
+
+  function populateMapWithMarkers() {
+    for (const marker of allMapMarkers) {
+      marker.remove();
+    }
+    allMapMarkers = [];
+
+    for (const feature of geoJsonData.features) {
+      const el = document.createElement("div");
+      el.className = "marker marker-default";
+
+      tagURLs = [];
+      for (const tag of feature.properties.tags) {
+        var tagURL = `<a href="/holistic/tag/${tag}">${tagsMapData[tag].description}</a>`;
+        tagURLs.push(tagURL);
+      }
+
+      var htmlToDisplay = `<h3>${feature.properties.name}</h3>
+      <p>${feature.properties.address}</p>
+      <p>Tagged as: ${tagURLs.join(", ")}</p>
+      <button class="standard-button" id="button-view-details-${feature.properties.short_name}">View Details</button>`;
+      $(document).on('click', `#button-view-details-${feature.properties.short_name}`, function() {
+        var propertiesJSON = JSON.stringify(feature.properties);
+        popUpFeatureModal(`${propertiesJSON}`);
+      });
+
+      var newMarker = new mapboxgl.Marker(el)
+        .setLngLat(feature.geometry.coordinates)
+        .setPopup(
+          new mapboxgl.Popup({maxWidth: "300px"})
+            .setHTML(htmlToDisplay)
+        )
+        .addTo(map);
+
+      allMapMarkers.push(newMarker);
+    }
+  }
+
+  map.on('load', () => {
+    populateMapWithMarkers();
+  });
+
+  $('#input-scroll-zoom').change(function() {
+    onClickScrollZoom();
+  });
+
+  $("#resource-details-modal .modal-close").click(function() {
+    $("#resource-details-modal").addClass("invisible");
+  });
+
+  $(".modal").click(function() {
+    $("#resource-details-modal").addClass("invisible");
+  });
+
+  </script>
+{% endblock %}

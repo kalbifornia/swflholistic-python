@@ -27,6 +27,10 @@ class Feature(db.Model):
         for tag in self.tags:
             tag_names.append(tag.tag_name)
 
+        area_short_names = []
+        for area in self.areas:
+            area_short_names.append(area.short_name)
+
         j = {
             "type": "Feature",
             "properties": {
@@ -36,6 +40,7 @@ class Feature(db.Model):
                 "description": self.description,
                 "why_on_wapf_list": self.why_on_wapf_list,
                 "tags": tag_names,
+                "areas": area_short_names,
                 "primary_tag": self.primary_tag,
                 "address": self.address,
                 "phone": self.phone,

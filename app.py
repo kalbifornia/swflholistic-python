@@ -102,6 +102,15 @@ def generate_tags_map_data():
     tag_map_data = '{{{tag_entries}}}'.format(tag_entries=(", ".join(tag_entries)))
     return tag_map_data
 
+def generate_areas_map_data():
+    all_areas = AreaModel.query.all()
+    area_entries = []
+    for area in all_areas:
+        str = '"{area_short_name}": {{"short_name":"{area_short_name}", "display_name":"{display_name}"}}'.format(area_short_name=area.short_name,display_name=area.name)
+        area_entries.append(str)
+    area_map_data = '{{{area_entries}}}'.format(area_entries=(", ".join(area_entries)))
+    return area_map_data
+
 def load_database_from_json():
     json_obj = ""
     with open("./static/json/wapf-naples.json", "r") as json_file:
@@ -404,11 +413,12 @@ def index(area_short_name):
         return "No area in data set with identifier {area_short_name}".format(area_short_name=area_short_name)
     geo_json_data = generate_geo_json_data(area)
     tags_map_data = generate_tags_map_data()
+    areas_map_data = generate_areas_map_data()
     area_enabled_features = []
     for feature in area.features:
         if feature.enabled:
             area_enabled_features.append(feature)
-    return render_template("holistic/main_page.html",tags=tags,features=area_enabled_features,geo_json_data=geo_json_data,tags_map_data=tags_map_data,area=area,areas=areas)
+    return render_template("holistic/map2.html",tags=tags,features=area_enabled_features,geo_json_data=geo_json_data,tags_map_data=tags_map_data,cities_map_data=areas_map_data,city=area,cities=areas)
 
 @app.route("/holistic/feature/<short_name>")
 def featurePage(short_name):
