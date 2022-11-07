@@ -61,11 +61,10 @@ def send_success_email(payload):
         traceback.print_exc()
         print("Error: unable to send email")
 
-
-def generate_geo_json_data(area):
+def generate_geo_json_data_features(features):
     features_json_dicts = []
 
-    for feature in area.features:
+    for feature in features:
         if feature.enabled:
             features_json_dicts.append(feature.to_json_dict())
 
@@ -75,6 +74,10 @@ def generate_geo_json_data(area):
     }
 
     return json.dumps(j)
+
+def generate_geo_json_data(area):
+    return generate_geo_json_data_features(area.features)
+
 
 def generate_tags_json_data():
     tags_json_dicts = []
@@ -385,7 +388,11 @@ def holistic_search():
     elif (search_type == "resource"):
         selectables_by_letter = get_resource_selectables_by_letter(filtered_features)
 
-    return render_template("holistic/search.html",selectable_type=search_type,city_filter=city_filter,tag_filter=tag_filter,selectables_by_letter=selectables_by_letter,all_cities=all_cities,all_tags=all_tags)
+    geo_json_data = generate_geo_json_data_features(filtered_features)
+    tags_map_data = generate_tags_map_data()
+    areas_map_data = generate_areas_map_data()
+
+    return render_template("holistic/search.html",selectable_type=search_type,city_filter=city_filter,tag_filter=tag_filter,selectables_by_letter=selectables_by_letter,all_cities=all_cities,all_tags=all_tags,geo_json_data=geo_json_data,tags_map_data=tags_map_data,cities_map_data=areas_map_data)
 
 @app.route("/swflholistic")
 @app.route("/swflholistic/")

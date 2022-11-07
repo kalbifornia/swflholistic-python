@@ -55,41 +55,7 @@
     </div>
   </div>
 
-  <div id="resource-details-modal" class="modal invisible">
-    <div class="modal-content">
-      <span class="modal-close">&times;</span>
-      <div class="modal-content-main">
-        <div class="modal-resource-header" id="modal-resource-name"></div>
-        <div class="modal-resource-field" id="modal-resource-field-description">
-          <div class="modal-resource-field-name">Description</div>
-          <div class="modal-resource-field-value"></div>
-        </div>
-        <div class="modal-resource-field" id="modal-resource-field-holistic-details">
-          <div class="modal-resource-field-name">Holistic Details</div>
-          <div class="modal-resource-field-value"></div>
-        </div>
-        <div class="modal-resource-field" id="modal-resource-field-website">
-          <div class="modal-resource-field-name">Website</div>
-          <div class="modal-resource-field-value"></div>
-        </div>
-        <div class="modal-resource-field" id="modal-resource-field-address">
-          <div class="modal-resource-field-name">Address</div>
-          <div class="modal-resource-field-value"></div>
-        </div>
-        <div class="modal-resource-field" id="modal-resource-field-phone">
-          <div class="modal-resource-field-name">Phone Number</div>
-          <div class="modal-resource-field-value"></div>
-        </div>
-        <div class="modal-resource-field" id="modal-resource-field-tags">
-          <div class="modal-resource-field-name">Tags</div>
-          <div class="modal-resource-field-value"></div>
-        </div>
-        <div class="modal-resource-field" id="modal-resource-field-cities">
-          <div class="modal-resource-field-name">Cities</div>
-          <div class="modal-resource-field-value"></div>
-        </div>
-      </div>
-  </div>
+  {% include 'holistic/resource_modal.html' %}
 
   <script>
   // The value for 'accessToken' begins with 'pk...'
@@ -124,86 +90,6 @@
     }
   }
 
-  function popUpFeatureModal(propsJSON) {
-    var propsObj = JSON.parse(propsJSON);
-
-    var nameHTMLElement = $('#modal-resource-name');
-    nameHTMLElement.empty();
-    if (propsObj.name != null) {
-      nameHTMLElement.html(`<h2>${propsObj.name}</h2>`);
-    }
-
-    var descriptionHTMLElement = $('#modal-resource-field-description div.modal-resource-field-value');
-    descriptionHTMLElement.empty();
-    if (propsObj.description != null) {
-      descriptionHTMLElement.html(propsObj.description);
-    } else {
-      descriptionHTMLElement.html("N/A");
-    }
-
-    var holisticDetailsHTMLElement = $('#modal-resource-field-holistic-details div.modal-resource-field-value');
-    holisticDetailsHTMLElement.empty();
-    if (propsObj.why_on_wapf_list != null) {
-      holisticDetailsHTMLElement.html(propsObj.why_on_wapf_list);
-    } else {
-      holisticDetailsHTMLElement.html("N/A");
-    }
-
-    var websiteHTMLElement = $('#modal-resource-field-website div.modal-resource-field-value');
-    websiteHTMLElement.empty();
-    if (propsObj.url != null) {
-      websiteHTMLElement.html(`<a href="${propsObj.url}">${propsObj.url}</a>`);
-    } else {
-      websiteHTMLElement.html("N/A");
-    }
-
-    var addressHTMLElement = $('#modal-resource-field-address div.modal-resource-field-value');
-    addressHTMLElement.empty();
-    if (propsObj.address != null) {
-      addressHTMLElement.html(propsObj.address);
-    } else {
-      addressHTMLElement.html("N/A");
-    }
-    var phoneHTMLElement = $('#modal-resource-field-phone div.modal-resource-field-value');
-    phoneHTMLElement.empty();
-    if (propsObj.phone != null) {
-      phoneHTMLElement.html(propsObj.phone);
-    } else {
-      phoneHTMLElement.html("N/A");
-    }
-
-    var tagsHTMLElement = $('#modal-resource-field-tags div.modal-resource-field-value');
-    tagsHTMLElement.empty();
-    if (propsObj.tags != null) {
-      var tagURLs = [];
-      for (tagIndex in propsObj.tags) {
-        var tag = propsObj.tags[tagIndex];
-        var tagURL = `<a href="/holistic/search?type=resource&tags=${tag}&cities=${citiesFilter.join(",")}">${tagsMapData[tag].description}</a>`;
-        tagURLs.push(tagURL);
-      }
-      tagsHTMLElement.html(tagURLs.join(", "));
-    } else {
-      tagsHTMLElement.html("N/A");
-    }
-
-    var citiesHTMLElement = $('#modal-resource-field-cities div.modal-resource-field-value');
-    citiesHTMLElement.empty();
-    if (propsObj.areas != null) {
-      var cityURLs = [];
-      for (cityIndex in propsObj.areas) {
-        var city = propsObj.areas[cityIndex];
-        var cityURL = `<a href="/holistic/search?type=resource&cities=${city}&tags=${tagsFilter.join(",")}">${citiesMapData[city].display_name}</a>`;
-        cityURLs.push(cityURL);
-        console.log(cityURL);
-      }
-      citiesHTMLElement.html(cityURLs.join(", "));
-    } else {
-      citiesHTMLElement.html("N/A");
-    }
-
-    $('#resource-details-modal').removeClass("invisible");
-  }
-
   function populateMapWithMarkers() {
     for (const marker of allMapMarkers) {
       marker.remove();
@@ -226,7 +112,7 @@
       <button class="standard-button" id="button-view-details-${feature.properties.short_name}">View Details</button>`;
       $(document).on('click', `#button-view-details-${feature.properties.short_name}`, function() {
         var propertiesJSON = JSON.stringify(feature.properties);
-        popUpFeatureModal(`${propertiesJSON}`);
+        popUpFeatureModal(`${propertiesJSON}`,tagsMapData,citiesMapData,tagsFilter,citiesFilter);
       });
 
       var newMarker = new mapboxgl.Marker(el)
@@ -247,14 +133,6 @@
 
   $('#input-scroll-zoom').change(function() {
     onClickScrollZoom();
-  });
-
-  $("#resource-details-modal .modal-close").click(function() {
-    $("#resource-details-modal").addClass("invisible");
-  });
-
-  $(".modal").click(function() {
-    $("#resource-details-modal").addClass("invisible");
   });
 
   </script>

@@ -181,6 +181,9 @@
         {% endfor %}
       </div>
     </div>
+
+    {% include 'holistic/resource_modal.html' %}
+
     <script>
       var isCitiesDropdownExpanded = false;
       var isTagsDropdownExpanded = false;
@@ -197,6 +200,12 @@
         {% for tag in tag_filter.short_names %}
           selectedTags.push("{{tag}}");
         {% endfor %}
+      {% endif %}
+
+      {% if selectable_type == "resource" %}
+      var geoJsonData = {{geo_json_data|safe}};
+      var tagsMapData = {{tags_map_data|safe}};
+      var citiesMapData = {{cities_map_data|safe}};
       {% endif %}
 
       function showCitiesDropdown() {
@@ -306,7 +315,13 @@
             }
             window.location.href = newWindowLocationHref;
           {% elif selectable_type == "resource" %}
-            window.location.href = "/holistic/feature/" + selectableShortName;
+            for (const feature of geoJsonData.features) {
+              if (feature.properties.short_name == selectableShortName) {
+                var propertiesJSON = JSON.stringify(feature.properties);
+                popUpFeatureModal(propertiesJSON,tagsMapData,citiesMapData,selectedTags,selectedCityShortNames);
+                break;
+              }
+            }
           {% endif %}
         });
 
