@@ -102,7 +102,7 @@
 
       tagURLs = [];
       for (const tag of feature.properties.tags) {
-        var tagURL = `<a href="/holistic/tag/${tag}">${tagsMapData[tag].description}</a>`;
+        var tagURL = `<a href="/holistic/search?type=resource&tags=${tag}&cities=${citiesFilter.join(",")}">${tagsMapData[tag].description}</a>`;
         tagURLs.push(tagURL);
       }
 
