@@ -265,6 +265,15 @@ def add_selectable_to_by_letter_dict(selectable,starting_letter,by_letter_dict):
         by_letter_dict.update({starting_letter:selectables_list})
     return by_letter_dict
 
+def add_feature_to_by_primary_tag(feature,primary_tag,by_primary_tag_dict):
+    if primary_tag not in by_primary_tag_dict:
+        by_primary_tag_dict.update({primary_tag:[feature]})
+    else:
+        features_list = by_primary_tag_dict[primary_tag]
+        features_list.append(feature)
+        features_list = sorted(features_list, key=lambda f: f.name)
+    return by_primary_tag_dict
+
 def get_category_selectables_by_letter(features):
     selectables_by_letter = {}
     category_tags = set()
@@ -297,6 +306,14 @@ def get_resource_selectables_by_letter(features):
         selectables_by_letter = add_selectable_to_by_letter_dict(selectable=selectable,starting_letter=starting_letter,by_letter_dict=selectables_by_letter)
 
     return selectables_by_letter
+
+def get_features_by_primary_tag(features):
+    features_by_primary_tag = {}
+    for feature in features:
+        primary_tag = feature.primary_tag_obj
+        features_by_primary_tag = add_feature_to_by_primary_tag(feature=feature,primary_tag=primary_tag,by_primary_tag_dict=features_by_primary_tag)
+
+    return features_by_primary_tag
 
 @app.route("/holistic")
 @app.route("/holistic/")
@@ -448,11 +465,10 @@ def map():
     geo_json_data = generate_geo_json_data_features(filtered_features.all())
     tags_map_data = generate_tags_map_data()
     areas_map_data = generate_areas_map_data()
-    area_enabled_features = []
-    for feature in area.features:
-        if feature.enabled:
-            area_enabled_features.append(feature)
-    return render_template("holistic/map2.html",features=area_enabled_features,geo_json_data=geo_json_data,tags_map_data=tags_map_data,cities_map_data=areas_map_data,city=filtered_areas[0],filtered_cities=filtered_areas,all_cities=all_areas)
+
+    features_by_primary_tag = get_features_by_primary_tag(features=filtered_features)
+
+    return render_template("holistic/map2.html",features=filtered_features,geo_json_data=geo_json_data,tags_map_data=tags_map_data,cities_map_data=areas_map_data,city=filtered_areas[0],filtered_cities=filtered_areas,all_cities=all_areas,features_by_primary_tag=features_by_primary_tag)
 
 @app.route("/holistic/feature/<short_name>")
 def featurePage(short_name):
