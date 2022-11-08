@@ -134,6 +134,11 @@
       </div>
       {% endif %}
 
+      {% if selectables_by_letter|count == 0 %}
+
+      <div class="no-search-results">No resources were found using the selected filters.</div>
+
+      {% else %}
 
       <div class="search-header-letters">
         {% if "A" in selectables_by_letter.keys() %}<a class="jump_to_letter" data-val="letter_A">A</a>{% else %}<a>A</a>{% endif %}
@@ -165,6 +170,7 @@
       </div>
     </div>
 
+
     <div class="groupings-by-letters">
       <div class="grouping-by-letter">
         {% set ordered_letter_keys = selectables_by_letter.keys()|sort() %}
@@ -183,6 +189,8 @@
     </div>
 
     {% include 'holistic/resource_modal.html' %}
+    
+    {% endif %}
 
     <script>
       var isCitiesDropdownExpanded = false;

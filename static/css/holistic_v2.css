@@ -340,13 +340,9 @@ div.map-subtitle {
   padding-left: var(--common-lr-padding);
   padding-right: var(--common-lr-padding);
   height: var(--map-subtitle-height);
-}
+  display: flex;
+  justify-content: space-between;
 
-div.map-subtitle-dropdown select {
-  position: relative;
-  left: 50%;
-  top: calc(var(--map-subtitle-height) * -1);
-  transform: translateX(-50%);
 }
 
 div.map-checkboxes {
@@ -454,5 +450,5 @@ div.modal {
   cursor: pointer;
   display: flex;
   justify-content: center;
-  background-image: url('./assets/markers/mapbox-marker-icon-gray.svg');
+  background-image: url('../markers/mapbox-marker-icon-gray.svg');
 }

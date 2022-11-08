@@ -4,7 +4,6 @@
 
 {%block additional_css %}
   <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
-  <link href="{{url_for('static',filename='css/holistic.css')}}" rel='stylesheet' />
 {% endblock %}
 {%block additional_js %}
   <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
@@ -32,16 +31,35 @@
     <div class="map-subtitle">
       <div class="map-subtitle-text">Select a resource to view more information.</div>
       <div class="map-subtitle-dropdown">
-        <select id="select-map-city">
-        {% for loop_city in cities %}
-          {% if city.short_name == loop_city.short_name %}
-          <option id="{{loop_city.short_name}}" selected>{{loop_city.name}}</option>
-          {% else %}
-          <option id="{{loop_city.short_name}}">{{loop_city.name}}</option>
-          {% endif %}
-        {% endfor %}
-        </select>
+        <div class="multiselect" id="map-city-multiselect">
+          <div class="selectBox" id="select-map-cities-select-box">
+            <select id="select-map-city">
+              {% if filtered_cities|count == 1 %}
+                    <option>City ({{filtered_cities[0].name}})</option>
+              {% else %}
+                    <option>Cities ({{filtered_cities|count}} cities)</option>
+              {% endif %}
+            </select>
+            <div class="overSelect"></div>
+          </div>
+        </div>
+        <div id="cities-checkboxes" class="invisible">
+          {% for city in all_cities %}
+            {% if city in filtered_cities %}
+          <label for="checkbox-city-{{city.short_name}}">
+            <input type="checkbox" id="checkbox-city-{{city.short_name}}" data-val="{{city.short_name}}" checked />
+            {{city.name}}
+          </label>
+            {% else %}
+          <label for="checkbox-city-{{city.short_name}}">
+            <input type="checkbox" id="checkbox-city-{{city.short_name}}" data-val="{{city.short_name}}" />
+            {{city.name}}
+          </label>
+            {% endif %}
+          {% endfor %}
+        </div>
       </div>
+      <div class="map-subtitle-empty-for-spacing"></div>
     </div>
   </div>
 
@@ -61,12 +79,19 @@
   // The value for 'accessToken' begins with 'pk...'
   mapboxgl.accessToken = 'pk.eyJ1Ijoia2FsYmlmb3JuaWEiLCJhIjoiY2w1MXBoczRkMDRjazNjbjlhandjZ3ZpciJ9.mjBOUTv1mm-zgQ2rvUlRvQ';
   var centerCoordinates = [{{city.longitude}}, {{city.latitude}}];
-  var citiesFilter = ["{{city.short_name}}"];
-  var tagsFilter = [];
+  var selectedCityShortNames = [];
+  {% for city in filtered_cities %}
+  selectedCityShortNames.push("{{city.short_name}}");
+  {% endfor %}
+  var selectedTags = [];
+  {% for tag in filtered_tags %}
+  selectedTags.push("{{tag.tag_name}}");
+  {% endfor %}
   var geoJsonData = {{geo_json_data|safe}};
   var tagsMapData = {{tags_map_data|safe}};
   var citiesMapData = {{cities_map_data|safe}};
   var allMapMarkers = [];
+  isCitiesDropdownExpanded = false;
 
   const map = new mapboxgl.Map({
     container: 'area-map',
@@ -81,6 +106,19 @@
 
   // disable map zoom when using scroll
   map.scrollZoom.disable();
+
+  function showCitiesDropdown() {
+    $('#cities-checkboxes').removeClass("invisible");
+    isCitiesDropdownExpanded = true;
+  }
+
+  function hideCitiesDropdown() {
+    $('#cities-checkboxes').addClass("invisible");
+    isCitiesDropdownExpanded = false;
+  }
+
+  function refreshIfNecessary() {
+  }
 
   function onClickScrollZoom() {
     if ($('#input-scroll-zoom').is(":checked")) {
@@ -102,7 +140,7 @@
 
       tagURLs = [];
       for (const tag of feature.properties.tags) {
-        var tagURL = `<a href="/holistic/search?type=resource&tags=${tag}&cities=${citiesFilter.join(",")}">${tagsMapData[tag].description}</a>`;
+        var tagURL = `<a href="/holistic/search?type=resource&tags=${tag}&cities=${selectedCityShortNames.join(",")}">${tagsMapData[tag].description}</a>`;
         tagURLs.push(tagURL);
       }
 
@@ -110,9 +148,10 @@
       <p>${feature.properties.address}</p>
       <p>Tagged as: ${tagURLs.join(", ")}</p>
       <button class="standard-button" id="button-view-details-${feature.properties.short_name}">View Details</button>`;
-      $(document).on('click', `#button-view-details-${feature.properties.short_name}`, function() {
+      $(document).on('click', `#button-view-details-${feature.properties.short_name}`, function(e) {
+        e.stopPropagation();
         var propertiesJSON = JSON.stringify(feature.properties);
-        popUpFeatureModal(`${propertiesJSON}`,tagsMapData,citiesMapData,tagsFilter,citiesFilter);
+        popUpFeatureModal(`${propertiesJSON}`,tagsMapData,citiesMapData,selectedTags,selectedCityShortNames);
       });
 
       var newMarker = new mapboxgl.Marker(el)
@@ -133,6 +172,30 @@
 
   $('#input-scroll-zoom').change(function() {
     onClickScrollZoom();
+  });
+
+  $(document).ready(function() {
+    $('body').click(function() {
+      hideCitiesDropdown();
+      refreshIfNecessary();
+    });
+
+    $('#cities-checkboxes').click(function(e) {
+      e.stopPropagation();  //Stops the hiding of city dropdown (done in 'body' click function) if clicking inside of that div
+    });
+
+    $('#select-map-cities-select-box').click(function(e) {
+      if (isCitiesDropdownExpanded) {
+        hideCitiesDropdown();
+        refreshIfNecessary();
+      } else {
+        showCitiesDropdown();
+      }
+
+      e.stopPropagation(); //Stops the automatic hiding of city dropdown (done in 'body' click function) if clicking inside of the select box
+    });
+
+
   });
 
   </script>

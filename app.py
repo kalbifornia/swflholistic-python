@@ -75,10 +75,6 @@ def generate_geo_json_data_features(features):
 
     return json.dumps(j)
 
-def generate_geo_json_data(area):
-    return generate_geo_json_data_features(area.features)
-
-
 def generate_tags_json_data():
     tags_json_dicts = []
     all_tags = TagModel.query.all()
@@ -324,7 +320,7 @@ selectables
 @app.route("/holistic/search")
 @app.route("/holistic/search/")
 def holistic_search():
-    search_type = "Category"   #default to Category
+    search_type = "category"   #default to Category
     city_filter = None
     tag_filter = None
 
@@ -413,19 +409,50 @@ def about():
 
 @app.route("/holistic/area/<area_short_name>")
 def index(area_short_name):
-    area = AreaModel.query.filter(AreaModel.short_name==area_short_name).first()
-    areas = AreaModel.query.all()
-    tags = TagModel.query.all()
-    if area == None:
-        return "No area in data set with identifier {area_short_name}".format(area_short_name=area_short_name)
-    geo_json_data = generate_geo_json_data(area)
+    return redirect("/holistic/map?cities={area_short_name}".format(area_short_name=area_short_name))
+
+@app.route("/holistic/map")
+def map():
+    citiesArg = request.args.get("cities")
+    tagsArg = request.args.get("tags")
+
+    all_areas = AreaModel.query.all()
+
+    filtered_areas = []
+    filtered_area_short_names = []
+    filtered_tags = TagModel.query.all()
+    filtered_tag_names = []
+
+    if citiesArg != None:
+        cities = citiesArg.split(",")
+        filtered_areas = AreaModel.query.filter(AreaModel.short_name.in_(cities)).all()
+        if len(filtered_areas) == 0:
+            #Default to swfl if no valid cities filter was applied
+            filtered_areas = AreaModel.query.filter(AreaModel.short_name == "swfl").all()
+    if tagsArg != None:
+        tags = tagsArg.split(",")
+        filtered_tags = TagModel.query.filter(TagModel.tag_name.in_(tags)).all()
+        if len(filtered_tags) == 0:
+            #Default to all_tags if no valid tags filter was applied
+            filtered_tags = TagModel.query.all()
+
+    for area in filtered_areas:
+        filtered_area_short_names.append(area.short_name)
+    for tag in filtered_tags:
+        filtered_tag_names.append(tag.tag_name)
+
+    filtered_features = FeatureModel.query.filter(FeatureModel.enabled==True)
+    filtered_features = filtered_features.filter(FeatureModel.tags.any(TagModel.tag_name.in_(filtered_tag_names)))
+    filtered_features = filtered_features.filter(FeatureModel.areas.any(AreaModel.short_name.in_(filtered_area_short_names)))
+
+    geo_json_data = generate_geo_json_data_features(filtered_features.all())
     tags_map_data = generate_tags_map_data()
     areas_map_data = generate_areas_map_data()
     area_enabled_features = []
     for feature in area.features:
         if feature.enabled:
             area_enabled_features.append(feature)
-    return render_template("holistic/map2.html",tags=tags,features=area_enabled_features,geo_json_data=geo_json_data,tags_map_data=tags_map_data,cities_map_data=areas_map_data,city=area,cities=areas)
+    return render_template("holistic/map2.html",features=area_enabled_features,geo_json_data=geo_json_data,tags_map_data=tags_map_data,cities_map_data=areas_map_data,city=filtered_areas[0],filtered_cities=filtered_areas,all_cities=all_areas)
 
 @app.route("/holistic/feature/<short_name>")
 def featurePage(short_name):
@@ -440,11 +467,6 @@ def tagPage(tag_name):
 @app.route("/holistic/load-json-from-database")
 def build_json_from_database():
     return generate_json_from_database()
-
-@app.route("/holistic/load-database-from-json-XYZ")
-def load_database_from_json_xyz():
-    load_database_from_json()
-    return "Loaded the database."
 
 @app.route("/holistic/addfeature")
 def add_feature():
