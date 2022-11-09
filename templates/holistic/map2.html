@@ -79,21 +79,26 @@
     <div class="map-directory-title"><h2>Directory</h2></div>
     <div class="map-directory-subtitle"><h4>Listing of the resources shown on the map above</h4></div>
     <div class="map-directory-content">
-      {% for primary_tag in (features_by_primary_tag.keys() | sort(attribute='description')) %}
+      {% for primary_tag in (features_by_primary_tag.keys() | sort(attribute='plural_description')) %}
       <div class="map-directory-primary-tag-div" id="map-directory-tag-{{primary_tag.tag_name}}">
         <div class="map-directory-primary-tag-title">
-          <h2>{{primary_tag.description}}</h2>
+          <h2>{{primary_tag.plural_description}}</h2>
         </div>
         <div class="map-directory-primary-tag-entries">
           {% for feature in features_by_primary_tag[primary_tag] %}
-          <div class="map-directory-primary-tag-entry" id="map-directory-primary-tag-{{feature.short_name}}">
+            {% if loop.index % 2 == 0 %}
+            {% set evenOddClass = "entry-even" %}
+            {% else %}
+            {% set evenOddClass = "entry-odd" %}
+            {% endif %}
+          <div class="map-directory-primary-tag-entry {{evenOddClass}}" id="map-directory-primary-tag-{{feature.short_name}}">
             <div class="map-directory-entry-name"><h3>{{feature.name}}</h3></div>
             <div class="map-directory-field-name">Description</div>
             <div class="map-directory-field-value">{{feature.description}}</div>
             <div class="map-directory-field-name">Holistic Details</div>
             <div class="map-directory-field-value">{{feature.why_on_wapf_list}}</div>
             <div class="map-directory-field-name">Website</div>
-            <div class="map-directory-field-value">{{feature.url}}</div>
+            <div class="map-directory-field-value"><a href="{{feature.url}}">{{feature.url}}</a></div>
             <div class="map-directory-field-name">Address</div>
             <div class="map-directory-field-value">{{feature.address}}</div>
             <div class="map-directory-field-name">Phone Number</div>

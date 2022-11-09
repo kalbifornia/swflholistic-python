@@ -452,3 +452,13 @@ div.modal {
   justify-content: center;
   background-image: url('../markers/mapbox-marker-icon-gray.svg');
 }
+
+.map-directory-field-name {
+  font-weight: bold;
+}
+
+.entry-even {
+}
+
+.entry-odd {
+}
