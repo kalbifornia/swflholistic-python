@@ -453,8 +453,49 @@ div.modal {
   background-image: url('../markers/mapbox-marker-icon-gray.svg');
 }
 
+.map-directory {
+  padding-top: var(--common-tb-padding);
+  padding-bottom: var(--common-tb-padding);
+  padding-left: var(--common-lr-padding);
+  padding-right: var(--common-lr-padding);
+}
+
+.map-directory-title {
+  padding-bottom: var(--common-tb-padding);
+}
+
+.map-directory-subtitle {
+  font-style:italic;
+}
+
+.map-directory-primary-tag-title {
+  font-weight: bold;
+  padding-top: var(--common-tb-padding);
+}
+
+.map-directory-primary-tag-entry {
+  padding-top: var(--common-tb-padding);
+  padding-left: var(--common-lr-padding);
+  padding-right: var(--common-lr-padding);
+}
+
+.map-directory-entry-name {
+  padding-bottom: var(--common-tb-padding);
+}
+
+.map-directory-button-section {
+  padding-left: var(--common-lr-padding);
+  padding-bottom: var(--common-tb-padding);
+}
+
 .map-directory-field-name {
   font-weight: bold;
+  padding-bottom: var(--common-tb-padding);
+  padding-left: var(--common-lr-padding);
+}
+.map-directory-field-value {
+  padding-bottom: var(--common-tb-padding);
+  padding-left: var(--common-lr-padding);
 }
 
 .entry-even {

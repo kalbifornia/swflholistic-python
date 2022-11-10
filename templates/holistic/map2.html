@@ -76,7 +76,7 @@
   {% include 'holistic/resource_modal.html' %}
 
   <div class="map-directory">
-    <div class="map-directory-title"><h2>Directory</h2></div>
+    <div class="map-directory-title"><h1>Directory</h1></div>
     <div class="map-directory-subtitle"><h4>Listing of the resources shown on the map above</h4></div>
     <div class="map-directory-content">
       {% for primary_tag in (features_by_primary_tag.keys() | sort(attribute='plural_description')) %}
@@ -93,27 +93,38 @@
             {% endif %}
           <div class="map-directory-primary-tag-entry {{evenOddClass}}" id="map-directory-primary-tag-{{feature.short_name}}">
             <div class="map-directory-entry-name"><h3>{{feature.name}}</h3></div>
+            <div class="map-directory-button-section">
+              <button data-val="{{feature.short_name}}" lat="{{feature.latitude}}" lng="{{feature.longitude}}" class="button-view-on-map"">View on Map</button>
+            </div>
             <div class="map-directory-field-name">Description</div>
             <div class="map-directory-field-value">{{feature.description}}</div>
             <div class="map-directory-field-name">Holistic Details</div>
             <div class="map-directory-field-value">{{feature.why_on_wapf_list}}</div>
             <div class="map-directory-field-name">Website</div>
-            <div class="map-directory-field-value"><a href="{{feature.url}}">{{feature.url}}</a></div>
+            <div class="map-directory-field-value">
+              {%if feature.url != None and feature.url != "" %}
+              <a href="{{feature.url}}">{{feature.url}}</a>
+              {% else %}
+              N/A
+              {% endif %}
+            </div>
             <div class="map-directory-field-name">Address</div>
             <div class="map-directory-field-value">{{feature.address}}</div>
             <div class="map-directory-field-name">Phone Number</div>
-            <div class="map-directory-field-value">{{feature.phone}}</div>
+            <div class="map-directory-field-value">{{feature.phone if (feature.phone != None and feature.phone != "") else 'N/A' }}</div>
+            <div class="map-directory-field-name">Primary Category</div>
+            <div class="map-directory-field-value"><a href="">{{feature.primary_tag_obj.description}}</a></div>
+            <div class="map-directory-field-name">All Categories</div>
+            <div class="map-directory-field-value">
+              {% for tag in feature.tags %}
+                <a href="/holistic/search?type=resource&tags={{ tag.tag_name }}&cities={{ filtered_city_short_names|join(",") }}">{{tag.description}}</a>{% if not loop.last %}, {% endif %}
+              {% endfor %}
+            </div>
           </div>
           {% endfor %}
         </div>
       </div>
       {% endfor %}
-    </div>
-    <div>
-      XXXXXX
-    </div>
-    <div>
-      YYYYYY
     </div>
   </div>
 
@@ -237,6 +248,20 @@
       e.stopPropagation(); //Stops the automatic hiding of city dropdown (done in 'body' click function) if clicking inside of the select box
     });
 
+    $('.button-view-on-map').click(function() {
+      var lat = $(this).attr("lat");
+      var lng = $(this).attr("lng");
+
+      $('html, body').animate({
+        scrollTop: $("#area-map").offset().top
+      }, 200);
+
+      map.flyTo({
+        center: [lng,lat],
+        essential: false,
+        zoom: 15
+      });
+    });
 
   });
 

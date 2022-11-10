@@ -10,13 +10,13 @@ function popUpFeatureModal(propsJSON,tagsMapData,citiesMapData,tagsFilter,cities
 
   var nameHTMLElement = $('#modal-resource-name');
   nameHTMLElement.empty();
-  if (propsObj.name != null) {
+  if (propsObj.name != null && propsObj.description != "") {
     nameHTMLElement.html(`<h2>${propsObj.name}</h2>`);
   }
 
   var descriptionHTMLElement = $('#modal-resource-field-description div.modal-resource-field-value');
   descriptionHTMLElement.empty();
-  if (propsObj.description != null) {
+  if (propsObj.description != null && propsObj.description != "") {
     descriptionHTMLElement.html(propsObj.description);
   } else {
     descriptionHTMLElement.html("N/A");
@@ -24,7 +24,7 @@ function popUpFeatureModal(propsJSON,tagsMapData,citiesMapData,tagsFilter,cities
 
   var holisticDetailsHTMLElement = $('#modal-resource-field-holistic-details div.modal-resource-field-value');
   holisticDetailsHTMLElement.empty();
-  if (propsObj.why_on_wapf_list != null) {
+  if (propsObj.why_on_wapf_list != null && propsObj.why_on_wapf_list != "") {
     holisticDetailsHTMLElement.html(propsObj.why_on_wapf_list);
   } else {
     holisticDetailsHTMLElement.html("N/A");
@@ -32,7 +32,7 @@ function popUpFeatureModal(propsJSON,tagsMapData,citiesMapData,tagsFilter,cities
 
   var websiteHTMLElement = $('#modal-resource-field-website div.modal-resource-field-value');
   websiteHTMLElement.empty();
-  if (propsObj.url != null) {
+  if (propsObj.url != null && propsObj.url != "") {
     websiteHTMLElement.html(`<a href="${propsObj.url}">${propsObj.url}</a>`);
   } else {
     websiteHTMLElement.html("N/A");
@@ -40,14 +40,14 @@ function popUpFeatureModal(propsJSON,tagsMapData,citiesMapData,tagsFilter,cities
 
   var addressHTMLElement = $('#modal-resource-field-address div.modal-resource-field-value');
   addressHTMLElement.empty();
-  if (propsObj.address != null) {
+  if (propsObj.address != null && propsObj.address != "") {
     addressHTMLElement.html(propsObj.address);
   } else {
     addressHTMLElement.html("N/A");
   }
   var phoneHTMLElement = $('#modal-resource-field-phone div.modal-resource-field-value');
   phoneHTMLElement.empty();
-  if (propsObj.phone != null) {
+  if (propsObj.phone != null && propsObj.phone != "") {
     phoneHTMLElement.html(propsObj.phone);
   } else {
     phoneHTMLElement.html("N/A");
