@@ -94,6 +94,7 @@ div.footer {
   padding-left: var(--common-lr-padding);
   padding-right: var(--common-lr-padding);
   display: flex;
+  z-index: 10;
 }
 
 div.footer a,i {
@@ -502,4 +503,83 @@ div.modal {
 }
 
 .entry-odd {
+}
+
+.add-resource-header {
+  padding-left: var(--common-lr-padding);
+  padding-top: var(--common-tb-padding);
+}
+
+.add-resource-title {
+  padding-bottom: var(--common-tb-padding);
+}
+
+.add-resource-subtitle {
+  padding-bottom: var(--common-tb-padding);
+}
+
+.add-resource-content {
+  padding-left: var(--common-lr-padding);
+  padding-bottom: 30px;
+}
+
+.add-resource-row {
+  padding-bottom: var(--common-tb-padding);
+}
+
+div.add-resource-input {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  max-width: 80vw;
+}
+
+div.add-resource-input label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+div.add-resource-input label span.smallText {
+  font-size: 10px;
+}
+
+div.add-resource-input input {
+  width: 80vw;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border-width: 1px;
+  border-color: rgb(206, 212, 218);
+  border-style: solid;
+  resize: none;
+  font-size: 16px;
+}
+
+div.add-resource-input input:focus {
+  border-color:#86b7fe;
+  outline:0;
+  box-shadow:0 0 0 .25rem rgba(13,110,253,.25)
+}
+
+div.add-resource-input select {
+  padding: 5px;
+  border-radius: 10px;
+  border-width: 1px;
+}
+
+div.add-resource-input textarea {
+  width: 80vw;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border-width: 1px;
+  border-color: rgb(206, 212, 218);
+  border-style: solid;
+  resize: none;
+  font-size: 16px;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+div.add-resource-input textarea:focus {
+  border-color:#86b7fe;
+  outline:0;
+  box-shadow:0 0 0 .25rem rgba(13,110,253,.25)
 }

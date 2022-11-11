@@ -13,75 +13,87 @@
 
 {%block content %}
 
-  <div class="new-feature-content">
+  <div class="add-resource-header">
+    <div class="add-resource-title"><h1>Add a Resource</h1></div>
+    <div class="add-resource-subtitle">Have a resource you'd like to share? Input the details below, then press 'Submit'.</div>
+  </div>
+  <div class="add-resource-content">
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <label for="input-name">Name*</label>
+        <input id="input-name" />
+      </div>
+      <div class="add-resource-input">
+        <label for="input-short-name">Short Name</label>
+        <input id="input-short-name" />
+      </div>
+    </div>
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <label for="input-description">Description*</label>
+        <textarea id="input-description" rows="3" /></textarea>
+      </div>
+    </div>
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <label for="input-why-on-wapf-list" type="textarea">What makes this a holistic resource?*</label>
+        <textarea id="input-why-on-wapf-list" rows="3"></textarea>
+      </div>
+    </div>
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <label for="input-address">Address*</label>
+        <input id="input-address"/>
+      </div>
+    </div>
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <label for="input-phone">Phone Number</label>
+        <input id="input-phone"/>
+      </div>
+    </div>
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <label for="input-url">Web Link</label>
+        <input id="input-url"/>
+      </div>
+    </div>
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <label for="select-areas">Area(s) this Resource is in*</label>
+        <select id="select-areas" multiple>
+          {% for area in all_areas %}
+          <option value="{{area.short_name}}">{{area.name}}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <label for="select-primary-tag">Resource Type*</label>
+        <select id="select-primary-tag">
+          <option value="" disabled selected></option>
+          {% for tag in all_tags %}
+          <option value="{{tag.tag_name}}">{{tag.description}}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-    <h1>New Holistic Resource</h1>
-
-    <div class="new-feature-input">
-      <label for="input-name">Name*</label>
-      <input id="input-name" />
+      <div class="add-resource-input">
+        <label for="select-tags">Tags*</label>
+        <select id="select-tags" multiple>
+          {% for tag in all_tags %}
+          <option value="{{tag.tag_name}}">{{tag.description}}</option>
+          {% endfor %}
+        </select>
+      </div>
     </div>
 
-    <div class="new-feature-input">
-      <label for="input-short-name">Short Name <span class="smallText">(used for generating URL... this will be auto-generated if you don't enter one)</span></label>
-      <input id="input-short-name" />
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <button class="standard-button" id="button-add-feature">Submit</button>
+      </div>
     </div>
-
-  <div class="new-feature-input">
-    <label for="input-description">Description*</label>
-    <textarea id="input-description" rows="3" /></textarea>
-  </div>
-
-  <div class="new-feature-input">
-    <label for="input-why-on-wapf-list" type="textarea">Why this belongs on WAPF list*</label>
-    <textarea id="input-why-on-wapf-list" rows="3"></textarea>
-  </div>
-
-  <div class="new-feature-input">
-    <label for="input-address">Address*</label>
-    <input id="input-address"/>
-  </div>
-
-  <div class="new-feature-input">
-    <label for="input-phone">Phone Number</label>
-    <input id="input-phone"/>
-  </div>
-
-  <div class="new-feature-input">
-    <label for="input-url">URL</label>
-    <input id="input-url"/>
-  </div>
-
-  <div class="new-feature-input">
-    <label for="select-areas">Area(s) this Resource is in*</label>
-    <select id="select-areas" multiple>
-      {% for area in all_areas %}
-      <option value="{{area.short_name}}">{{area.short_display_name}} ({{area.wapf_chapter_name}})</option>
-      {% endfor %}
-    </select>
-  </div>
-
-  <div class="new-feature-input">
-    <label for="select-primary-tag">Primary Tag for this Resource*</label>
-    <select id="select-primary-tag">
-      <option value="" disabled selected></option>
-      {% for tag in all_tags %}
-      <option value="{{tag.tag_name}}">{{tag.description}}</option>
-      {% endfor %}
-    </select>
-  </div>
-
-  <div class="new-feature-input">
-    <label for="select-tags">All Tags for this Resource*</label>
-    <select id="select-tags" multiple>
-      {% for tag in all_tags %}
-      <option value="{{tag.tag_name}}">{{tag.description}}</option>
-      {% endfor %}
-    </select>
-  </div>
-
-  <div class="new-feature-input">
-    <button class="standard-button" id="button-add-feature">Add Holistic Resource</button>
   </div>
 
   <div id="div-loading-details" class="loading-details">
