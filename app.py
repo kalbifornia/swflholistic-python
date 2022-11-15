@@ -5,6 +5,7 @@ import typing
 import graphene
 import os
 import json
+import logging
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import and_
 import traceback
@@ -27,6 +28,9 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("SQLALCHEMY_DATABASE_URI"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS","Specified environment variable is not set.")
 app.config["SQLALCHEMY_POOL_RECYCLE"] = 60
 db = SQLAlchemy(app)
+logger = logging.getLogger("werkzeug")
+handler = logging.FileHandler("log/joekalb.log")
+logger.addHandler(handler)
 
 from models import Feature as FeatureModel
 from models import Tag as TagModel
@@ -318,6 +322,7 @@ def get_features_by_primary_tag(features):
 @app.route("/holistic")
 @app.route("/holistic/")
 def holistic_home():
+    logger.info("Redirecting someone to /holistic/area/swfl")
     return redirect("/holistic/area/swfl")
 
 #Holistic Search
@@ -424,6 +429,10 @@ def viewdetail_redirect():
 def about():
     return render_template("holistic/about.html")
 
+@app.route("/holistic/contact")
+def holistic_contact():
+    return render_template("holistic/contact.html")
+
 @app.route("/holistic/area/<area_short_name>")
 def index(area_short_name):
     return redirect("/holistic/map?cities={area_short_name}".format(area_short_name=area_short_name))
@@ -468,7 +477,7 @@ def map():
 
     features_by_primary_tag = get_features_by_primary_tag(features=filtered_features)
 
-    return render_template("holistic/map2.html",features=filtered_features,geo_json_data=geo_json_data,tags_map_data=tags_map_data,cities_map_data=areas_map_data,city=filtered_areas[0],filtered_city_short_names=filtered_area_short_names,filtered_cities=filtered_areas,all_cities=all_areas,features_by_primary_tag=features_by_primary_tag)
+    return render_template("holistic/map2.html",features=filtered_features,geo_json_data=geo_json_data,tags_map_data=tags_map_data,cities_map_data=areas_map_data,city=filtered_areas[0],filtered_city_short_names=filtered_area_short_names,filtered_cities=filtered_areas,all_cities=all_areas,features_by_primary_tag=features_by_primary_tag,filtered_tags=filtered_tags)
 
 @app.route("/holistic/feature/<short_name>")
 def featurePage(short_name):
@@ -655,6 +664,65 @@ def api_feature():
             "error_message":error_message
         }
         return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+
+@app.route("/holistic/sendContactEmail", methods = ['POST'])
+def holistic_send_contact_email_page():
+    try:
+        print("\r\n\r\n\r\n\r\nSENDING HOLISTIC CONTACT EMAIL")
+        print("Before get_json(), request is: {request}".format(request=request))
+        input_payload = request.get_json()
+
+        print("Loaded input_payload {input_payload}".format(input_payload=input_payload))
+
+        name = None
+        email = None
+        message = None
+
+        try:
+            name = input_payload["name"]
+            email = input_payload["email"]
+            message = input_payload["message"]
+
+        except KeyError as ke:
+            error_j = {"status":"error","error_message":"Missing required field {key}".format(key=ke)}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+
+        subject = "Message from {name} on JoeKalb.com/holistic".format(name=name)
+        html_message =  subject + "<br /><br />From Email: " + email + "<br /><br />" + message
+        email_message = Mail(
+            from_email=os.environ.get("SENDGRID_FROM_EMAIL"),
+            to_emails=os.environ.get("SENDGRID_TO_EMAILS").split(","),
+            subject="Message from {name} on JoeKalb.com/holistic".format(name=name),
+            html_content=html_message)
+
+        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        response = sg.send(email_message)
+        print("Responses for sending contact email for JoeKalb.com/holistic...")
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+        success_j = j = {
+            "status": "success"
+        }
+        return json.dumps(success_j),200,{'Content-Type': 'application/json'}
+
+    except werkzeug.exceptions.BadRequest as br:
+        traceback.print_exc()
+        error_j = {
+            "status":"error",
+            "error_message":str(br)
+        }
+        return json.dumps(error_j),400,{'Content-Type': 'application/json'}
+
+    except Exception as ex:
+        traceback.print_exc()
+        error_message = "Could not send contact email. Technical reason: {reason}".format(reason=str(ex))
+        error_j = {
+            "status":"error",
+            "error_message":error_message
+        }
+        return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+    return
 
 if __name__ == "__main__":
     app.run()

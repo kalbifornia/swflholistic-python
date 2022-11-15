@@ -505,6 +505,25 @@ div.modal {
 .entry-odd {
 }
 
+button.button-view-on-map {
+  text-align: center;
+  padding-top: var(--common-tb-padding);
+  padding-bottom: var(--common-tb-padding);
+  padding-left: var(--common-lr-padding);
+  padding-right: var(--common-lr-padding);
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 2px;
+  cursor: pointer;
+  background-color: lightgray;
+  font-weight: 700;
+}
+
+
+button.button-view-on-map:active {
+  background-color: gray;
+}
+
 .add-resource-header {
   padding-left: var(--common-lr-padding);
   padding-top: var(--common-tb-padding);
@@ -582,4 +601,95 @@ div.add-resource-input textarea:focus {
   border-color:#86b7fe;
   outline:0;
   box-shadow:0 0 0 .25rem rgba(13,110,253,.25)
+}
+
+.about-header-section {
+  padding-top: var(--common-tb-padding);
+  padding-left: var(--common-lr-padding);
+  padding-bottom: var(--common-tb-padding);
+  padding-right: var(--common-lr-padding);
+}
+
+.about-subtitle {
+  font-style: italic;
+}
+
+.about-content-section {
+  padding-left: var(--common-lr-padding);
+  padding-right: var(--common-lr-padding);
+}
+
+.about-content-section p {
+  padding-bottom: var(--common-tb-padding);
+}
+
+.about-links {
+  padding-top: var(--common-tb-padding);
+  padding-bottom: var(--common-tb-padding);
+}
+
+.about-links-links a {
+  display: block;
+  padding-top: var(--common-tb-padding);
+}
+
+.div-contact-content {
+  padding-left: var(--common-lr-padding);
+  padding-right: var(--common-lr-padding);
+  padding-top: var(--common-tb-padding);
+  padding-bottom: var(--common-tb-padding);
+}
+
+.div-contact-title {
+  padding-top: var(--common-tb-padding);
+  padding-bottom: var(--common-tb-padding);
+}
+
+.div-contact-subtitle {
+  padding-bottom: var(--common-tb-padding);
+}
+
+.div-contact-form-entry {
+  padding-bottom: var(--common-tb-padding);
+}
+
+.contact-input {
+  width: 60vw;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border-width: 1px;
+  border-color: gray;
+  border-style: solid;
+  resize: none;
+  font-size: 16px;
+  font-family: var(--body-font);
+}
+
+.textarea-contact-form-entry {
+  display: block;
+  height: 40vh;
+  width: 80vw;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border-width: 1px;
+  border-color: gray;
+  border-style: solid;
+  resize: none;
+  font-size: 16px;
+  font-family: var(--body-font);
+}
+
+button.button-contact-form-entry {
+  text-align: center;
+  padding: 15px;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+  cursor: pointer;
+  background-color: white;
+  font-weight: 700;
+}
+
+button.button-contact-form-entry:active {
+  background-color: lightgray;
 }

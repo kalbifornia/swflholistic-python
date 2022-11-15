@@ -3,26 +3,31 @@
 {%block title %}Holistic Resources Directory {% endblock %}
 
 {%block content %}
-  <div class="divMainHeader center">
-    <h1>Holistic Resources Directory</h1>
+  <div class="about-header-section">
+    <div class="about-title">
+      <h1>About</h1>
+    </div>
+    <div class="about-subtitle">
+      <h3>About this Holistic Resources Directory</h3>
+    </div>
   </div>
-  <div class="divContent center">
-    <label for="select-area center"><h3>Select a WAPF Chapter Map</h3></label>
-    <select class="selectArea largeSelect center" id="select-area">
-      <option value="none" selected disabled hidden>Choose</option>
-      {% for loopArea in areas %}
-      <option value="{{loopArea.short_name}}">{{loopArea.wapf_chapter_name}}</option>
-      {% endfor %}
-    </select>
+  <div class="about-content-section">
+    <p>This geographic directory is here to help people find good holistic health resources in their area, and to provide a list of quality people to support. The directory started out as a PDF document put together by the leader of the <a href="https://westonaprice.org">Weston A. Price Foundation</a> - Naples chapter. A WAPF member, software developer <a href="https://joekalb.com" target="_blank">Joe Kalb</a>, thought it might be useful to have the directory accessible online with the locations mapped out. So he created this site: it is currently set up to support one map per WAPF chapter.</p>
+    <p>This directory is NOT in any way officially affiliated with the Weston A. Price Foundation. It is just something a WAPF member made to try to help out. The people, farms, and businesses have no affiliation, nor are they necessarily aware this directory even exists. The information in this directory may or may not be accurate.</p>
   </div>
-  <div class="divContent">This directory (and the maps included) are here to help people find good holistic health resources in their area. The directory started out as a PDF document put together by the leader of the <a href="https://westonaprice.org">Weston A. Price Foundation</a> - Naples chapter. A WAPF member, software developer Joe Kalb, thought it might be useful to have the directory accessible online with the locations mapped out. So he created this site: it is currently set up to support one map per WAPF chapter.</div>
-  <div class="divContent">This directory is NOT in any way officially affiliated with the Weston A. Price Foundation. It is just something a WAPF member made to try to help out.</div>
-  <div class="divContent">Feel free to check out the map for a specific WAPF chapter above, or <a href="/holistic/addfeature">add a resouce</a> to the directory.</div>
-
-  <script>
-  $('#select-area').change(function() {
-    window.location.href=`/holistic/area/${$(this).val()}`;
-  });
+  <div class="about-content-section">
+    <div class="about-links">
+      <div class="about-links-header">
+        <h3>Links</h3>
+      </div>
+      <div class="about-links-links">
+        <a href="/holistic">View Map</a>
+        <a href="/holistic/search">Search</a>
+        <a href="/holistic/addfeature">Add a Resource to Directory</a>
+        <a href="/holistic/contact">Contact</a>
+      </div>
+    </div>
+  </div>
 
   </script>
 {% endblock %}

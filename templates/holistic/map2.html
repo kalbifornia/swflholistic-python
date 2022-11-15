@@ -171,6 +171,19 @@
   }
 
   function refreshIfNecessary() {
+    var prevSelectedCityShortNames = selectedCityShortNames;
+    selectedCityShortNames = [];
+    $('#cities-checkboxes input:checked').each(function() {
+      selectedCityShortNames.push($(this).attr("data-val"));
+    });
+    if (selectedCityShortNames.sort().toString() != prevSelectedCityShortNames.sort().toString()) {
+      newWindowLocationHref = "/holistic/map?cities=" + selectedCityShortNames.join(",");
+      if (selectedTags.length > 0) {
+        var commaSeparatedTags = selectedTags.join(",");
+        newWindowLocationHref += "&tags=" + commaSeparatedTags;
+      }
+      window.location.href = newWindowLocationHref;
+    }
   }
 
   function onClickScrollZoom() {
