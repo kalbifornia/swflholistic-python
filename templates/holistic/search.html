@@ -85,7 +85,7 @@
         </div>
         <div id="cities-checkboxes" class="invisible">
           {% for city in all_cities %}
-            {% if city.short_name in city_filter.short_names %}
+            {% if city_filter == None or city.short_name in city_filter.short_names %}
           <label for="checkbox-city-{{city.short_name}}">
             <input type="checkbox" id="checkbox-city-{{city.short_name}}" data-val="{{city.short_name}}" checked />
             {{city.name}}
