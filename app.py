@@ -42,6 +42,7 @@ from selectable import SelectableFilter
 
 
 def send_success_email(payload):
+    logger.info("Sending success email: {payload}").format(payload=payload)
     sender = os.environ.get("SENDGRID_FROM_EMAIL")
     receivers = os.environ.get("SENDGRID_TO_EMAILS").split(",")
     subject = 'Holistic Resource added to directory'
@@ -57,13 +58,13 @@ def send_success_email(payload):
     try:
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
         response = sg.send(message)
-        print("Responses for holistic resource added-to-directory email...")
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
+        logger.info("Responses for holistic resource added-to-directory email...")
+        logger.info(response.status_code)
+        logger.info(response.body)
+        logger.info(response.headers)
     except Exception:
         traceback.print_exc()
-        print("Error: unable to send email")
+        logger.info("Error: unable to send email")
 
 def generate_geo_json_data_features(features):
     features_json_dicts = []
@@ -149,7 +150,7 @@ def load_database_from_json():
             type=feature['geometry']['type']
         )
         for tag in feature['properties']['tags']:
-            print(tag)
+            logger.info(tag)
             fm.tags.append(TagModel.query.filter(TagModel.tag_name==tag).first())
         fm.areas.append(swfl_area_model)
         db.session.add(fm)
@@ -178,36 +179,42 @@ def generate_json_from_database():
 
 @app.route("/")
 def home_page():
+    logger.info("Redirecting from / to /dev")
     return redirect("/dev")
 
 @app.route("/dev")
 def dev_home_page():
+    logger.info("Rendering dev/index.html")
     return render_template("dev/index.html")
 
 @app.route("/dev/index.html")
 def dev_home_page_redirect():
+    logger.info("Redirecting from /dev/index.html to /dev")
     return redirect("/dev")
 
 @app.route("/dev/experience.html")
 def dev_experience_page():
+    logger.info("Rendering dev/experience.html")
     return render_template("dev/experience.html")
 
 @app.route("/dev/about.html")
 def dev_about_page():
+    logger.info("Rendering dev/about.html")
     return render_template("dev/about.html")
 
 @app.route("/dev/contact.html")
 def dev_contact_page():
+    logger.info("Rendering dev/contact.html")
     return render_template("dev/contact.html")
 
 @app.route("/dev/sendContactEmail", methods = ['POST'])
 def dev_send_contact_email_page():
     try:
-        print("\r\n\r\n\r\n\r\n")
-        print("Before get_json(), request is: {request}".format(request=request))
+        logger.info("\r\n\r\n\r\n\r\n")
+        logger.info("Before get_json(), request is: {request}".format(request=request))
         input_payload = request.get_json()
 
-        print("Loaded input_payload {input_payload}".format(input_payload=input_payload))
+        logger.info("Loaded input_payload {input_payload}".format(input_payload=input_payload))
 
         name = None
         email = None
@@ -232,10 +239,10 @@ def dev_send_contact_email_page():
 
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
         response = sg.send(email_message)
-        print("Responses for sending contact email for JoeKalb.com/dev...")
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
+        logger.info("Responses for sending contact email for JoeKalb.com/dev...")
+        logger.info(response.status_code)
+        logger.info(response.body)
+        logger.info(response.headers)
         success_j = j = {
             "status": "success"
         }
@@ -410,31 +417,38 @@ def holistic_search():
     tags_map_data = generate_tags_map_data()
     areas_map_data = generate_areas_map_data()
 
+    logger.info("Rendering holistic/search.html for selectable_type {search_type}, city_filter {city_filter}, tag_filter {tag_filter}".format(search_type=search_type,city_filter=(city_filter.short_names if city_filter != None else None),tag_filter=(tag_filter.short_names if tag_filter != None else None)))
     return render_template("holistic/search.html",selectable_type=search_type,city_filter=city_filter,tag_filter=tag_filter,selectables_by_letter=selectables_by_letter,all_cities=all_cities,all_tags=all_tags,geo_json_data=geo_json_data,tags_map_data=tags_map_data,cities_map_data=areas_map_data)
 
 @app.route("/swflholistic")
 @app.route("/swflholistic/")
 def swflholistic_redirect():
+    logger.info("Redirect from /swflholistic to /holistic/area/swfl")
     return redirect("/holistic/area/swfl")
 
 @app.route("/swflholistic/viewtag.html")
 def viewtag_redirect():
+    logger.info("Redirect from viewtag.html")
     return redirect("/holistic/tag/{tag}".format(tag=request.args.get("tag")))
 
 @app.route("/swflholistic/viewdetail.html")
 def viewdetail_redirect():
+    logger.info("Redirect from viewdetail.html")
     return redirect("/holistic/feature/{feature_short_name}".format(feature_short_name=request.args.get("short_name")))
 
 @app.route("/holistic/about")
 def about():
+    logger.info("Rendering holistic/about.html")
     return render_template("holistic/about.html")
 
 @app.route("/holistic/contact")
 def holistic_contact():
+    logger.info("Rendering holistic/contact.html")
     return render_template("holistic/contact.html")
 
 @app.route("/holistic/area/<area_short_name>")
 def index(area_short_name):
+    logger.info("Redirecting from /holistic/area/{area_short_name} to holistic/map/...".format(area_short_name=area_short_name))
     return redirect("/holistic/map?cities={area_short_name}".format(area_short_name=area_short_name))
 
 @app.route("/holistic/map")
@@ -477,16 +491,19 @@ def map():
 
     features_by_primary_tag = get_features_by_primary_tag(features=filtered_features)
 
+    logger.info("Rendering holistic/map2.html for features {filtered_features}, filtered_city_short_names = {filtered_area_short_names}, filtered_tags = {filtered_tags}".format(filtered_features=filtered_features,filtered_area_short_names=filtered_area_short_names,filtered_tags=filtered_tags))
     return render_template("holistic/map2.html",features=filtered_features,geo_json_data=geo_json_data,tags_map_data=tags_map_data,cities_map_data=areas_map_data,city=filtered_areas[0],filtered_city_short_names=filtered_area_short_names,filtered_cities=filtered_areas,all_cities=all_areas,features_by_primary_tag=features_by_primary_tag,filtered_tags=filtered_tags)
 
 @app.route("/holistic/feature/<short_name>")
 def featurePage(short_name):
     feature = FeatureModel.query.filter(and_(FeatureModel.short_name == short_name, FeatureModel.enabled == True)).first()
+    logger.info("Rendering holistic/feature.html for {feature}".format(feature=feature))
     return render_template("holistic/feature.html",feature=feature)
 
 @app.route("/holistic/tag/<tag_name>")
 def tagPage(tag_name):
     tag = TagModel.query.filter(TagModel.tag_name == tag_name).first()
+    logger.info("Rendering holistic/tag.html for {tag}".format(tag=tag))
     return render_template("holistic/tag.html",tag=tag)
 
 @app.route("/holistic/load-json-from-database")
@@ -497,16 +514,17 @@ def build_json_from_database():
 def add_feature():
     all_areas = AreaModel.query.all()
     all_tags = TagModel.query.all()
+    logger.info("Rendering holistic/new_feature.html")
     return render_template("holistic/new_feature.html",all_areas=all_areas,all_tags=all_tags)
 
 @app.route("/holistic/api/feature", methods = ['POST'])
 def api_feature():
     try:
-        print("\r\n\r\n\r\n\r\n")
-        print("Before get_json(), request is: {request}".format(request=request))
+        logger.info("\r\n\r\n\r\n\r\n")
+        logger.info("Before get_json(), request is: {request}".format(request=request))
         input_payload = request.get_json()
 
-        print("Loaded input_payload {input_payload}".format(input_payload=input_payload))
+        logger.info("Loaded input_payload {input_payload}".format(input_payload=input_payload))
 
         name = None
         enabled = None
@@ -538,17 +556,17 @@ def api_feature():
         try:
             short_name = input_payload["short_name"]
         except KeyError as ke:
-            print("optional field short_name not entered")
+            logger.info("optional field short_name not entered")
 
         try:
             phone = input_payload["phone"]
         except KeyError as ke:
-            print("optional field phone not entered")
+            logger.info("optional field phone not entered")
 
         try:
             url = input_payload["url"]
         except KeyError as ke:
-            print("optional field url not entered")
+            logger.info("optional field url not entered")
 
         if short_name != None and not isinstance(short_name,str):
             error_j = {"status":"error","error_message":"short_name must be of type string."}
@@ -668,11 +686,11 @@ def api_feature():
 @app.route("/holistic/sendContactEmail", methods = ['POST'])
 def holistic_send_contact_email_page():
     try:
-        print("\r\n\r\n\r\n\r\nSENDING HOLISTIC CONTACT EMAIL")
-        print("Before get_json(), request is: {request}".format(request=request))
+        logger.info("\r\n\r\n\r\n\r\nSENDING HOLISTIC CONTACT EMAIL")
+        logger.info("Before get_json(), request is: {request}".format(request=request))
         input_payload = request.get_json()
 
-        print("Loaded input_payload {input_payload}".format(input_payload=input_payload))
+        logger.info("Loaded input_payload {input_payload}".format(input_payload=input_payload))
 
         name = None
         email = None
@@ -697,9 +715,9 @@ def holistic_send_contact_email_page():
 
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
         response = sg.send(email_message)
-        print("Responses for sending contact email for JoeKalb.com/holistic...")
-        print(response.status_code)
-        print(response.body)
+        logger.info("Responses for sending contact email for JoeKalb.com/holistic...")
+        logger.info(response.status_code)
+        logger.info(response.body)
         print(response.headers)
         success_j = j = {
             "status": "success"
