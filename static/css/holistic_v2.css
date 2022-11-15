@@ -218,6 +218,10 @@ div.search-header-subtitle {
   padding-bottom: var(--common-tb-padding);
 }
 
+#search-header-category {
+  display: none;
+}
+
 div.search-subtitle-printable {
   padding-top: var(--common-tb-padding);
 }

@@ -19,7 +19,7 @@
       {% endif %}
       </div>
       {% if tag_filter != None %}
-      <div class="search-header-subtitle">
+      <div class="search-header-subtitle" id="search-header-category">
         {% if tag_filter.display_names|count == 1 %}
         <h3>Category: {{tag_filter.display_names[0]}}</h3>
         {%elif tag_filter.display_names|count > 1 %}
@@ -36,7 +36,7 @@
       </div>
       {% endif %}
       {% if city_filter != None %}
-      <div class="search-header-subtitle">
+      <div class="search-header-subtitle" id="search-header-city">
         {% if city_filter.display_names|count == 1 %}
         <h3>City: {{city_filter.display_names[0]}}</h3>
         {%elif city_filter.display_names|count > 1 %}
