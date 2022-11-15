@@ -118,7 +118,7 @@
         </div>
         <div id="tags-checkboxes" class="invisible">
           {% for tag in all_tags %}
-            {% if tag.tag_name in tag_filter.short_names %}
+            {% if tag_filter == None or tag.tag_name in tag_filter.short_names %}
           <label for="checkbox-tag-{{tag.tag_name}}">
             <input type="checkbox" id="checkbox-tag-{{tag.tag_name}}" data-val="{{tag.tag_name}}" checked />
             {{tag.description}}

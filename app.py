@@ -491,7 +491,7 @@ def map():
 
     features_by_primary_tag = get_features_by_primary_tag(features=filtered_features)
 
-    logger.info("Rendering holistic/map2.html for features {filtered_features}, filtered_city_short_names = {filtered_area_short_names}, filtered_tags = {filtered_tags}".format(filtered_features=filtered_features,filtered_area_short_names=filtered_area_short_names,filtered_tags=filtered_tags))
+    logger.info("Rendering holistic/map2.html for filtered_city_short_names = {filtered_area_short_names}, filtered_tags = {filtered_tags}".format(filtered_features=filtered_features,filtered_area_short_names=filtered_area_short_names,filtered_tags=filtered_tags))
     return render_template("holistic/map2.html",features=filtered_features,geo_json_data=geo_json_data,tags_map_data=tags_map_data,cities_map_data=areas_map_data,city=filtered_areas[0],filtered_city_short_names=filtered_area_short_names,filtered_cities=filtered_areas,all_cities=all_areas,features_by_primary_tag=features_by_primary_tag,filtered_tags=filtered_tags)
 
 @app.route("/holistic/feature/<short_name>")
