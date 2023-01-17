@@ -46,10 +46,7 @@ def send_success_email(payload):
     sender = os.environ.get("SENDGRID_FROM_EMAIL")
     receivers = os.environ.get("SENDGRID_TO_EMAILS").split(",")
     subject = 'Holistic Resource added to directory'
-    html_content = """Holistic resource added to directory, please confirm via your PythonAnywhere database account.
-
-    {payload}
-    """.format(payload=payload)
+    html_content = "Holistic resource added to directory, please confirm via your PythonAnywhere database account. {payload}".format(payload=payload)
     message = Mail(
         from_email=sender,
         to_emails=receivers,
