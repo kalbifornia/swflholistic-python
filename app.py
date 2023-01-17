@@ -42,7 +42,7 @@ from selectable import SelectableFilter
 
 
 def send_success_email(payload):
-    logger.info("Sending success email: {payload}").format(payload=payload)
+    logger.info("Sending success email: {payload}".format(payload=payload))
     sender = os.environ.get("SENDGRID_FROM_EMAIL")
     receivers = os.environ.get("SENDGRID_TO_EMAILS").split(",")
     subject = 'Holistic Resource added to directory'
