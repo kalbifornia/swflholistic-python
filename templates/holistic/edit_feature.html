@@ -1,0 +1,399 @@
+{% extends 'holistic/base.html' %}
+
+{%block title %}Edit Holistic Resources{% endblock %}
+
+{%block additional_css %}
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+  <link href="{{url_for('static',filename='css/selectize.bootstrap5.css')}}" rel="stylesheet" />
+{% endblock %}
+{%block additional_js %}
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+  <script src="{{url_for('static',filename='script/selectize.js')}}"></script>
+{% endblock %}
+
+{%block content %}
+
+{% for feature in features %}
+  <div class="add-resource-header">
+    <div class="add-resource-title"><h1>Edit a Resource</h1></div>
+    <div class="add-resource-subtitle">Have a resource you'd like to share? Input the details below, then press 'Submit'.</div>
+  </div>
+  <div class="add-resource-content">
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <label for="input-name-{{feature.short_name}}">Name*</label>
+        <input id="input-name-{{feature.short_name}}" value="{{feature.name}}"/>
+      </div>
+      <div class="add-resource-input">
+        <label for="input-short-name-{{feature.short_name}}">Short Name: {{feature.short_name}}</label>
+        <input id="input-short-name-{{feature.short_name}}" value="{{feature.short_name}}" />
+      </div>
+    </div>
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <label for="input-description-{{feature.short_name}}">Description*</label>
+        <textarea id="input-description-{{feature.short_name}}" rows="3"/>{{feature.description}}</textarea>
+      </div>
+    </div>
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <label for="input-why-on-wapf-list-{{feature.short_name}}" type="textarea">What makes this a holistic resource?*</label>
+        <textarea id="input-why-on-wapf-list-{{feature.short_name}}" rows="3">{{feature.why_on_wapf_list}}</textarea>
+      </div>
+    </div>
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <label for="input-address-{{feature.short_name}}">Address*</label>
+        <input id="input-address-{{feature.short_name}}" value="{{feature.address}}"/>
+      </div>
+    </div>
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <label for="input-longitude-{{feature.short_name}}">Longitude*</label>
+        <input id="input-longitude-{{feature.short_name}}" value="{{feature.longitude}}"/>
+      </div>
+    </div>
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <label for="input-latitude-{{feature.short_name}}">Latitude*</label>
+        <input id="input-latitude-{{feature.short_name}}" value="{{feature.latitude}}"/>
+      </div>
+    </div>
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <label for="input-phone-{{feature.short_name}}">Phone Number</label>
+        <input id="input-phone-{{feature.short_name}}" value="{{feature.phone}}"/>
+      </div>
+    </div>
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <label for="input-url-{{feature.short_name}}">Web Link</label>
+        <input id="input-url-{{feature.short_name}}" value="{{feature.url}}"/>
+      </div>
+    </div>
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <label for="select-areas-{{feature.short_name}}">Area(s) this Resource is in*</label>
+        <select id="select-areas-{{feature.short_name}}" class="select-areas" multiple>
+          {% for area in all_areas %}
+            {% if area in feature.areas %}
+              <option value="{{area.short_name}}" selected>{{area.name}}</option>
+            {% else %}
+              <option value="{{area.short_name}}">{{area.name}}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <label for="select-primary-tag-{{feature.short_name}}">Resource Type*</label>
+        <select id="select-primary-tag-{{feature.short_name}}" class="select-primary-tag">
+          {% for tag in all_tags %}
+            {% if tag.tag_name == feature.primary_tag %}
+            <option value="{{tag.tag_name}}" selected>{{tag.description}}</option>
+            {% else %}
+            <option value="{{tag.tag_name}}">{{tag.description}}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="add-resource-input">
+        <label for="select-tags-{{feature.short_name}}">Tags*</label>
+        <select id="select-tags-{{feature.short_name}}" class="select-tags" multiple>
+          {% for tag in all_tags %}
+            {% if tag in feature.tags %}
+            <option value="{{tag.tag_name}}" selected>{{tag.description}}</option>
+            {% else %}
+            <option value="{{tag.tag_name}}">{{tag.description}}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="add-resource-row">
+      <div class="add-resource-input">
+        <button class="standard-button button-to-edit-feature" id="button-edit-feature" data-short-name="{{feature.short_name}}">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="div-loading-details-{{feature.short_name}}" class="loading-details">
+  </div>
+
+  <div id="div-error-details-{{feature.short_name}}" class="error-details invisible">
+  </div>
+
+  <div id="div-success-details-{{feature.short_name}}" class="success-details invisible">
+  </div>
+{% endfor %}
+<script>
+
+  function validateURL(url) {
+    return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test( url );
+  }
+
+  function validateInputs(shortName) {
+    if ($('#input-name' + '-' + shortName).val().length == 0) {
+      alert("Please enter a Name value.");
+      $('#input-name' + '-' + shortName).focus();
+      return false;
+    }
+
+    if ($('#input-name' + '-' + shortName).val().length > 100) {
+      alert("Please enter a Name value with a length of 100 characters or less.");
+      $('#input-name' + '-' + shortName).focus();
+      return false;
+    }
+
+    if ($('#input-short-name' + '-' + shortName).val().length > 20) {
+      alert("Please enter a Short Name value with a length of 20 characters or less (or leave the field blank and the Short Name will be autogenerated.");
+      $('#input-short-name' + '-' + shortName).focus();
+      return false;
+    }
+
+    if ($('#input-short-name' + '-' + shortName).val().includes(" ")) {
+      alert("Please enter a Short Name value with no spaces. This gets used for URL generation; it cannot have spaces.");
+      $('#input-short-name' + '-' + shortName).focus();
+      return false;
+    }
+
+    if ($('#input-description' + '-' + shortName).val().length == 0) {
+      alert("Please enter a Description value.");
+      $('#input-short-name' + '-' + shortName).focus();
+      return false;
+    }
+
+    if ($('#input-description' + '-' + shortName).val().length > 1000) {
+      alert("Please enter a Description value with 1000 characters or less.");
+      $('#input-description' + '-' + shortName).focus();
+      return false;
+    }
+
+    if ($('#input-why-on-wapf-list' + '-' + shortName).val().length == 0) {
+      alert("Please enter a \"Why this belongs on WAPF list\" value.");
+      $('#input-why-on-wapf-list' + '-' + shortName).focus();
+      return false;
+    }
+
+    if ($('#input-why-on-wapf-list' + '-' + shortName).val().length > 1000) {
+      alert("Please enter a \"Why this belongs on WAPF list\" value with 1000 characters or less.");
+      $('#input-why-on-wapf-list' + '-' + shortName).focus();
+      return false;
+    }
+
+    if ($('#input-address' + '-' + shortName).val().length == 0) {
+      alert("Please enter an Address value.");
+      $('#input-address' + '-' + shortName).focus();
+      return false;
+    }
+
+    if ($('#input-address' + '-' + shortName).val().length > 200) {
+      alert("Please enter an Address value with 200 characters or less.");
+      $('#input-address' + '-' + shortName).focus();
+      return false;
+    }
+
+    if ($('#input-longitude' + '-' + shortName).val().length == 0) {
+      alert("Please enter a Longitude value.");
+      $('#input-longitude' + '-' + shortName).focus();
+      return false;
+    }
+
+    if (isNaN(parseFloat($('#input-longitude' + '-' + shortName).val()))) {
+      alert("Please enter a decimal for Longitude.");
+      $('#input-longitude' + '-' + shortName).focus();
+      return false;
+    }
+
+    if ($('#input-latitude' + '-' + shortName).val().length == 0) {
+      alert("Please enter a Latitude value.");
+      $('#input-latitude' + '-' + shortName).focus();
+      return false;
+    }
+
+    if (isNaN(parseFloat($('#input-latitude' + '-' + shortName).val()))) {
+      alert("Please enter a decimal for Latitude.");
+      $('#input-latitude' + '-' + shortName).focus();
+      return false;
+    }
+
+    let phone = $('#input-phone' + '-' + shortName).val();
+
+    if (phone.length > 30) {
+      alert("Please enter a Phone value with 30 characters or less.");
+      $('#input-phone' + '-' + shortName).focus();
+      return false;
+    }
+
+    let pattern = /^(([-]|[0-9])+)$/gmi;
+    let result = phone.match(pattern);
+    if (phone.length > 0 && result == null) {
+      alert("Please enter a Phone value using only digits (0-9) and dashes (-)");
+      $('#input-phone' + '-' + shortName).focus();
+      return false;
+    }
+
+    var url = $('#input-url' + '-' + shortName).val();
+    if (url.length > 0 && !validateURL(url)) {
+      alert("Please either enter a valid URL or leave the field blank.");
+      $('#input-url' + '-' + shortName).focus();
+      return false;
+    }
+
+    const tags = $('#select-tags' + '-' + shortName).val();
+    if (tags == null || tags.length == 0) {
+      alert("Please select at least one tag to properly categorize this resource.");
+      $('#select-tags' + '-' + shortName).focus();
+      return false;
+    }
+
+    const primaryTag = $('#select-primary-tag' + '-' + shortName).val();
+    if (primaryTag == null || primaryTag.length == 0) {
+      alert("Please select a Primary Tag for this resource.");
+      $('#select-primary-tag' + '-' + shortName).focus();
+      return false;
+    }
+
+    console.log(tags);
+    console.log(primaryTag);
+    var isPrimaryTagInTags = false;
+    for (indx in tags) {
+      if (tags[indx] == primaryTag) {
+        isPrimaryTagInTags = true;
+        break;
+      }
+    }
+
+    if (!isPrimaryTagInTags) {
+      alert("Please select a Primary Tag which is also in the overall list of All Tags for this Resouce.");
+      $('#select-primary-tag').focus();
+      return false;
+    }
+
+    const areas = $('#select-areas' + '-' + shortName).val();
+    if (areas == null || areas.length == 0) {
+      alert("Please select at least one Area this Resource is in.");
+      $('#select-areas' + '-' + shortName).focus();
+      return false;
+    }
+
+    return true;
+  }
+
+  function updateFeature() {
+    updatedShortName = $(this).attr("data-short-name");
+    console.log("updatedShortName = " + updatedShortName);
+    $('#div-success-details' + '-' + updatedShortName).empty();
+    $('#div-error-details' + '-' + updatedShortName).empty();
+    console.log("About to validate inputs");
+    if (validateInputs(updatedShortName)) {
+      console.log("Validated inputs");
+      $('#div-loading-details' + '-' + updatedShortName).empty();
+      $('#div-loading-details' + '-' + updatedShortName).append("Loading your feature into the system...");
+      updateFeatureInDatabase(updatedShortName);
+    }
+  }
+
+  function clearOutInputFields() {
+    $('#input-name').val("");
+    $('#input-short-name').val("");
+    $('#input-description').val("");
+    $('#input-why-on-wapf-list').val("");
+    $('#input-address').val("");
+    $('#input-phone').val("");
+    $('#input-url').val("");
+    $('#select-tags')[0].selectize.clear();
+    $('#select-primary-tag')[0].selectize.clear();
+    $('#select-areas')[0].selectize.clear();
+  }
+
+  function updateFeatureInDatabase(shortName) {
+
+    edit_feature_payload = {
+      name: $('#input-name' + '-' + shortName).val(),
+      short_name: $('#input-short-name'+ '-' + shortName).val(),
+      enabled: true,
+      description: $('#input-description'+ '-' + shortName).val(),
+      why_on_wapf_list: $('#input-why-on-wapf-list'+ '-' + shortName).val(),
+      longitude: parseFloat($('#input-longitude'+ '-' + shortName).val()),
+      latitude: parseFloat($('#input-latitude'+ '-' + shortName).val()),
+      address: $('#input-address'+ '-' + shortName).val(),
+      phone: $('#input-phone'+ '-' + shortName).val(),
+      url: $('#input-url'+ '-' + shortName).val(),
+      primary_tag: $('#select-primary-tag'+ '-' + shortName).val(),
+      type: "Point",
+      tags: $('#select-tags'+ '-' + shortName).val(),
+      areas: $('#select-areas'+ '-' + shortName).val()
+    };
+    edit_feature_json = JSON.stringify(edit_feature_payload);
+    fetch("/holistic/api/feature" + "/" + shortName, {
+      "method": "POST",
+      "headers": {"Content-Type": "application/json", "mypassword":"JJJ123"},
+      "body": edit_feature_json
+    })
+    .then((response) => {
+      if (response.ok) {
+        var responseJson = response.json();
+        return responseJson;
+      }
+      return Promise.reject(response);
+    })
+    .then((responseJson) => {
+      console.log(responseJson);
+      $('#div-loading-details' + '-' + shortName).empty();
+      $('#div-success-details' + '-' + shortName).empty();
+      $('#div-success-details' + '-' + shortName).removeClass("invisible");
+      $('#div-success-details' + '-' + shortName).append(`Successfully updated feature in database with short_name identifier <strong>${responseJson["short_name"]}</strong>. Thank you for your update to the Holistic directory!`);
+      $('#div-error-details' + '-' + shortName).empty();
+      $('html, body').animate({
+        scrollTop: $("#div-success-details" + '-' + shortName).offset().top
+      }, 1000);
+    })
+    .catch((response) => {
+      response.json().then((json) => {
+        $('#div-loading-details' + '-' + shortName).empty();
+        $('#div-error-details' + '-' + shortName).removeClass("invisible");
+        console.log(json["error_message"]);
+        $('#div-error-details' + '-' + shortName).empty();
+        $('#div-error-details' + '-' + shortName).append(`Technical error returned from server: ${json["error_message"]}<br /><br />Please report this to the developer, joekalb (at) protonmail (dot) com to look into.`);
+        return;
+      }).catch((response) => {
+        //Catching the non-JSON error response case
+        $('#div-loading-details' + '-' + shortName).empty();
+        $('#div-error-details' + '-' + shortName).empty();
+        $('#div-error-details' + '-' + shortName).append(`Technical error returned from server. Technical note: This was NOT a JSON error response.<br /><br />Please report this to the developer, joekalb (at) protonmail (dot) com to look into.`);
+        alert("Catching the non-JSON error response case. " + response);
+      });
+    });
+  }
+  $('.button-to-edit-feature').click(updateFeature);
+
+  var selectTags = $('.select-tags').selectize({
+    plugins: ["remove_button"],
+    create: false,
+    sortField: 'text',
+    selectOnTab: false,
+  });
+
+  $('.select-primary-tag').selectize({
+    create: false,
+    sortField: 'text',
+    onChange: function(value, isOnInitialize) {
+        var selectTagsVal = $('#select-tags').val();
+        if (selectTagsVal == null || selectTagsVal.length == 0) {
+          $('#select-tags')[0].selectize.setValue([value]);
+        }
+    }
+  });
+
+  $('.select-areas').selectize({
+    plugins: ["remove_button"],
+    create: false,
+    sortField: 'text',
+    selectOnTab: false
+  });
+</script>
+{% endblock %}

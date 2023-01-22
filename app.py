@@ -41,8 +41,30 @@ from selectable import Selectable
 from selectable import SelectableFilter
 
 
-def send_success_email(payload):
-    logger.info("Sending success email: {payload}".format(payload=payload))
+def send_success_email_update(payload):
+    logger.info("Sending success email for Update Resource: {payload}".format(payload=payload))
+    sender = os.environ.get("SENDGRID_FROM_EMAIL")
+    receivers = os.environ.get("SENDGRID_TO_EMAILS").split(",")
+    subject = 'Holistic Resource updated in directory'
+    html_content = "Holistic resource updated in directory, please confirm via your PythonAnywhere database account. {payload}".format(payload=payload)
+    message = Mail(
+        from_email=sender,
+        to_emails=receivers,
+        subject=subject,
+        html_content=html_content)
+    try:
+        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        response = sg.send(message)
+        logger.info("Responses for holistic resource updated-in-directory email...")
+        logger.info(response.status_code)
+        logger.info(response.body)
+        logger.info(response.headers)
+    except Exception:
+        traceback.print_exc()
+        logger.info("Error: unable to send email")
+
+def send_success_email_add(payload):
+    logger.info("Sending success email for Add Resource: {payload}".format(payload=payload))
     sender = os.environ.get("SENDGRID_FROM_EMAIL")
     receivers = os.environ.get("SENDGRID_TO_EMAILS").split(",")
     subject = 'Holistic Resource added to directory'
@@ -514,6 +536,199 @@ def add_feature():
     logger.info("Rendering holistic/new_feature.html")
     return render_template("holistic/new_feature.html",all_areas=all_areas,all_tags=all_tags)
 
+@app.route("/holistic/editfeature")
+def edit_feature():
+    offset = request.args.get('offset')
+    limit = request.args.get('limit')
+    password = request.args.get('password')
+
+    if password != "JoeJoeJoe":
+        return "Incorrect security!"
+
+    if offset == None:
+        offset = 0
+    if limit == None:
+        limit = 0
+
+    all_areas = AreaModel.query.all()
+    all_tags = TagModel.query.all()
+
+    logger.info("offset = {offset}, limit = {limit}".format(limit=limit,offset=offset))
+    features = FeatureModel.query.order_by(FeatureModel.short_name).offset(offset).limit(limit).all()
+    logger.info("Features to edit: {features}".format(features=features))
+    return render_template("holistic/edit_feature.html",features=features,all_areas=all_areas,all_tags=all_tags)
+
+@app.route("/holistic/api/feature/<short_name>", methods = ['POST'])
+def api_feature_update(short_name):
+    try:
+        logger.info("\r\n\r\n\r\n\r\n")
+        logger.info("Update Feature... Before get_json(), request is: {request}".format(request=request))
+        logger.info("Request headers: {request_headers}".format(request_headers=request.headers))
+
+        pw = request.headers['mypassword']
+        if pw != "JJJ123":
+            error_j = {"status":"error","error_message":"Invalid password provided!"}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+
+        feature = FeatureModel.query.filter_by(short_name=short_name).first()
+
+        if feature == None:
+            error_j = {"status":"error","error_message":"No such feature found!"}
+            return json.dumps(error_j),404,{'Content-Type': 'application/json'}
+
+        original_feature_json=feature.to_json_dict()
+        logger.info("Before update, feature = {feature_json}".format(feature_json=original_feature_json))
+        input_payload = request.get_json()
+
+        logger.info("Got request payload {input_payload} for feature with short_name {short_name}".format(input_payload=input_payload,short_name=short_name))
+
+        name = None
+        enabled = None
+        short_name = None #not required
+        description = None
+        why_on_wapf_list = None
+        longitude = None
+        latitude = None
+        primary_tag = None
+        address = None
+        phone = None    #not required
+        url = None  #not required
+        type = None
+
+        try:
+            name = input_payload["name"]
+            enabled = input_payload["enabled"]
+            description = input_payload["description"]
+            why_on_wapf_list = input_payload["why_on_wapf_list"]
+            longitude = input_payload["longitude"]
+            latitude = input_payload["latitude"]
+            primary_tag = input_payload["primary_tag"]
+            address = input_payload["address"]
+            type = input_payload["type"]
+        except KeyError as ke:
+            error_j = {"status":"error","error_message":"Missing required field {key}".format(key=ke)}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+
+        try:
+            short_name = input_payload["short_name"]
+        except KeyError as ke:
+            logger.info("optional field short_name not entered")
+
+        try:
+            phone = input_payload["phone"]
+        except KeyError as ke:
+            logger.info("optional field phone not entered")
+
+        try:
+            url = input_payload["url"]
+        except KeyError as ke:
+            logger.info("optional field url not entered")
+
+        if not isinstance(name,str) or name == "":
+            error_j = {"status":"error","error_message":"name must have a string value with length >= 1."}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+        elif not isinstance(enabled,bool):
+            error_j = {"status":"error","error_message":"enabled must have a boolean value."}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+        elif not isinstance(description,str) or description == "":
+            error_j = {"status":"error","error_message":"description must have a string value with length >= 1."}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+        elif not isinstance(why_on_wapf_list,str) or why_on_wapf_list == "":
+            error_j = {"status":"error","error_message":"why_on_wapf_list must have a string value with length >= 1."}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+        elif not isinstance(longitude,float):
+            error_j = {"status":"error","error_message":"longitude must be a float"}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+        elif not isinstance(latitude,float):
+            error_j = {"status":"error","error_message":"latitude must be a float"}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+        elif not isinstance(primary_tag,str) or primary_tag == "":
+            error_j = {"status":"error","error_message":"primary_tag must have a string value with length >= 1"}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+        elif TagModel.query.filter(TagModel.tag_name==primary_tag).first() == None:
+            error_j = {"status":"error","error_message":"Entered primary_tag {primary_tag} is not a valid value.".format(primary_tag=primary_tag)}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+        elif not isinstance(address,str) or address == "":
+            error_j = {"status":"error","error_message":"address must have a string value with length >= 1."}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+        elif not isinstance(type,str) or type == "":
+            error_j = {"status":"error","error_message":"type must have a string value with length >= 1."}
+            return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+
+        tags = input_payload["tags"]
+        areas = input_payload["areas"]
+
+        feature.name=name
+        feature.enabled=enabled
+        feature.short_name=short_name
+        feature.description=description
+        feature.why_on_wapf_list=why_on_wapf_list
+        feature.longitude=longitude
+        feature.latitude=latitude
+        feature.primary_tag=primary_tag
+        feature.address=address
+        feature.phone=phone
+        feature.url=url
+        feature.type=type
+
+        feature.tags = []
+
+        for tag in tags:
+            tm = TagModel.query.filter(TagModel.tag_name==tag).first()
+            if tm != None:
+                feature.tags.append(tm)
+            else:
+                error_j = {"status":"error","error_message":"tags entry '{tag_name}' is invalid.".format(tag_name=tag)}
+                return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+
+        feature.areas = []
+        for area in areas:
+            am = AreaModel.query.filter(AreaModel.short_name==area).first()
+            if am != None:
+                feature.areas.append(am)
+            else:
+                error_j = {"status":"error","error_message":"areas entry '{area_short_name}' is invalid.".format(area_short_name=area)}
+                return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+
+        db.session.add(feature)
+        db.session.commit()
+
+        send_success_email_update(input_payload)
+
+        success_j = j = {
+            "status": "success",
+            "original_feature_json": original_feature_json,
+            "updated_feature_json": feature.to_json_dict()
+        }
+        logger.info("Response success_j to caller: {success_j}".format(success_j=success_j))
+        return json.dumps(success_j),200,{'Content-Type': 'application/json'}
+    except werkzeug.exceptions.BadRequest as br:
+        traceback.print_exc()
+        error_j = {
+            "status":"error",
+            "error_message":str(br)
+        }
+        return json.dumps(error_j),400,{'Content-Type': 'application/json'}
+    except IntegrityError as ie:
+        traceback.print_exc()
+        error_j = {
+            "status":"error",
+            "error_message":"Could not insert feature into database; data integrity error (technical issue). Details: {details}".format(details=str(ie))
+        }
+        return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+    except Exception as ex:
+        traceback.print_exc()
+        error_message = "Could not insert feature into database. Technical reason: {reason}".format(reason=str(ex))
+        error_j = {
+            "status":"error",
+            "error_message":error_message
+        }
+        return json.dumps(error_j),500,{'Content-Type': 'application/json'}
+
+
+    return "abracadabra {short_name}".format(short_name=short_name)
+
+
 @app.route("/holistic/api/feature", methods = ['POST'])
 def api_feature():
     try:
@@ -650,7 +865,7 @@ def api_feature():
         db.session.add(new_fm)
         db.session.commit()
 
-        send_success_email(input_payload)
+        send_success_email_add(input_payload)
 
         success_j = j = {
             "status": "success",
